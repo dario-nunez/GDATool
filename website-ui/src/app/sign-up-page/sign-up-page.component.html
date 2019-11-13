@@ -1,0 +1,53 @@
+<div class="container-fluid form-body">
+    <div class="container card p-5">
+        <h1 class="text-center">Create an account</h1>
+                
+        <form class="needs-validation" #userForm="ngForm" (ngSubmit)="createUser()">
+            <div class="row">
+                <div class="form-group col-md-12 mb-3">
+                    <label for="email">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" [(ngModel)]="user.email" placeholder="" required email
+                      #email="ngModel"> 
+                    <div [hidden]="email.valid || email.pristine" class="alert alert-danger">
+                        <div *ngIf="email.errors && email.errors.required">
+                            Name is required.
+                        </div>
+                        <div *ngIf="email.errors && email.errors.email">
+                            Invalid email address.
+                        </div>                        
+                    </div>                    
+                </div>
+
+                <div class="form-group col-md-12 mb-3">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" [(ngModel)]="user.password" minlength="6" 
+                    required #password="ngModel">
+                    <div [hidden]="password.valid || password.pristine" class="alert alert-danger">
+                        <div *ngIf="password.errors && password.errors.required">
+                            This field is required.
+                        </div>
+                        <div *ngIf="password.errors && password.errors.minlength">
+                            The password should be at least 6 charachters long
+                        </div>
+                    </div>                    
+                </div>
+
+                <div class="form-group col-md-12 mb-3">
+                    <label for="repeatPassword">Repeat password</label> 
+                    <input type="password" class="form-control" id="repeatPassword" name="repeatPassword" [(ngModel)]="repeatedPassword"
+                        required #repeatPassword="ngModel" appPasswordMatch="{{user.password}}">
+                    <div [hidden]="repeatPassword.valid || repeatPassword.pristine" class="alert alert-danger">
+                        <div *ngIf="repeatPassword.errors && repeatPassword.errors.required">
+                            This field is required.
+                        </div>
+                        <div *ngIf="repeatPassword.errors && repeatPassword.errors.passwordMatch">
+                            Passwords do not match.
+                        </div>
+                    </div>            
+                </div>
+            </div>     
+
+            <button class="btn btn-primary btn-lg btn-block" type="submit" [disabled]="!userForm.form.valid">Create account</button>
+        </form>
+    </div>
+</div>
