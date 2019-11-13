@@ -2,8 +2,8 @@
 
 import { Request, Response } from "express";
 import { Document } from "mongoose";
-import { IRepository } from "../repositories/repository";
 import logger from "../logger/loggerFactory";
+import { IRepository } from "../repositories/repository";
 
 export interface IController {
     create(req: Request, res: Response): void;
