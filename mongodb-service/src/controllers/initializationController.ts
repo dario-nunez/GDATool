@@ -53,6 +53,8 @@ export class DatabaseController {
                 _id: "111111111111111111111111",
                 username: "Inesusername",
                 password: "Inespassword",
+                email: "Inesemail",
+                rolse: [],
                 dashboards: [],
                 name: "Ines"
             }
@@ -70,7 +72,8 @@ export class DatabaseController {
                 description: "Ines' job",
                 rawInputDirectory: "raw",
                 stagingFileName: "staging",
-                userId: "111111111111111111111111"
+                userId: "111111111111111111111111",
+                generateESIndeces: true
             }
         );
 
@@ -104,6 +107,8 @@ export class DatabaseController {
                 _id: "121212121212121212121212",
                 username: "Roseusername",
                 password: "Rosepassword",
+                email: "Roseemail",
+                roles: [],
                 dashboards: [],
                 name: "Rose"
             }
@@ -121,7 +126,8 @@ export class DatabaseController {
                 description: "Rose's job",
                 rawInputDirectory: "raw",
                 stagingFileName: "staging",
-                userId: "121212121212121212121212"
+                userId: "121212121212121212121212",
+                generateESIndeces: true
             }
         );
 
@@ -191,6 +197,8 @@ export class DatabaseController {
                 _id: "222222222222222222222222",
                 username: "Caryusername",
                 password: "Carypassword",
+                email: "Caryemail",
+                roles: [],
                 name: "Cary",
                 dashboards: []
             }
@@ -208,7 +216,8 @@ export class DatabaseController {
                 description: "Cary's job",
                 rawInputDirectory: "raw",
                 stagingFileName: "staging",
-                userId: "222222222222222222222222"
+                userId: "222222222222222222222222",
+                generateESIndeces: true
             }
         );
 
