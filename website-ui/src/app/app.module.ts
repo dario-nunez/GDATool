@@ -9,6 +9,7 @@ import { MarketingPageComponent } from './marketing-page/marketing-page.componen
 import { LogInPageComponent } from './log-in-page/log-in-page.component';
 import { SignUpPageComponent } from './sign-up-page/sign-up-page.component';
 import { PasswordMathcValidatorDirective } from "./sign-up-page/password-match.directive";
+import { JobsPageComponent } from './jobs-page/jobs-page.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { PasswordMathcValidatorDirective } from "./sign-up-page/password-match.d
     MarketingPageComponent,
     LogInPageComponent,
     SignUpPageComponent,
-    PasswordMathcValidatorDirective
+    PasswordMathcValidatorDirective,
+    JobsPageComponent
   ],
   imports: [
     BrowserModule,
