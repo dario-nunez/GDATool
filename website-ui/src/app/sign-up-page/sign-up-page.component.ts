@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { IUser } from "src/models/user.model";
+import { IUser } from 'src/models/user.model';
+import { Router } from '@angular/router';
+import { MongodbService } from '../../services/mongodb/mongodb.service';
 
 @Component({
   selector: 'app-sign-up-page',
@@ -8,9 +10,13 @@ import { IUser } from "src/models/user.model";
 })
 export class SignUpPageComponent implements OnInit {
 
-  public user: IUser;
-  public repeatedPassword: string;
-  constructor() { }
+  private user: IUser;
+
+  private userEmail: string;
+  private userPassword: string;
+  private repeatedPassword: string;
+
+  constructor(private router: Router, private mongodbService: MongodbService) { }
 
   ngOnInit() {
     this.user = {
@@ -22,5 +28,7 @@ export class SignUpPageComponent implements OnInit {
 
   createUser() {
     console.log("Create user button clicked");
+    this.mongodbService.createUser(this.user.username, this.user.password);
+    //this.router.navigate(['/jobsPage']);
   }
 }

@@ -10,6 +10,7 @@ export class JobsPageComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    console.log("Logged in user: " + localStorage.getItem("username"));
   }
 
 }
