@@ -1,11 +1,12 @@
-<div class="card {{cardColor}}" style="width: 20rem;">
+<div class="card {{cardColor}} mb-4" style="width: 20rem;">
     <div class="card-header border-0">
         <div class="d-flex align-items-center">
             <div>
-                <h5 class="card-title" style="margin: 0%">{{job.description}}</h5>
+                <a class="card-title h5" [routerLink]="['/jobDetailsPage']" style="margin: 0%">{{job.description}}</a>
             </div>
             <div class="ml-auto">
-                <div *ngIf="pending" class="spinner-border-sm spinner-border text-warning" role="status" aria-hidden="true"></div>
+                <div *ngIf="pending" class="spinner-border-sm spinner-border text-warning" role="status"
+                    aria-hidden="true"></div>
             </div>
         </div>
     </div>

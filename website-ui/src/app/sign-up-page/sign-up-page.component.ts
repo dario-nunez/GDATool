@@ -28,7 +28,7 @@ export class SignUpPageComponent implements OnInit {
 
   createUser() {
     console.log("Create user button clicked");
-    this.mongodbService.createUser(this.user.username, this.user.password);
+    this.mongodbService.createUser(this.user.email, this.user.password);
     //this.router.navigate(['/jobsPage']);
   }
 }

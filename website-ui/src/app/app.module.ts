@@ -18,6 +18,7 @@ import { AuthenticationService } from '../services/authentication/authentication
 import { MongodbService } from '../services/mongodb/mongodb.service';
 import { UserPageComponent } from './user-page/user-page.component';
 import { TopNavbarComponent } from './top-navbar/top-navbar.component';
+import { JobDetailsPageComponent } from './job-details-page/job-details-page.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { TopNavbarComponent } from './top-navbar/top-navbar.component';
     JobComponent,
     RunComponent,
     UserPageComponent,
-    TopNavbarComponent
+    TopNavbarComponent,
+    JobDetailsPageComponent
   ],
   imports: [
     BrowserModule,
