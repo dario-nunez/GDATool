@@ -1,34 +1,17 @@
 <div class="form-body text-center">
     <div class="form-signin card p-5">
-        <form class="needs-validation" (ngSubmit)="login()" #loginForm="ngForm">
+        <form class="was-validated" (ngSubmit)="login()" #loginForm="ngForm">
             <h1 class="mb-4">Log in</h1>
-            <!-- username -->
             <div class="form-group">
-                <!-- The username input field -->
                 <input type="email" class="form-control" id="email" name="email" [(ngModel)]="userEmail"
                     placeholder="Email" required email #email="ngModel">
-                <!-- The red warning bar that appears underneath it when the format is incorrect -->
-                <div [hidden]="email.valid || email.pristine" class="alert alert-danger">
-                    <div *ngIf="email.errors && email.errors.required">
-                        Name is required.
-                    </div>
-                    <div *ngIf="email.errors && email.errors.email">
-                        Invalid email address.
-                    </div>
-                </div>
             </div>
-
-            <!-- password -->
             <div class="form-group">
-                <input type="password" class="form-control" id="password" name="password"
-                    [(ngModel)]="userPassword" placeholder="Password" required #password="ngModel">
-
-                <div [hidden]="password.valid || password.pristine" class="alert alert-danger">
-                    <div *ngIf="password.errors && password.errors.required">
-                        This field is required.
-                    </div>
-                </div>
+                <input type="password" class="form-control" id="password" name="password" [(ngModel)]="userPassword"
+                    placeholder="Password" required #password="ngModel">
+                <label class="h7 text-danger float-left" *ngIf=incorrectPassword>Incorrect password</label>
             </div>
+
             <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
         </form>
 

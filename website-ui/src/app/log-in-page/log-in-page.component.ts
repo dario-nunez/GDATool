@@ -9,14 +9,16 @@ import { AuthenticationService } from "../../services/authentication/authenticat
 })
 export class LogInPageComponent implements OnInit {
 
+  private incorrectPassword: boolean;
   private userEmail: string;
   private userPassword: string;
 
   constructor(private router: Router, private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
-    this.userEmail = "";
-    this.userPassword = "";
+    this.incorrectPassword = false;
+    this.userEmail = "Rose@email";
+    this.userPassword = "Rosepassword";
   }
 
   login() {
@@ -24,6 +26,9 @@ export class LogInPageComponent implements OnInit {
     if (this.authenticationService.login(this.userEmail, this.userPassword)) {
       this.router.navigate(["/jobsPage"]);
     }
+
+    this.incorrectPassword = true;
+    this.userPassword = "";
     
     // this.authenticationService.getAllUsers().subscribe(user => {
     //   console.log(user);
