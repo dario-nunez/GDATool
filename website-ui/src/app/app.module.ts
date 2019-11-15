@@ -11,6 +11,8 @@ import { LogInPageComponent } from './log-in-page/log-in-page.component';
 import { SignUpPageComponent } from './sign-up-page/sign-up-page.component';
 import { PasswordMathcValidatorDirective } from "./sign-up-page/password-match.directive";
 import { JobsPageComponent } from './jobs-page/jobs-page.component';
+import { JobComponent } from './jobs-page/job/job.component';
+import { RunComponent } from './jobs-page/run/run.component';
 
 import { AuthenticationService } from '../services/authentication/authentication.service';
 import { MongodbService } from '../services/mongodb/mongodb.service';
@@ -22,7 +24,9 @@ import { MongodbService } from '../services/mongodb/mongodb.service';
     LogInPageComponent,
     SignUpPageComponent,
     PasswordMathcValidatorDirective,
-    JobsPageComponent
+    JobsPageComponent,
+    JobComponent,
+    RunComponent
   ],
   imports: [
     BrowserModule,

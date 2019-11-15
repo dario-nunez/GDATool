@@ -14,4 +14,9 @@
     </div>
 </nav>
 
-<p>jobs-page works!</p>
+<div class="container">
+    <h2>Jobs</h2>
+    <div class="card-deck">
+        <app-job *ngFor="let job of jobs" [job]="job"></app-job>
+    </div>
+</div>
