@@ -10,7 +10,12 @@ export class AuthenticationService {
 
   constructor(private http: HttpClient) { }
 
-  login(username: string, password: string) : boolean{
+  /**
+   * Return the userId of a user if the username and password match
+   * @param username 
+   * @param password 
+   */
+  login(username: string, password: string) : boolean {
     console.log("At auth: -- Username: " + username + " Password: " + password);
     
     if (username == "Rose@email" && password == "Rosepassword") {

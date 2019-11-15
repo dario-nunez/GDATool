@@ -16,6 +16,8 @@ import { RunComponent } from './jobs-page/run/run.component';
 
 import { AuthenticationService } from '../services/authentication/authentication.service';
 import { MongodbService } from '../services/mongodb/mongodb.service';
+import { UserPageComponent } from './user-page/user-page.component';
+import { TopNavbarComponent } from './top-navbar/top-navbar.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { MongodbService } from '../services/mongodb/mongodb.service';
     PasswordMathcValidatorDirective,
     JobsPageComponent,
     JobComponent,
-    RunComponent
+    RunComponent,
+    UserPageComponent,
+    TopNavbarComponent
   ],
   imports: [
     BrowserModule,

@@ -9,13 +9,10 @@ import { IJob } from '../../models/job.model';
 export class JobsPageComponent implements OnInit {
 
   jobs: IJob[];
-  loggedInUser: string;
 
   constructor() { }
 
   ngOnInit() {
-    this.loggedInUser = localStorage.getItem("username");''
-    console.log("Logged in user: " + this.loggedInUser);
     this.getJobsByUser();
   }
 
