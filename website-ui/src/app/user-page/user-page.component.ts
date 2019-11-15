@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { IUser } from 'src/models/user.model';
 
 @Component({
   selector: 'app-user-page',
@@ -7,9 +8,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserPageComponent implements OnInit {
 
+  user: IUser;
+
   constructor() { }
 
   ngOnInit() {
+    this.getUser();
   }
 
+  getUser() {
+    this.user = {
+      _id: "111111111111111111111111",
+      dashboards: [],
+      name: "Rose",
+      username: "Roseusername",
+      email: "Rose@email",
+      password: "Rosepassword"
+    }
+  }
 }
