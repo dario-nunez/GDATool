@@ -9,11 +9,13 @@ import { IJob } from '../../models/job.model';
 export class JobsPageComponent implements OnInit {
 
   jobs: IJob[];
+  loggedInUser: string;
 
   constructor() { }
 
   ngOnInit() {
-    console.log("Logged in user: " + localStorage.getItem("username"));
+    this.loggedInUser = localStorage.getItem("username");''
+    console.log("Logged in user: " + this.loggedInUser);
     this.getJobsByUser();
   }
 
@@ -71,7 +73,7 @@ export class JobsPageComponent implements OnInit {
       } as IJob,
       {
         _id: "Jobabcabcabcabcabcbac",
-        description: "August temperature comparison",
+        description: "August temperature",
         rawInputDirectory: "raw",
         stagingFielName: "staging",
         userId: "333333333333333333333333",
