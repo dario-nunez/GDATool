@@ -1,9 +1,9 @@
 import { IUser, IUserModel } from "../../../common-service/src/models/userModel";
-import {UserRepository} from "../../../common-service/src/repositories/userRepository";
-import {Controller} from "../../../common-service/src/controllers/controller";
+import { UserRepository } from "../../../common-service/src/repositories/userRepository";
+import { Controller } from "../../../common-service/src/controllers/controller";
 import logger from "../../../common-service/src/logger/loggerFactory";
 import { Inject } from "typescript-ioc";
-import {Context, DELETE, Errors, GET, Path, PathParam, POST, PreProcessor, PUT, ServiceContext} from "typescript-rest";
+import { Context, DELETE, Errors, GET, Path, PathParam, POST, PreProcessor, PUT, ServiceContext } from "typescript-rest";
 import { uniqueUsernameValidator } from "../validators/validators";
 
 @Path("/ms/user")
@@ -14,6 +14,17 @@ export class UserController extends Controller<IUser> {
 
     constructor(@Inject private userRepository: UserRepository) {
         super(userRepository);
+    }
+
+    @Path("/byUsername/:username")
+    @GET
+    public async getUserByUsername(@PathParam("username") username: string): Promise<IUserModel> {
+        try {
+            return await this.userRepository.getByUsername(username);
+        } catch (error) {
+            logger.error(error.message);
+            throw new Errors.InternalServerError(error.message);
+        }
     }
 
     @Path("/getAll")
