@@ -12,10 +12,6 @@ export class SignUpPageComponent implements OnInit {
 
   private user: IUser;
 
-  private userEmail: string;
-  private userPassword: string;
-  private repeatedPassword: string;
-
   constructor(private router: Router, private mongodbService: MongodbService) { }
 
   ngOnInit() {
@@ -27,8 +23,10 @@ export class SignUpPageComponent implements OnInit {
   }
 
   createUser() {
-    console.log("Create user button clicked");
-    this.mongodbService.createUser(this.user.email, this.user.password);
+    this.mongodbService.createUser(this.user.email, this.user.password).subscribe(
+      returnedUser => console.log("Returned created user: " + returnedUser)
+    )
+    
     //this.router.navigate(['/jobsPage']);
   }
 }
