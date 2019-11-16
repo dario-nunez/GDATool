@@ -1,50 +1,55 @@
 <div class="container-fluid form-body">
     <div class="container card p-5">
         <h1 class="text-center">Create an account</h1>
-
-        <form class="needs-validation" #userForm="ngForm" (ngSubmit)="createUser()">
+        <hr>
+        <form class="was-validated" #userForm="ngForm" (ngSubmit)="createUser()">
             <div class="row">
                 <div class="form-group col-md-12 mb-3">
-                    <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" [(ngModel)]="user.email"
-                        placeholder="" required email #email="ngModel">
-                    <div [hidden]="email.valid || email.pristine" class="alert alert-danger">
-                        <div *ngIf="email.errors && email.errors.required">
-                            Name is required.
-                        </div>
-                        <div *ngIf="email.errors && email.errors.email">
-                            Invalid email address.
+                    <div class="row">
+                        <div class="col-5">
+                            <label for="email">Email</label> </div>
+                        <div class="col-7">
+                            <label class="h7 text-danger float-right" *ngIf="email.errors && email.errors.email">Invalid
+                                email format
+                            </label>
                         </div>
                     </div>
+                    <input type="email" class="form-control" id="email" name="email" [(ngModel)]="user.email"
+                        placeholder="john@email.com" required email #email="ngModel">
                 </div>
 
                 <div class="form-group col-md-12 mb-3">
-                    <label for="password">Password</label>
+                    <div class="row">
+                        <div class="col-5">
+                            <label for="password">Password</label>
+                        </div>
+                        <div class="col-7">
+                            <label class="h7 text-danger float-right"
+                                *ngIf="password.errors && password.errors.minlength">
+                                Password is too short
+                            </label>
+                        </div>
+                    </div>
                     <input type="password" class="form-control" id="password" name="password"
                         [(ngModel)]="user.password" minlength="6" required #password="ngModel">
-                    <div [hidden]="password.valid || password.pristine" class="alert alert-danger">
-                        <div *ngIf="password.errors && password.errors.required">
-                            This field is required.
-                        </div>
-                        <div *ngIf="password.errors && password.errors.minlength">
-                            The password should be at least 6 charachters long
-                        </div>
-                    </div>
+
                 </div>
 
                 <div class="form-group col-md-12 mb-3">
-                    <label for="repeatPassword">Repeat password</label>
-                    <input type="password" class="form-control" id="repeatPassword" name="repeatPassword"
-                        [(ngModel)]="repeatedPassword" required #repeatPassword="ngModel"
-                        appPasswordMatch="{{user.password}}">
-                    <div [hidden]="repeatPassword.valid || repeatPassword.pristine" class="alert alert-danger">
-                        <div *ngIf="repeatPassword.errors && repeatPassword.errors.required">
-                            This field is required.
+                    <div class="row">
+                        <div class="col-5">
+                            <label for="repeatPassword">Confirm password</label>
                         </div>
-                        <div *ngIf="repeatPassword.errors && repeatPassword.errors.passwordMatch">
-                            Passwords do not match.
+                        <div class="col-7">                      
+                            <label class="h7 text-danger float-right"
+                                *ngIf="repeatPassword.errors && repeatPassword.errors.passwordMatch">Passwords don't
+                                match
+                            </label>
                         </div>
                     </div>
+                    <input type="password" class="form-control" id="repeatPassword" name="repeatPassword"
+                        [(ngModel)]="repeatedPassword" required #repeatPassword="ngModel" appPasswordMatch="{{user.password}}">
+
                 </div>
             </div>
 
