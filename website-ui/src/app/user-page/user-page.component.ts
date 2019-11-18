@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IUser } from 'src/models/user.model';
+import { MongodbService } from "../../services/mongodb/mongodb.service";
 
 @Component({
   selector: 'app-user-page',
@@ -10,10 +11,12 @@ export class UserPageComponent implements OnInit {
 
   user: IUser;
 
-  constructor() { }
+  constructor(private mongodbService: MongodbService) { }
 
   ngOnInit() {
-    this.getUser();
+    this.mongodbService.getUserByUsername(localStorage.getItem("username")).subscribe(user => {
+      this.user = user
+    });
   }
 
   getUser() {

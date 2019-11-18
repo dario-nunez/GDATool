@@ -24,9 +24,11 @@ export class SignUpPageComponent implements OnInit {
 
   createUser() {
     this.mongodbService.createUser(this.user.email, this.user.password).subscribe(
-      returnedUser => console.log("Returned created user: " + returnedUser)
-    )
-    
+      returnedUser => {
+        console.log("Returned created user: " + returnedUser);
+      });
+
+    localStorage.setItem("username", this.user.username);
     this.router.navigate(['/jobsPage']);
   }
 }

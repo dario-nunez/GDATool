@@ -23,4 +23,12 @@ export class MongodbService {
 
     return this.http.post("http://localhost:5000/ms/user", user) as Observable<IUser>;
   }
+
+  getAllUsers(): Observable<IUser[]> {
+    return this.http.get<IUser[]>("http://localhost:5000/ms/user/getAll", {});
+  }
+
+  getUserByUsername(username: string): Observable<IUser> {
+    return this.http.get<IUser>("http://localhost:5000/ms/user/byUsername/" + username);
+  }
 }

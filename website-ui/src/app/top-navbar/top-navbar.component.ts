@@ -13,7 +13,9 @@ export class TopNavbarComponent implements OnInit {
 
   ngOnInit() {
     this.loggedInUser = localStorage.getItem("username");
-    //console.log("Logged in user: " + this.loggedInUser);
   }
 
+  logOut() {
+    localStorage.clear();
+  }
 }

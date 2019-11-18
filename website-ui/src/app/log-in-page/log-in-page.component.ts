@@ -17,8 +17,8 @@ export class LogInPageComponent implements OnInit {
 
   ngOnInit() {
     this.incorrectPassword = false;
-    this.userEmail = "Rose@email";
-    this.userPassword = "Rosepassword";
+    this.userEmail = localStorage.getItem("username");
+    this.userPassword = "";
   }
 
   login() {
@@ -26,6 +26,7 @@ export class LogInPageComponent implements OnInit {
 
     this.authenticationService.authenticate(this.userEmail, this.userPassword).subscribe(bool => {
       if (bool) {
+        localStorage.setItem("username", this.userEmail);
         this.router.navigate(["/jobsPage"]);
       } else {
         this.userPassword = "";

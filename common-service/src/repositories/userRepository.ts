@@ -15,4 +15,8 @@ export class UserRepository extends Repository<IUser> {
 
         return false;
     }
+
+    public async getUserByUsername(username: string): Promise<IUser> {
+        return User.findOne({username: username}, (err, obj) => {}).lean().exec();
+    }
 }

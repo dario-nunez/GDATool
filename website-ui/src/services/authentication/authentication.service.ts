@@ -26,8 +26,4 @@ export class AuthenticationService {
 
     return this.http.post("http://localhost:5000/ms/user/authenticate", userAndPass) as Observable<boolean>;
   }
-
-  getAllUsers(): Observable<IUser[]> {
-    return this.http.get<IUser[]>("http://localhost:5000/ms/user/getAll", {});
-  }
 }

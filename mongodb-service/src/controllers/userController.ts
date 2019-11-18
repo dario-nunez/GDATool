@@ -27,6 +27,12 @@ export class UserController extends Controller<IUser> {
         }
     }
 
+    @Path("/byUsername/:username")
+    @GET
+    public async getUserByUsername(@PathParam("username") username: string): Promise<IUserModel> {
+        return await this.userRepository.getUserByUsername(username);
+    }
+
     @Path("/getAll")
     @GET
     public async getAll(): Promise<Array<IUserModel>> {
