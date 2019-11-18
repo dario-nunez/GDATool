@@ -14,6 +14,7 @@ import { JobsPageComponent } from './jobs-page/jobs-page.component';
 import { JobComponent } from './jobs-page/job/job.component';
 import { RunComponent } from './jobs-page/run/run.component';
 
+import { AuthenticationGuardService } from '../services/routeGuards/authentication-guard.service';
 import { AuthenticationService } from '../services/authentication/authentication.service';
 import { MongodbService } from '../services/mongodb/mongodb.service';
 import { UserPageComponent } from './user-page/user-page.component';
@@ -42,7 +43,8 @@ import { JobDetailsPageComponent } from './job-details-page/job-details-page.com
   ],
   providers: [
     AuthenticationService,
-    MongodbService
+    MongodbService,
+    AuthenticationGuardService
   ],
   bootstrap: [AppComponent]
 })
