@@ -18,7 +18,7 @@ export class UserController extends Controller<IUser> {
 
     @Path("/authenticate")
     @POST
-    public async authenticateUser(userAndPass: any): Promise<boolean> {
+    public async authenticateUser(userAndPass: any): Promise<any> {
         try {
             return await this.userRepository.authenticateUser(userAndPass.username, userAndPass.password);
         } catch (error) {

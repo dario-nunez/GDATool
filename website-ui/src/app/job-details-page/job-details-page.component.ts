@@ -13,6 +13,7 @@ export class JobDetailsPageComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    
     this.getJob();
   }
 

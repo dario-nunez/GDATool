@@ -11,6 +11,8 @@ import { MongodbService } from '../../services/mongodb/mongodb.service';
 export class SignUpPageComponent implements OnInit {
 
   private user: IUser;
+  private repeatedPassword: string;
+  private emailExists: boolean;
 
   constructor(private router: Router, private mongodbService: MongodbService) { }
 
@@ -20,15 +22,32 @@ export class SignUpPageComponent implements OnInit {
       username: "",
       password: ""
     } as IUser;
+
+    this.repeatedPassword = "";
+    this.emailExists = false;
+  }
+
+  emailValueChange() {
+    this.emailExists = false;
   }
 
   createUser() {
     this.mongodbService.createUser(this.user.email, this.user.password).subscribe(
-      returnedUser => {
-        console.log("Returned created user: " + returnedUser);
-      });
-
-    localStorage.setItem("username", this.user.username);
-    this.router.navigate(['/jobsPage']);
+      user => {
+        if (user != null) {
+          console.log("Returned created user: " + user);
+          const simplifiedUser = {
+            id: user._id,
+            username: user.email
+          };
+          localStorage.setItem("user", JSON.stringify(simplifiedUser));
+          this.router.navigate(['/jobsPage']);
+        } else {
+          this.user.password = "";
+          this.repeatedPassword = "";
+          this.emailExists = true;
+        }
+      }
+    );
   }
 }

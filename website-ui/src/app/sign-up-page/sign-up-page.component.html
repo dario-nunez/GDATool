@@ -9,13 +9,16 @@
                         <div class="col-5">
                             <label for="email">Email</label> </div>
                         <div class="col-7">
-                            <label class="h7 text-danger float-right" *ngIf="email.errors && email.errors.email">Invalid
-                                email format
+                            <label class="h7 text-danger float-right" *ngIf="email.errors && email.errors.email">
+                                Invalid email format
+                            </label>
+                            <label class="h7 text-danger float-right" *ngIf="emailExists && !(email.errors && email.errors.email)">
+                                User already exists
                             </label>
                         </div>
                     </div>
                     <input type="email" class="form-control" id="email" name="email" [(ngModel)]="user.email"
-                        placeholder="john@email.com" required email #email="ngModel">
+                        placeholder="john@email.com" required email #email="ngModel" (ngModelChange)="emailValueChange()">
                 </div>
 
                 <div class="form-group col-md-12 mb-3">
@@ -40,7 +43,7 @@
                         <div class="col-5">
                             <label for="repeatPassword">Confirm password</label>
                         </div>
-                        <div class="col-7">                      
+                        <div class="col-7">
                             <label class="h7 text-danger float-right"
                                 *ngIf="repeatPassword.errors && repeatPassword.errors.passwordMatch">Passwords don't
                                 match
@@ -48,7 +51,8 @@
                         </div>
                     </div>
                     <input type="password" class="form-control" id="repeatPassword" name="repeatPassword"
-                        [(ngModel)]="repeatedPassword" required #repeatPassword="ngModel" appPasswordMatch="{{user.password}}">
+                        [(ngModel)]="repeatedPassword" required #repeatPassword="ngModel"
+                        appPasswordMatch="{{user.password}}">
 
                 </div>
             </div>

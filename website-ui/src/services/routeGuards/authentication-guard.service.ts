@@ -15,7 +15,8 @@ export class AuthenticationGuardService implements CanActivate{
     // console.log("Router State Snapshot: " + state);
 
     if (!this.unprotectedRoutes.includes(state.url)) {  //Trying to access a protected page
-        if (localStorage.length > 0) {
+      console.log("Local storage length: " + localStorage.length);  
+      if (localStorage.length > 0) {
           return true;
         }
     }

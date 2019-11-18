@@ -14,19 +14,18 @@ export class UserPageComponent implements OnInit {
   constructor(private mongodbService: MongodbService) { }
 
   ngOnInit() {
-    this.mongodbService.getUserByUsername(localStorage.getItem("username")).subscribe(user => {
+    // Initialise the user before the page is displayed to avoid an error while the data arrives
+    this.user = {
+      _id: "",
+      dashboards: [],
+      name: "",
+      username: "",
+      email: "",
+      password: ""
+    }
+
+    this.mongodbService.getUserByUsername(JSON.parse(localStorage.getItem("user")).username).subscribe(user => {
       this.user = user
     });
-  }
-
-  getUser() {
-    this.user = {
-      _id: "111111111111111111111111",
-      dashboards: [],
-      name: "Rose",
-      username: "Roseusername",
-      email: "Rose@email",
-      password: "Rosepassword"
-    }
   }
 }

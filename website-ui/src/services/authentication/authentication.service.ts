@@ -16,7 +16,7 @@ export class AuthenticationService {
    * @param username 
    * @param password 
    */
-  authenticate(username: string, password: string): Observable<boolean> {
+  authenticate(username: string, password: string): Observable<any> {
     console.log("At auth: -- Username: " + username + " Password: " + password);
 
     const userAndPass = {
@@ -24,6 +24,6 @@ export class AuthenticationService {
       password: password
     }
 
-    return this.http.post("http://localhost:5000/ms/user/authenticate", userAndPass) as Observable<boolean>;
+    return this.http.post("http://localhost:5000/ms/user/authenticate", userAndPass) as Observable<any>;
   }
 }

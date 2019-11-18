@@ -17,16 +17,22 @@ export class LogInPageComponent implements OnInit {
 
   ngOnInit() {
     this.incorrectPassword = false;
-    this.userEmail = localStorage.getItem("username");
+
+    if (localStorage.length > 0) {
+      this.userEmail = JSON.parse(localStorage.getItem("user")).username;
+    }
+
     this.userPassword = "";
   }
 
   login() {
     console.log("Log in button pressed");
 
-    this.authenticationService.authenticate(this.userEmail, this.userPassword).subscribe(bool => {
-      if (bool) {
-        localStorage.setItem("username", this.userEmail);
+    this.authenticationService.authenticate(this.userEmail, this.userPassword).subscribe(user => {
+      console.log("LOGIN RETURNED USED: ");
+      console.log(user);
+      if (user.id != null) {
+        localStorage.setItem("user", JSON.stringify(user));
         this.router.navigate(["/jobsPage"]);
       } else {
         this.userPassword = "";
