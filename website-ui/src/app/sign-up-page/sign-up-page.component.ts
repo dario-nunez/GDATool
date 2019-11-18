@@ -27,6 +27,6 @@ export class SignUpPageComponent implements OnInit {
       returnedUser => console.log("Returned created user: " + returnedUser)
     )
     
-    //this.router.navigate(['/jobsPage']);
+    this.router.navigate(['/jobsPage']);
   }
 }

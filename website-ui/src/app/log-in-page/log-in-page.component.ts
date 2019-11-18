@@ -23,15 +23,14 @@ export class LogInPageComponent implements OnInit {
 
   login() {
     console.log("Log in button pressed");
-    if (this.authenticationService.login(this.userEmail, this.userPassword)) {
-      this.router.navigate(["/jobsPage"]);
-    }
 
-    this.incorrectPassword = true;
-    this.userPassword = "";
-    
-    // this.authenticationService.getAllUsers().subscribe(user => {
-    //   console.log(user);
-    // });
+    this.authenticationService.authenticate(this.userEmail, this.userPassword).subscribe(bool => {
+      if (bool) {
+        this.router.navigate(["/jobsPage"]);
+      } else {
+        this.userPassword = "";
+        this.incorrectPassword = true;
+      }
+    });
   }
 }

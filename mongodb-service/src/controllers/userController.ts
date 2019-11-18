@@ -16,11 +16,11 @@ export class UserController extends Controller<IUser> {
         super(userRepository);
     }
 
-    @Path("/byUsername/:username")
-    @GET
-    public async getUserByUsername(@PathParam("username") username: string): Promise<IUserModel> {
+    @Path("/authenticate")
+    @POST
+    public async authenticateUser(userAndPass: any): Promise<boolean> {
         try {
-            return await this.userRepository.getByUsername(username);
+            return await this.userRepository.authenticateUser(userAndPass.username, userAndPass.password);
         } catch (error) {
             logger.error(error.message);
             throw new Errors.InternalServerError(error.message);

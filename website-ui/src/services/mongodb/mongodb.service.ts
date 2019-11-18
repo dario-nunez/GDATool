@@ -21,6 +21,6 @@ export class MongodbService {
 
     console.log("User sent in the POST request: " + user);
 
-    return this.http.post("http://localhost:5000/ms/user", user) as Observable<IUser>
+    return this.http.post("http://localhost:5000/ms/user", user) as Observable<IUser>;
   }
 }

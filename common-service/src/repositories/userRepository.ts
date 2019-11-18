@@ -6,7 +6,13 @@ export class UserRepository extends Repository<IUser> {
         super(User);
     }
 
-    public getByUsername(username: string): Promise<any> {
-        return User.findOne({username: username}, (err, obj) => {}).lean().exec();
+    public async authenticateUser(username: string, password: string): Promise<boolean> {
+        const user: IUser = await User.findOne({username: username}, (err, obj) => {}).lean().exec();
+
+        if (user != null && user.password === password) {
+            return true;
+        }
+
+        return false;
     }
 }
