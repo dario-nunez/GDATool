@@ -3,31 +3,78 @@
 <div class="container p-5">
     <h2>User details: {{user.name}}</h2>
     <hr>
-    <form>
+    <form class="was-validated" #userForm="ngForm" (ngSubmit)="updateAccount()">
+        <!-- Name -->
         <div class="form-group">
-            <label for="inputEmail4">Name</label>
-            <input type="email" class="form-control" id="inputEmail4" value={{user.name}}>
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" [(ngModel)]="user.name" required
+                #name="ngModel">
         </div>
+
+        <!-- Email -->
         <div class="form-group">
-            <label for="inputPassword4">Username</label>
-            <input type="text" class="form-control" id="inputPassword4" value={{user.username}}>
+            <div class="row">
+                <div class="col-5">
+                    <label for="email">Email</label> </div>
+                <div class="col-7">
+                    <label class="h7 text-danger float-right" *ngIf="email.errors && email.errors.email">
+                        Invalid email format
+                    </label>
+                    <label class="h7 text-danger float-right"
+                        *ngIf="emailExists && !(email.errors && email.errors.email)">
+                        User already exists
+                    </label>
+                </div>
+            </div>
+
+            <input type="email" class="form-control" id="email" name="email" [(ngModel)]="user.email"
+                placeholder="john@email.com" required email #email="ngModel" (ngModelChange)="emailValueChange()">
         </div>
+
+        <!-- Password -->
         <div class="form-group">
-            <label for="inputAddress">Email</label>
-            <input type="text" class="form-control" id="inputAddress" value={{user.email}}>
+            <div class="row">
+                <div class="col-5">
+                    <label for="password">Password</label>
+                </div>
+                <div class="col-7">
+                    <label class="h7 text-danger float-right" *ngIf="password.errors && password.errors.minlength">
+                        Password is too short
+                    </label>
+                </div>
+            </div>
+
+            <input type="password" class="form-control" id="password" name="password" [(ngModel)]="user.password"
+                minlength="6" required #password="ngModel">
         </div>
+
+        <!-- Retyped Password -->
         <div class="form-group">
-            <label for="inputAddress">Password</label>
-            <input type="text" class="form-control" id="inputAddress" value={{user.password}}>
+            <div class="row">
+                <div class="col-5">
+                    <label for="repeatPassword">Confirm password</label>
+                </div>
+                <div class="col-7">
+                    <label class="h7 text-danger float-right"
+                        *ngIf="repeatPassword.errors && repeatPassword.errors.passwordMatch">Passwords don't
+                        match
+                    </label>
+                </div>
+            </div>
+
+            <input type="password" class="form-control" id="repeatPassword" name="repeatPassword"
+                [(ngModel)]="repeatedPassword" required #repeatPassword="ngModel" appPasswordMatch="{{user.password}}">
         </div>
 
         <div class="row">
             <div class="col col text-left">
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary" [disabled]="!userForm.form.valid">Update</button>
             </div>
             <div class="col text-right">
-                <button class="btn btn-danger" (click)="deleteAccount()">Delete Account</button>
+                <button type="button" class="btn btn-danger" (click)="deleteAccount()">Delete Account</button>
             </div>
         </div>
     </form>
+
+    <!-- <button class="btn btn-danger" (click)="deleteAccount()">Delete Account</button> -->
 </div>

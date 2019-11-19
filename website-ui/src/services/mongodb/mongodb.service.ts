@@ -38,4 +38,8 @@ export class MongodbService {
   deleteUser(id: string):Observable<IUser> {
     return this.http.delete<IUser>("http://localhost:5000/ms/user/" + id);
   }
+
+  updateUser(user: IUser):Observable<IUser> {
+    return this.http.put<IUser>("http://localhost:5000/ms/user/" + user._id, user);
+  }
 }
