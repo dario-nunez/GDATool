@@ -1,6 +1,6 @@
 import { Repository } from "../../../common-service/src/repositories/repository";
 import Job from "../../../common-service/src/models/jobModel";
-import Aggregation, { IAggregation } from "../models/aggregationModel";
+import Aggregation, { IAggregation } from "../../../common-service/src/models/aggregationModel";
 
 export class AggregationRepository extends Repository<IAggregation> {
     constructor() {

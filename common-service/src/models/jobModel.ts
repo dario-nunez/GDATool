@@ -4,6 +4,7 @@ import { Model } from "mongoose";
 type JobType = IJob & mongoose.Document;
 
 export interface IJobModel {
+    _id: string;
     description: string;
     rawInputDirectory: string;
     stagingFileName: string;
@@ -11,7 +12,8 @@ export interface IJobModel {
     generateESIndices: boolean;
 }
 
-export interface IJob extends IJobModel,  mongoose.Document {    
+export interface IJob extends IJobModel,  mongoose.Document {
+    _id: string;    
 }
 
 export const JobSchema = new mongoose.Schema({

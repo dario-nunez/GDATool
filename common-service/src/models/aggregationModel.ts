@@ -1,12 +1,20 @@
 import * as mongoose from "mongoose";
+import { Model } from "mongoose";
 
-export interface IAggregation extends mongoose.Document {
+type AggregationType = IAggregation & mongoose.Document;
+
+export interface IAggregationModel {
+    _id: string;
     aggs: Array<string>;
     featureColumns: Array<string>;
     jobId: string;
     metricColumn: string;
     name: string;
     sortColumnName: string;
+}
+
+export interface IAggregation extends IAggregationModel, mongoose.Document {
+    _id: string;
 }
 
 export const AggregationSchema = new mongoose.Schema({
@@ -42,5 +50,5 @@ export const AggregationSchema = new mongoose.Schema({
     }
 });
 
-const Aggregation = mongoose.model<IAggregation>("Aggregation", AggregationSchema);
+const Aggregation: Model<IAggregation> = mongoose.model<AggregationType>("Aggregation", AggregationSchema);
 export default Aggregation;

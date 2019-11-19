@@ -2,7 +2,7 @@ import Job from "../../../common-service/src/models/jobModel";
 import User from "../../../common-service/src/models/userModel";
 import * as mongoose from "mongoose";
 import { DELETE, Path, POST } from "typescript-rest";
-import Aggregation from "../models/aggregationModel";
+import Aggregation from "../../../common-service/src/models/aggregationModel";
 
 @Path("/ms/database")
 export class DatabaseController {
@@ -52,7 +52,7 @@ export class DatabaseController {
             {
                 _id: "111111111111111111111111",
                 password: "Inespassword",
-                email: "Inesemail",
+                email: "Inese@mail",
                 rolse: [],
                 dashboards: [],
                 name: "Ines"
@@ -105,7 +105,7 @@ export class DatabaseController {
             {
                 _id: "121212121212121212121212",
                 password: "Rosepassword",
-                email: "Roseemail",
+                email: "Rose@email",
                 roles: [],
                 dashboards: [],
                 name: "Rose"
@@ -194,7 +194,7 @@ export class DatabaseController {
             {
                 _id: "222222222222222222222222",
                 password: "Carypassword",
-                email: "Caryemail",
+                email: "Cary@email",
                 roles: [],
                 name: "Cary",
                 dashboards: []
@@ -253,7 +253,6 @@ export class DatabaseController {
     @DELETE
     public async dropDatabase(): Promise<any> {
         const collections = await mongoose.connection.db.collections();
-
         collections.forEach((collection) => {
             collection.drop();
         });
