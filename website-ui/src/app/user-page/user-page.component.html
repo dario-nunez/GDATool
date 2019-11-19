@@ -1,7 +1,7 @@
 <app-top-navbar></app-top-navbar>
 
 <div class="container p-5">
-    <h2>User details: {{user.name}}</h2> 
+    <h2>User details: {{user.name}}</h2>
     <hr>
     <form>
         <div class="form-group">
@@ -21,6 +21,13 @@
             <input type="text" class="form-control" id="inputAddress" value={{user.password}}>
         </div>
 
-        <button type="submit" class="btn btn-primary">Update</button>
+        <div class="row">
+            <div class="col col text-left">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+            <div class="col text-right">
+                <button class="btn btn-danger" (click)="deleteAccount()">Delete Account</button>
+            </div>
+        </div>
     </form>
 </div>

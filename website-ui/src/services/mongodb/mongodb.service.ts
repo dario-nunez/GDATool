@@ -35,5 +35,7 @@ export class MongodbService {
     return this.http.get<IUser>("http://localhost:5000/ms/user/byUsername/" + username);
   }
 
-
+  deleteUser(id: string):Observable<IUser> {
+    return this.http.delete<IUser>("http://localhost:5000/ms/user/" + id);
+  }
 }
