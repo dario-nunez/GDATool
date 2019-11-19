@@ -6,23 +6,23 @@ export class UserRepository extends Repository<IUser> {
         super(User);
     }
 
-    public async authenticateUser(username: string, password: string): Promise<any> {
-        const user: IUser = await User.findOne({username: username}, (err, obj) => {}).lean().exec();
+    public async authenticateUser(email: string, password: string): Promise<any> {
+        const user: IUser = await User.findOne({email: email}).lean().exec();
 
         if (user != null && user.password === password) {
             return {
                 id: user._id,
-                username: user.email
+                email: user.email
             };
         }
 
         return {
             id: null,
-            username: null
+            email: null
         };
     }
 
-    public async getUserByUsername(username: string): Promise<IUser> {
-        return User.findOne({username: username}, (err, obj) => {}).lean().exec();
+    public async getUserByEmail(email: string): Promise<IUser> {
+        return User.findOne({email: email}).lean().exec();
     }
 }

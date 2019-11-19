@@ -22,24 +22,23 @@ export class UserPageComponent implements OnInit {
       _id: "",
       dashboards: [],
       name: "",
-      username: "",
       email: "",
       password: ""
     }
 
-    this.mongodbService.getUserByUsername(JSON.parse(localStorage.getItem("user")).username).subscribe(user => {
+    this.mongodbService.getUserByEmail(JSON.parse(localStorage.getItem("user")).email).subscribe(user => {
       this.user = user
     });
   }
 
   updateAccount() {
-    this.user.username = this.user.email;
+    this.user.email = this.user.email;
 
     this.mongodbService.updateUser(this.user).subscribe(user => {
       if (user != null) {
         const simplifiedUser = {
           id: this.user._id,
-          username: this.user.email
+          email: this.user.email
         };
 
         console.log("Simplified user: ");

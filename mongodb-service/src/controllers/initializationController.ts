@@ -1,7 +1,7 @@
 import Job from "../../../common-service/src/models/jobModel";
 import User from "../../../common-service/src/models/userModel";
 import * as mongoose from "mongoose";
-import { DELETE, Path, POST} from "typescript-rest";
+import { DELETE, Path, POST } from "typescript-rest";
 import Aggregation from "../models/aggregationModel";
 
 @Path("/ms/database")
@@ -11,7 +11,7 @@ export class DatabaseController {
     public async createCollections(): Promise<any> {
         const errors: Array<string> = [];
 
-        const aggregationInstance = new Aggregation({name: "dummy"});
+        const aggregationInstance = new Aggregation({ name: "dummy" });
 
         await aggregationInstance.save((err) => {
             if (err) {
@@ -19,7 +19,7 @@ export class DatabaseController {
             }
         });
 
-        const userInstance = new User({username: "dummy"});
+        const userInstance = new User({ email: "dummy" });
 
         await userInstance.save((err) => {
             if (err) {
@@ -27,7 +27,7 @@ export class DatabaseController {
             }
         });
 
-        const jobInstance = new Job({description: "dummy"});
+        const jobInstance = new Job({ description: "dummy" });
 
         await jobInstance.save((err) => {
             if (err) {
@@ -51,7 +51,6 @@ export class DatabaseController {
         const testUserInes = new User(
             {
                 _id: "111111111111111111111111",
-                username: "Inesusername",
                 password: "Inespassword",
                 email: "Inesemail",
                 rolse: [],
@@ -105,7 +104,6 @@ export class DatabaseController {
         const testUserRose = new User(
             {
                 _id: "121212121212121212121212",
-                username: "Roseusername",
                 password: "Rosepassword",
                 email: "Roseemail",
                 roles: [],
@@ -195,7 +193,6 @@ export class DatabaseController {
         const testUserCary = new User(
             {
                 _id: "222222222222222222222222",
-                username: "Caryusername",
                 password: "Carypassword",
                 email: "Caryemail",
                 roles: [],

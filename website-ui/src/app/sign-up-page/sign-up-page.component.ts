@@ -19,7 +19,6 @@ export class SignUpPageComponent implements OnInit {
   ngOnInit() {
     this.user = {
       email: "",
-      username: "",
       password: ""
     } as IUser;
 
@@ -38,7 +37,7 @@ export class SignUpPageComponent implements OnInit {
           console.log("Returned created user: " + user);
           const simplifiedUser = {
             id: user._id,
-            username: user.email
+            email: user.email
           };
           localStorage.setItem("user", JSON.stringify(simplifiedUser));
           this.router.navigate(['/jobsPage']);

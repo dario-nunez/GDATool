@@ -11,16 +11,16 @@ export class MongodbService {
 
   constructor(private http: HttpClient) { }
 
-  createUser(username: string, password: string): Observable<IUser> {
+  createUser(email: string, password: string): Observable<IUser> {
     var user: IUser = {
       dashboards: [],
-      name: username,
-      username: username,
-      email: username,
+      name: email,
+      email: email,
       password: password
     }
 
-    console.log("User sent in the POST request: " + user);
+    console.log("User sent in the POST request: ");
+    console.log(user);
 
     return this.http.post<IUser>("http://localhost:5000/ms/user", user).pipe(
       catchError(err => of(null))
@@ -31,8 +31,8 @@ export class MongodbService {
     return this.http.get<IUser[]>("http://localhost:5000/ms/user/getAll", {});
   }
 
-  getUserByUsername(username: string): Observable<IUser> {
-    return this.http.get<IUser>("http://localhost:5000/ms/user/byUsername/" + username);
+  getUserByEmail(email: string): Observable<IUser> {
+    return this.http.get<IUser>("http://localhost:5000/ms/user/byEmail/" + email);
   }
 
   deleteUser(id: string):Observable<IUser> {

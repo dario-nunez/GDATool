@@ -12,15 +12,15 @@ export class AuthenticationService {
   constructor(private http: HttpClient, private mongodbService: MongodbService) { }
 
   /**
-   * Return the userId of a user if the username and password match
-   * @param username 
+   * Return the userId of a user if the email and password match
+   * @param email 
    * @param password 
    */
-  authenticate(username: string, password: string): Observable<any> {
-    console.log("At auth: -- Username: " + username + " Password: " + password);
+  authenticate(email: string, password: string): Observable<any> {
+    console.log("At auth: -- Email: " + email + " Password: " + password);
 
     const userAndPass = {
-      username: username,
+      email: email,
       password: password
     }
 

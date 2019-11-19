@@ -5,7 +5,6 @@ type UserType = IUser & mongoose.Document;
 
 export interface IUserModel {
     _id: string;
-    username: string;
     password: string;
     email: string;
     roles: Array<string>;
@@ -18,17 +17,13 @@ export interface IUser extends IUserModel, mongoose.Document {
 }
 
 export const UserSchema = new mongoose.Schema({
-    username: {
-        required: true,
-        unique: true,
-        type: String
-    },
     password: {
         required: true,
         type: String
     },
     email: {
         required: true,
+        unique: true,
         type: String
     },
     roles: {

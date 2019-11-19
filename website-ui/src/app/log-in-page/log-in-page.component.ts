@@ -19,7 +19,7 @@ export class LogInPageComponent implements OnInit {
     this.incorrectPassword = false;
 
     if (localStorage.length > 0) {
-      this.userEmail = JSON.parse(localStorage.getItem("user")).username;
+      this.userEmail = JSON.parse(localStorage.getItem("user")).email;
     }
 
     this.userPassword = "";
