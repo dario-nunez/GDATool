@@ -12,6 +12,7 @@ export class UserPageComponent implements OnInit {
 
   user: IUser;
   private emailExists: boolean;
+  private repeatedPassword: string;
 
   constructor(private router: Router, private mongodbService: MongodbService) { }
 
@@ -33,18 +34,25 @@ export class UserPageComponent implements OnInit {
 
   updateAccount() {
     this.user.username = this.user.email;
-    
+
     this.mongodbService.updateUser(this.user).subscribe(user => {
-      const simplifiedUser = {
-        id: this.user._id,
-        username: this.user.email
-      };
+      if (user != null) {
+        const simplifiedUser = {
+          id: this.user._id,
+          username: this.user.email
+        };
 
-      console.log("Simplified user: ");
-      console.log(simplifiedUser);
+        console.log("Simplified user: ");
+        console.log(simplifiedUser);
 
-      localStorage.setItem("user", JSON.stringify(simplifiedUser));
-      this.router.navigate(['/jobsPage']);
+        localStorage.setItem("user", JSON.stringify(simplifiedUser));
+        this.router.navigate(['/jobsPage']);
+      } else {
+        console.log("Email already exists");
+        this.user.password = "";
+        this.repeatedPassword = "";
+        this.emailExists = true;
+      }
     });
   }
 

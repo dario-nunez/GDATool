@@ -40,6 +40,8 @@ export class MongodbService {
   }
 
   updateUser(user: IUser):Observable<IUser> {
-    return this.http.put<IUser>("http://localhost:5000/ms/user/" + user._id, user);
+    return this.http.put<IUser>("http://localhost:5000/ms/user/" + user._id, user).pipe(
+      catchError(err => of(null))
+    );
   }
 }

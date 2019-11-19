@@ -20,6 +20,7 @@ export interface IUser extends IUserModel, mongoose.Document {
 export const UserSchema = new mongoose.Schema({
     username: {
         required: true,
+        unique: true,
         type: String
     },
     password: {
