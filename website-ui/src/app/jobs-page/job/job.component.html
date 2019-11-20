@@ -2,7 +2,7 @@
     <div class="card-header border-0">
         <div class="d-flex align-items-center">
             <div>
-                <a class="card-title h5" [routerLink]="['/jobDetailsPage']" style="margin: 0%">{{job.description}}</a>
+                <a class="card-title h5" [routerLink]="['/jobDetailsPage', job._id]" style="margin: 0%">{{job.description}}</a>
             </div>
             <div class="ml-auto">
                 <div *ngIf="pending" class="spinner-border-sm spinner-border text-warning" role="status"

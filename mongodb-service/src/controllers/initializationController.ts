@@ -68,7 +68,8 @@ export class DatabaseController {
         const testJobInes = new Job(
             {
                 _id: "333333333333333333333333",
-                description: "Ines' job",
+                name: "Ines' job",
+                description: "Jobs about things",
                 rawInputDirectory: "raw",
                 stagingFileName: "staging",
                 userId: "111111111111111111111111",
@@ -123,7 +124,8 @@ export class DatabaseController {
         const testJobRose = new Job(
             {
                 _id: "141414141414141414141414",
-                description: "Rose's job",
+                name: "Rose's job",
+                description: "Jobs about things",
                 rawInputDirectory: "raw",
                 stagingFileName: "staging",
                 userId: "121212121212121212121212",
@@ -214,7 +216,8 @@ export class DatabaseController {
         const testJobCary = new Job(
             {
                 _id: "444444444444444444444444",
-                description: "Cary's job",
+                name: "Cary's job",
+                description: "Jobs about things",
                 rawInputDirectory: "raw",
                 stagingFileName: "staging",
                 userId: "222222222222222222222222",

@@ -20,6 +20,7 @@ import { MongodbService } from '../services/mongodb/mongodb.service';
 import { UserPageComponent } from './user-page/user-page.component';
 import { TopNavbarComponent } from './top-navbar/top-navbar.component';
 import { JobDetailsPageComponent } from './job-details-page/job-details-page.component';
+import { CreateJobPageComponent } from './create-job-page/create-job-page.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { JobDetailsPageComponent } from './job-details-page/job-details-page.com
     RunComponent,
     UserPageComponent,
     TopNavbarComponent,
-    JobDetailsPageComponent
+    JobDetailsPageComponent,
+    CreateJobPageComponent
   ],
   imports: [
     BrowserModule,

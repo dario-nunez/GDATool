@@ -7,6 +7,7 @@ export interface IJob {
     rawInputDirectory: string;
     stagingFielName: string;
     userId: string;
+    generateESIndices: boolean;
     jobStatus: string;
     runs: IRun[];
 }

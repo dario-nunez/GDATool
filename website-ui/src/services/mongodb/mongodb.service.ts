@@ -51,4 +51,20 @@ export class MongodbService {
       catchError(err => of(null))
     );
   }
+
+  getJobById(jobId: string): Observable<IJob> {
+    return this.http.get<IJob>("http://localhost:5000/ms/job/" + jobId).pipe(
+      catchError(err => of(null))
+    );
+  }
+
+  updateJob(job: IJob):Observable<IJob> {
+    return this.http.put<IJob>("http://localhost:5000/ms/job/" + job._id, job).pipe(
+      catchError(err => of(null))
+    );
+  }
+
+  deleteJob(id: string):Observable<IJob> {
+    return this.http.delete<IJob>("http://localhost:5000/ms/job/" + id);
+  }
 }

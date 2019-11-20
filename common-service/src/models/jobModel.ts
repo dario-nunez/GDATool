@@ -5,6 +5,7 @@ type JobType = IJob & mongoose.Document;
 
 export interface IJobModel {
     _id: string;
+    name: string;
     description: string;
     rawInputDirectory: string;
     stagingFileName: string;
@@ -20,6 +21,11 @@ export interface IJob extends IJobModel, mongoose.Document {
 
 export const JobSchema = new mongoose.Schema({
     description: {
+        default: "dummy",
+        required: true,
+        type: String
+    },
+    name: {
         default: "dummy",
         required: true,
         type: String
