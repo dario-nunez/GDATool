@@ -17,7 +17,7 @@
         <div>
             <label>Runs</label>
             <div class="pl-2">
-                <label *ngIf="job.runs != null">No runs detected</label>
+                <label *ngIf="job.runs == null">No runs detected</label>
             </div>
             <ul *ngFor="let run of job.runs">
                 <li>Started: {{run.timeStarted}} Status: {{run.runStatus}}</li>

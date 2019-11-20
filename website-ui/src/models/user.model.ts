@@ -1,6 +1,6 @@
 export interface IUser {
     _id?: string;
-    dashboards: [];
+    dashboards: Array<string>;
     name: string;
     email: string;
     password: string;

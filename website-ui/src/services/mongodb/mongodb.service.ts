@@ -67,4 +67,13 @@ export class MongodbService {
   deleteJob(id: string):Observable<IJob> {
     return this.http.delete<IJob>("http://localhost:5000/ms/job/" + id);
   }
+
+  createJob(job: IJob): Observable<IJob> {
+    console.log("Job sent in the POST request: ");
+    console.log(job);
+
+    return this.http.post<IJob>("http://localhost:5000/ms/job", job).pipe(
+      catchError(err => of(null))
+    );
+  }
 }
