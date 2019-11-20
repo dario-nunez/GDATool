@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IJob } from '../../models/job.model';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
+import { IRun } from 'src/models/run.model';
 
 @Component({
   selector: 'app-jobs-page',
@@ -10,17 +11,41 @@ import { MongodbService } from 'src/services/mongodb/mongodb.service';
 export class JobsPageComponent implements OnInit {
 
   jobs: IJob[];
+  mockRuns: IRun[];
 
   constructor(private mongodbService: MongodbService) { }
 
   ngOnInit() {
     this.getJobsByUser();
+
+    this.mockRuns = [
+      {
+        timeStarted: new Date(),
+        timeFinished: new Date(),
+        runStatus: "success"
+      },
+      {
+        timeStarted: new Date(),
+        timeFinished: new Date(),
+        runStatus: "pending"
+      },
+      {
+        timeStarted: new Date(),
+        timeFinished: new Date(),
+        runStatus: "fail"
+      }
+    ]
   }
 
   getJobsByUser() {
     this.mongodbService.getJobsByUserId(JSON.parse(localStorage.getItem("user")).id).subscribe(
       retJobs => {
+        console.log(retJobs);
         if (retJobs != null) {
+          retJobs.forEach(job => {
+            job.runs = this.mockRuns;
+          });
+
           this.jobs = retJobs;
         } else {
           console.log("User has no jobs");

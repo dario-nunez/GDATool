@@ -52,7 +52,7 @@ export class DatabaseController {
             {
                 _id: "111111111111111111111111",
                 password: "Inespassword",
-                email: "Inese@mail",
+                email: "Ines@email",
                 rolse: [],
                 dashboards: [],
                 name: "Ines"
@@ -72,7 +72,9 @@ export class DatabaseController {
                 rawInputDirectory: "raw",
                 stagingFileName: "staging",
                 userId: "111111111111111111111111",
-                generateESIndeces: true
+                generateESIndeces: true,
+                runs: [],
+                jobStatus: "success"
             }
         );
 
@@ -125,7 +127,9 @@ export class DatabaseController {
                 rawInputDirectory: "raw",
                 stagingFileName: "staging",
                 userId: "121212121212121212121212",
-                generateESIndeces: true
+                generateESIndeces: true,
+                runs: [],
+                jobStatus: "success"
             }
         );
 
@@ -214,7 +218,9 @@ export class DatabaseController {
                 rawInputDirectory: "raw",
                 stagingFileName: "staging",
                 userId: "222222222222222222222222",
-                generateESIndeces: true
+                generateESIndeces: true,
+                runs: [],
+                jobStatus: "success"
             }
         );
 

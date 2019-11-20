@@ -10,10 +10,12 @@ export interface IJobModel {
     stagingFileName: string;
     userId: string;
     generateESIndices: boolean;
+    runs: Array<string>;
+    jobStatus: string;
 }
 
-export interface IJob extends IJobModel,  mongoose.Document {
-    _id: string;    
+export interface IJob extends IJobModel, mongoose.Document {
+    _id: string;
 }
 
 export const JobSchema = new mongoose.Schema({
@@ -35,12 +37,20 @@ export const JobSchema = new mongoose.Schema({
         required: false,
         type: String
     },
+    runs: {
+        required: false,
+        type: Array
+    },
+    jobStatus: {
+        required: false,
+        type: String
+    },
     userId: {
         default: "dummy",
         required: true,
         type: String
     }
-}, {timestamps: true});
+}, { timestamps: true });
 
 const Job: Model<JobType> = mongoose.model<JobType>("Job", JobSchema);
 export default Job;
