@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { IUser } from 'src/models/user.model';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { IJob } from 'src/models/job.model';
 
 @Injectable({
   providedIn: 'root'
@@ -41,6 +42,12 @@ export class MongodbService {
 
   updateUser(user: IUser):Observable<IUser> {
     return this.http.put<IUser>("http://localhost:5000/ms/user/" + user._id, user).pipe(
+      catchError(err => of(null))
+    );
+  }
+
+  getJobsByUserId(userId: string): Observable<IJob[]> {
+    return this.http.get<IUser>("http://localhost:5000/ms/job/byUser/" + userId).pipe(
       catchError(err => of(null))
     );
   }

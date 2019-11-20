@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IJob } from '../../models/job.model';
+import { MongodbService } from 'src/services/mongodb/mongodb.service';
 
 @Component({
   selector: 'app-jobs-page',
@@ -10,13 +11,24 @@ export class JobsPageComponent implements OnInit {
 
   jobs: IJob[];
 
-  constructor() { }
+  constructor(private mongodbService: MongodbService) { }
 
   ngOnInit() {
     this.getJobsByUser();
   }
 
   getJobsByUser() {
+    this.mongodbService.getJobsByUserId(JSON.parse(localStorage.getItem("user")).id).subscribe(
+      retJobs => {
+        if (retJobs != null) {
+          this.jobs = retJobs;
+        } else {
+          console.log("User has no jobs");
+        }
+      });
+  }
+
+  getMockJobsByUser() {
     this.jobs = [
       {
         _id: "e5362300-bf75-11e9-909f-6f48786f343d",

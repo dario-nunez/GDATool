@@ -43,6 +43,6 @@ export class JobController extends Controller<IJob> {
     @Path("byUser/:id")
     @GET
     public async getJobsByUser(@PathParam("id") id: string): Promise<Array<IJobModel>> {
-        return await this.jobRepository.getjobsById(id);
+        return await this.jobRepository.getjobsByUserId(id);
     }
 }
