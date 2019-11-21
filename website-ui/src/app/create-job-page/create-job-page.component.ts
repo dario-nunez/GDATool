@@ -59,14 +59,14 @@ export class CreateJobPageComponent implements OnInit {
   }
 
   createJob() {
-    if (!this.customAggregations) {
+    if (!this.customAggregations) { //Job without aggregations
       this.mongodbService.createJob(this.job).subscribe(
         retJob => {
           console.log("Job created!");
           this.router.navigate(['/jobsPage']);
         }
       )
-    } else {
+    } else {  //Job with aggregations
       console.log(this.job);
       console.log(this.aggregations);
     }

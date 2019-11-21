@@ -72,4 +72,10 @@ export class UserController extends Controller<IUser> {
     public async deleteUser(@PathParam("id") id: string): Promise<IUserModel> {
         return await this.userRepository.delete(id);
     }
+
+    @Path("/recursive/:id")
+    @DELETE
+    public async deleteUserRecursive(@PathParam("id") id: string): Promise<IUserModel> {
+        return await this.userRepository.deleteRecursive(id);
+    }
 }
