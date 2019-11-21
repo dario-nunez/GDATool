@@ -30,7 +30,7 @@ export class CreateJobPageComponent implements OnInit {
   constructor(private mongodbService: MongodbService, private router: Router) { }
 
   ngOnInit() {
-    this.customAggregations = true;
+    this.customAggregations = false;
     this.currentAggregationName = "";
     this.currentAggregationMetricColumn = "Choose one";
 
@@ -59,17 +59,45 @@ export class CreateJobPageComponent implements OnInit {
   }
 
   createJob() {
-    if (!this.customAggregations) { //Job without aggregations
-      this.mongodbService.createJob(this.job).subscribe(
-        retJob => {
-          console.log("Job created!");
-          this.router.navigate(['/jobsPage']);
+    this.mongodbService.createJob(this.job).subscribe(
+      retJob => {
+        if (this.customAggregations) {
+          for (let agg of this.aggregations) {
+            agg.jobId = retJob._id;
+          }
+
+          this.mongodbService.createMultipleAggregations(this.aggregations).subscribe(
+            aggs => {
+              console.log("Job created!");
+              this.router.navigate(['/jobsPage']);
+            });
+        } else {
+          let allAggs: IAggregation[] = [];
+
+          for (let mc of this.METRIC_COLUMNS) {
+            let agg: IAggregation = {
+              aggs: this.AGGS,
+              featureColumns: this.FEATURE_COLUMNS,
+              jobId: retJob._id,
+              metricColumn: mc,
+              name: "Aggregation by " + mc,
+              sortColumnName: mc
+            }
+
+            allAggs.push(agg);
+          }
+
+
+
+          this.mongodbService.createMultipleAggregations(allAggs).subscribe(
+            aggs => {
+              console.log("Job created!");
+              this.router.navigate(['/jobsPage']);
+            }
+          );
         }
-      )
-    } else {  //Job with aggregations
-      console.log(this.job);
-      console.log(this.aggregations);
-    }
+      }
+    );
   }
 
   createAggregation() {

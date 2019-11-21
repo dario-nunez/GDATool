@@ -4,6 +4,7 @@ import { IUser } from 'src/models/user.model';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { IJob } from 'src/models/job.model';
+import { IAggregation } from 'src/models/aggregation.model';
 
 @Injectable({
   providedIn: 'root'
@@ -36,15 +37,15 @@ export class MongodbService {
     return this.http.get<IUser>("http://localhost:5000/ms/user/byEmail/" + email);
   }
 
-  deleteUser(id: string):Observable<IUser> {
+  deleteUser(id: string): Observable<IUser> {
     return this.http.delete<IUser>("http://localhost:5000/ms/user/" + id);
   }
 
-  deleteUserRecursive(id: string):Observable<IUser> {
+  deleteUserRecursive(id: string): Observable<IUser> {
     return this.http.delete<IUser>("http://localhost:5000/ms/user/recursive/" + id);
   }
 
-  updateUser(user: IUser):Observable<IUser> {
+  updateUser(user: IUser): Observable<IUser> {
     return this.http.put<IUser>("http://localhost:5000/ms/user/" + user._id, user).pipe(
       catchError(err => of(null))
     );
@@ -62,17 +63,17 @@ export class MongodbService {
     );
   }
 
-  updateJob(job: IJob):Observable<IJob> {
+  updateJob(job: IJob): Observable<IJob> {
     return this.http.put<IJob>("http://localhost:5000/ms/job/" + job._id, job).pipe(
       catchError(err => of(null))
     );
   }
 
-  deleteJob(id: string):Observable<IJob> {
+  deleteJob(id: string): Observable<IJob> {
     return this.http.delete<IJob>("http://localhost:5000/ms/job/" + id);
   }
 
-  deleteJobRecusrive(id: string):Observable<IJob> {
+  deleteJobRecusrive(id: string): Observable<IJob> {
     return this.http.delete<IJob>("http://localhost:5000/ms/job/recursive/" + id);
   }
 
@@ -81,6 +82,14 @@ export class MongodbService {
     console.log(job);
 
     return this.http.post<IJob>("http://localhost:5000/ms/job", job).pipe(
+      catchError(err => of(null))
+    );
+  }
+
+  createMultipleAggregations(aggregations: IAggregation[]): Observable<IAggregation[]> {
+    console.log("Aggregations at mongo service");
+    console.log(aggregations);
+    return this.http.post<IUser>("http://localhost:5000/ms/aggregation/multiple", aggregations).pipe(
       catchError(err => of(null))
     );
   }

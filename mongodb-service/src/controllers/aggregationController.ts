@@ -28,6 +28,12 @@ export class AggregationController extends Controller<IAggregation> {
         return await this.aggregationRepository.create(aggregation);
     }
 
+    @Path("/multiple")
+    @POST
+    public async createMultipleAggregation(aggregations: IAggregationModel[]): Promise<IAggregationModel[]> {
+        return await this.aggregationRepository.createMultipleAggregations(aggregations);
+    }
+
     @Path(":id")
     @PUT
     public async updateAggregation(@PathParam("id") id: string, aggregation: IAggregationModel): Promise<IAggregationModel> {
