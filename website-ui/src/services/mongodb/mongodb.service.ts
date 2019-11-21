@@ -14,7 +14,7 @@ export class MongodbService {
   constructor(private http: HttpClient) { }
 
   createUser(email: string, password: string): Observable<IUser> {
-    var user: IUser = {
+    let user: IUser = {
       dashboards: [],
       name: email,
       email: email,
