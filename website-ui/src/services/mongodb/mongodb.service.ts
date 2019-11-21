@@ -40,6 +40,10 @@ export class MongodbService {
     return this.http.delete<IUser>("http://localhost:5000/ms/user/" + id);
   }
 
+  deleteUserRecursive(id: string):Observable<IUser> {
+    return this.http.delete<IUser>("http://localhost:5000/ms/user/recursive/" + id);
+  }
+
   updateUser(user: IUser):Observable<IUser> {
     return this.http.put<IUser>("http://localhost:5000/ms/user/" + user._id, user).pipe(
       catchError(err => of(null))
@@ -66,6 +70,10 @@ export class MongodbService {
 
   deleteJob(id: string):Observable<IJob> {
     return this.http.delete<IJob>("http://localhost:5000/ms/job/" + id);
+  }
+
+  deleteJobRecusrive(id: string):Observable<IJob> {
+    return this.http.delete<IJob>("http://localhost:5000/ms/job/recursive/" + id);
   }
 
   createJob(job: IJob): Observable<IJob> {

@@ -5,7 +5,6 @@ import Job from "../models/jobModel";
 import * as mongoose from "mongoose";
 import Aggregation from "../models/aggregationModel";
 import { IAggregation } from "../models/aggregationModel";
-import logger from "../logger/loggerFactory";
 
 export class UserRepository extends Repository<IUser> {
     constructor() {

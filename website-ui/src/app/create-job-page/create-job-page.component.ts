@@ -13,7 +13,7 @@ export class CreateJobPageComponent implements OnInit {
   FEATURE_COLUMNS: Array<string> = ["city", "county", "id"];
   AGGS: Array<string> = ["SUM", "AVG", "MAX"];
   METRIC_COLUMNS: Array<string> = ["price"];
- 
+
   job: IJob;
   aggregations: IAggregation[];
   customAggregations: boolean;

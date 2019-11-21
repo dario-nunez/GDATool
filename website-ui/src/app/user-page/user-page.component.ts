@@ -61,7 +61,7 @@ export class UserPageComponent implements OnInit {
 
   deleteAccount() {
     if (confirm("This account will be lost forever. Are you sure you want to delete it?")) {
-      this.mongodbService.deleteUser(JSON.parse(localStorage.getItem("user")).id).subscribe(user => {
+      this.mongodbService.deleteUserRecursive(JSON.parse(localStorage.getItem("user")).id).subscribe(user => {
         console.log("Deleted User: ");
         console.log(user);
         localStorage.clear();
