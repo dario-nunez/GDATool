@@ -3,14 +3,14 @@ import {UserRepository} from "../../../common-service/src/repositories/userRepos
 import * as express from "express";
 import {Errors} from "typescript-rest";
 
-export async function uniqueUsernameValidator(req: express.Request): Promise<express.Request> {
+export async function uniqueEmailValidator(req: express.Request): Promise<express.Request> {
     const user: IUser = req.body;
     const userRepository: UserRepository = new UserRepository();
     const existingUsers: Array<IUser> = await userRepository.getByFields({
-        username: user.username.trim()
+        email: user.email.trim()
     });
     if (existingUsers.length > 0) {
-        throw new Errors.BadRequestError("Username already exists");
+        throw new Errors.BadRequestError("Email already exists");
     }
     return req;
 }

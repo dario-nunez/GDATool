@@ -2,7 +2,7 @@ import { IJob, IJobModel } from "../../../common-service/src/models/jobModel";
 import {Controller} from "../../../common-service/src/controllers/controller";
 import { Inject } from "typescript-ioc";
 import { DELETE, GET, Path, PathParam, POST, PUT } from "typescript-rest";
-import { JobRepository } from "../repositories/jobRepository";
+import { JobRepository } from "../../../common-service/src/repositories/jobRepository";
 
 @Path("/ms/job")
 export class JobController extends Controller<IJob> {
@@ -40,9 +40,15 @@ export class JobController extends Controller<IJob> {
         return await this.jobRepository.delete(id);
     }
 
+    @Path("recursive/:id")
+    @DELETE
+    public async deleteJobRecursive(@PathParam("id") id: string): Promise<IJobModel> {
+        return await this.jobRepository.deleteRecursive(id);
+    }
+
     @Path("byUser/:id")
     @GET
     public async getJobsByUser(@PathParam("id") id: string): Promise<Array<IJobModel>> {
-        return await this.jobRepository.getjobsById(id);
+        return await this.jobRepository.getjobsByUserId(id);
     }
 }

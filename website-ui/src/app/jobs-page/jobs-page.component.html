@@ -1,0 +1,12 @@
+<app-top-navbar></app-top-navbar>
+
+<div class="container pt-3">
+    <button type="button" class="btn btn-primary" [routerLink]="['/createJobPage']">Add Job</button>
+    <hr>
+</div>
+
+<div class="container p-1">
+    <div class="card-deck justify-content-center align-items-center">
+        <app-job *ngFor="let job of jobs" [job]="job"></app-job>
+    </div>
+</div>

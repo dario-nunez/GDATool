@@ -1,0 +1,23 @@
+<div class="card {{cardColor}} mb-4" style="width: 20rem;">
+    <div class="card-header border-0">
+        <div class="d-flex align-items-center">
+            <div>
+                <a class="card-title h5" [routerLink]="['/jobDetailsPage', job._id]" style="margin: 0%">{{job.description}}</a>
+            </div>
+            <div class="ml-auto">
+                <div *ngIf="pending" class="spinner-border-sm spinner-border text-warning" role="status"
+                    aria-hidden="true"></div>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <p style="margin: 0%">Recent runs:</p>
+        <div *ngFor="let run of jobRuns">
+            <app-run [run]="run"></app-run>
+        </div>
+    </div>
+
+    <div class="card-footer border-0">
+        <a [routerLink]="['/userPage', job._id]" class="card-link">Go to Dashboard</a>
+    </div>
+</div>

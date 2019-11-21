@@ -7,7 +7,7 @@ export class JobRepository extends Repository<IJob> {
         super(Job);
     }
 
-    public getjobsById(id: any): Promise<Array<IJob>> {
+    public getjobsByUserId(id: any): Promise<Array<IJob>> {
         return Job.find({ userId: id }).exec();
     }
 }

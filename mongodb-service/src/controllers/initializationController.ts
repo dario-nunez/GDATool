@@ -1,8 +1,8 @@
 import Job from "../../../common-service/src/models/jobModel";
 import User from "../../../common-service/src/models/userModel";
 import * as mongoose from "mongoose";
-import { DELETE, Path, POST} from "typescript-rest";
-import Aggregation from "../models/aggregationModel";
+import { DELETE, Path, POST } from "typescript-rest";
+import Aggregation from "../../../common-service/src/models/aggregationModel";
 
 @Path("/ms/database")
 export class DatabaseController {
@@ -11,7 +11,7 @@ export class DatabaseController {
     public async createCollections(): Promise<any> {
         const errors: Array<string> = [];
 
-        const aggregationInstance = new Aggregation({name: "dummy"});
+        const aggregationInstance = new Aggregation({ name: "dummy" });
 
         await aggregationInstance.save((err) => {
             if (err) {
@@ -19,7 +19,7 @@ export class DatabaseController {
             }
         });
 
-        const userInstance = new User({username: "dummy"});
+        const userInstance = new User({ email: "dummy" });
 
         await userInstance.save((err) => {
             if (err) {
@@ -27,7 +27,7 @@ export class DatabaseController {
             }
         });
 
-        const jobInstance = new Job({description: "dummy"});
+        const jobInstance = new Job({ description: "dummy" });
 
         await jobInstance.save((err) => {
             if (err) {
@@ -51,9 +51,8 @@ export class DatabaseController {
         const testUserInes = new User(
             {
                 _id: "111111111111111111111111",
-                username: "Inesusername",
                 password: "Inespassword",
-                email: "Inesemail",
+                email: "Ines@email",
                 rolse: [],
                 dashboards: [],
                 name: "Ines"
@@ -69,11 +68,14 @@ export class DatabaseController {
         const testJobInes = new Job(
             {
                 _id: "333333333333333333333333",
-                description: "Ines' job",
+                name: "Ines' job",
+                description: "Jobs about things",
                 rawInputDirectory: "raw",
                 stagingFileName: "staging",
                 userId: "111111111111111111111111",
-                generateESIndeces: true
+                generateESIndeces: true,
+                runs: [],
+                jobStatus: "success"
             }
         );
 
@@ -105,9 +107,8 @@ export class DatabaseController {
         const testUserRose = new User(
             {
                 _id: "121212121212121212121212",
-                username: "Roseusername",
                 password: "Rosepassword",
-                email: "Roseemail",
+                email: "Rose@email",
                 roles: [],
                 dashboards: [],
                 name: "Rose"
@@ -123,11 +124,14 @@ export class DatabaseController {
         const testJobRose = new Job(
             {
                 _id: "141414141414141414141414",
-                description: "Rose's job",
+                name: "Rose's job",
+                description: "Jobs about things",
                 rawInputDirectory: "raw",
                 stagingFileName: "staging",
                 userId: "121212121212121212121212",
-                generateESIndeces: true
+                generateESIndeces: true,
+                runs: [],
+                jobStatus: "success"
             }
         );
 
@@ -195,9 +199,8 @@ export class DatabaseController {
         const testUserCary = new User(
             {
                 _id: "222222222222222222222222",
-                username: "Caryusername",
                 password: "Carypassword",
-                email: "Caryemail",
+                email: "Cary@email",
                 roles: [],
                 name: "Cary",
                 dashboards: []
@@ -213,11 +216,14 @@ export class DatabaseController {
         const testJobCary = new Job(
             {
                 _id: "444444444444444444444444",
-                description: "Cary's job",
+                name: "Cary's job",
+                description: "Jobs about things",
                 rawInputDirectory: "raw",
                 stagingFileName: "staging",
                 userId: "222222222222222222222222",
-                generateESIndeces: true
+                generateESIndeces: true,
+                runs: [],
+                jobStatus: "success"
             }
         );
 
@@ -256,7 +262,6 @@ export class DatabaseController {
     @DELETE
     public async dropDatabase(): Promise<any> {
         const collections = await mongoose.connection.db.collections();
-
         collections.forEach((collection) => {
             collection.drop();
         });
