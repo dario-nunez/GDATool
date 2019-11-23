@@ -123,8 +123,8 @@ export class CreateJobPageComponent implements OnInit {
     this.selectedAggregations = [];
   }
 
-  deleteAggregation() {
-
+  deleteAggregation(event, agg: any) {
+    this.aggregations = this.aggregations.filter(obj => obj !== agg);
   }
 
   addElement(event, element: string, type: string) {
