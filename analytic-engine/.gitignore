@@ -1,0 +1,10 @@
+/target
+/src/test/test-resources/root
+/src/test/test-resources/dev-bucket/
+.ipynb_checkpoints/
+.idea
+*.swp
+.classpath
+.factorypath
+.project
+.settings/
