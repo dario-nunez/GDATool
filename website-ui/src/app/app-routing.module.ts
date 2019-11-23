@@ -8,6 +8,7 @@ import { UserPageComponent } from './user-page/user-page.component';
 import { JobDetailsPageComponent } from './job-details-page/job-details-page.component';
 import { AuthenticationGuardService } from '../services/routeGuards/authentication-guard.service';
 import { CreateJobPageComponent } from './create-job-page/create-job-page.component';
+import { DashboardPageComponent } from './dashboard-page/dashboard-page.component';
 
 const routes: Routes = [
   {path: "", component: MarketingPageComponent},
@@ -16,7 +17,8 @@ const routes: Routes = [
   {path: "jobsPage", component: JobsPageComponent, canActivate: [AuthenticationGuardService]},
   {path: "userPage", component: UserPageComponent, canActivate: [AuthenticationGuardService]},
   {path: "jobDetailsPage/:job._id", component: JobDetailsPageComponent, canActivate: [AuthenticationGuardService]},
-  {path: "createJobPage", component: CreateJobPageComponent, canActivate: [AuthenticationGuardService]}
+  {path: "createJobPage", component: CreateJobPageComponent, canActivate: [AuthenticationGuardService]},
+  {path: "dashboardPage/:job._id", component: DashboardPageComponent, canActivate: [AuthenticationGuardService]}
 ];
 
 @NgModule({

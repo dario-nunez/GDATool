@@ -18,6 +18,8 @@ export class JobComponent implements OnInit {
     ngOnInit(): void {
         this.jobRuns = this.job.runs;
 
+        console.log(this.job)
+
         if (this.job.jobStatus == "success") {
             this.cardColor = "border-success mb-3";
         } else if (this.job.jobStatus == "pending") {
