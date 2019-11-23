@@ -37,8 +37,8 @@ export class CreateJobPageComponent implements OnInit {
     this.job = {
       name: "",
       description: "",
-      rawInputDirectory: "",
-      stagingFielName: "",
+      rawInputDirectory: "raw",
+      stagingFileName: "staging",
       userId: JSON.parse(localStorage.getItem("user")).id,
       generateESIndices: true,
       jobStatus: "",
@@ -75,19 +75,19 @@ export class CreateJobPageComponent implements OnInit {
           let allAggs: IAggregation[] = [];
 
           for (let mc of this.METRIC_COLUMNS) {
-            let agg: IAggregation = {
-              aggs: this.AGGS,
-              featureColumns: this.FEATURE_COLUMNS,
-              jobId: retJob._id,
-              metricColumn: mc,
-              name: "Aggregation by " + mc,
-              sortColumnName: mc
+            for (let fc of this.FEATURE_COLUMNS) {
+              let agg: IAggregation = {
+                aggs: this.AGGS,
+                featureColumns: [fc],
+                jobId: retJob._id,
+                metricColumn: mc,
+                name: "Aggregation of " + fc + " by " + mc,
+                sortColumnName: fc
+              }
+  
+              allAggs.push(agg);
             }
-
-            allAggs.push(agg);
           }
-
-
 
           this.mongodbService.createMultipleAggregations(allAggs).subscribe(
             aggs => {

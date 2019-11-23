@@ -25,7 +25,7 @@ export class DashboardBuilderController {
     private indexPatternController: IndexPatternController;
     private dashboardController: DashboardController;
 
-    public constructor(@Inject kibanaService: KibanaService, @Inject private metadataService: MongodbService) {
+    public constructor(@Inject kibanaService: KibanaService, @Inject private mongodbService: MongodbService) {
         this.visualizationController = new VisualizationController(kibanaService);
         this.indexPatternController = new IndexPatternController(kibanaService);
         this.dashboardController = new DashboardController(kibanaService);
@@ -40,8 +40,8 @@ export class DashboardBuilderController {
     @Path("basic/:id")
     @GET
     public async createBasicDashboard(@PathParam("id") jobId: string) {        
-        const aggregations = await this.metadataService.getAggsByJob(jobId);
-        const job = await this.metadataService.getJobById(jobId);
+        const aggregations = await this.mongodbService.getAggsByJob(jobId);
+        const job = await this.mongodbService.getJobById(jobId);
 
         const dashboardSeed: IDashboardSeed = {
             job: job.data,
