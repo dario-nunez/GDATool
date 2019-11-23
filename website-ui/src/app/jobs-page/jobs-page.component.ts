@@ -59,7 +59,7 @@ export class JobsPageComponent implements OnInit {
         _id: "e5362300-bf75-11e9-909f-6f48786f343d",
         description: "Sold properties in UK cities",
         rawInputDirectory: "raw",
-        stagingFielName: "staging",
+        stagingFileName: "staging",
         userId: "121212121212121212121212",
         jobStatus: "success",
         runs: [
@@ -84,7 +84,7 @@ export class JobsPageComponent implements OnInit {
         _id: "Jobxyzxyzxyzxyzxyzxyzxyz",
         description: "Stock changes",
         rawInputDirectory: "raw",
-        stagingFielName: "staging",
+        stagingFileName: "staging",
         userId: "222222222222222222222222",
         jobStatus: "pending",
         runs: [
@@ -109,7 +109,7 @@ export class JobsPageComponent implements OnInit {
         _id: "Jobabcabcabcabcabcbac",
         description: "August temperature",
         rawInputDirectory: "raw",
-        stagingFielName: "staging",
+        stagingFileName: "staging",
         userId: "333333333333333333333333",
         jobStatus: "pending",
         runs: [
@@ -134,7 +134,7 @@ export class JobsPageComponent implements OnInit {
         _id: "Job123123123123123123",
         description: "1st Quarter Sales",
         rawInputDirectory: "raw",
-        stagingFielName: "staging",
+        stagingFileName: "staging",
         userId: "444444444444444444444444",
         jobStatus: "failed",
         runs: [
@@ -159,7 +159,7 @@ export class JobsPageComponent implements OnInit {
         _id: "Jobxyzxyzxyzxyzxyzxyzxyz",
         description: "Coke vs Pepsi",
         rawInputDirectory: "raw",
-        stagingFielName: "staging",
+        stagingFileName: "staging",
         userId: "555555555555555555555555",
         jobStatus: "failed",
         runs: [
@@ -184,7 +184,7 @@ export class JobsPageComponent implements OnInit {
         _id: "Jobabcabcabcabcabcbac",
         description: "Political parties per city",
         rawInputDirectory: "raw",
-        stagingFielName: "staging",
+        stagingFileName: "staging",
         userId: "666666666666666666666666",
         jobStatus: "pending",
         runs: [
@@ -209,7 +209,7 @@ export class JobsPageComponent implements OnInit {
         _id: "Job123123123123123123",
         description: "March sales",
         rawInputDirectory: "raw",
-        stagingFielName: "staging",
+        stagingFileName: "staging",
         userId: "777777777777777777777777",
         jobStatus: "pending",
         runs: [
@@ -234,7 +234,7 @@ export class JobsPageComponent implements OnInit {
         _id: "Jobxyzxyzxyzxyzxyzxyzxyz",
         description: "April sales",
         rawInputDirectory: "raw",
-        stagingFielName: "staging",
+        stagingFileName: "staging",
         userId: "888888888888888888888888",
         jobStatus: "pending",
         runs: [

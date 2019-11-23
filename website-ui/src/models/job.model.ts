@@ -5,7 +5,7 @@ export interface IJob {
     _id?: string;
     description: string;
     rawInputDirectory: string;
-    stagingFielName: string;
+    stagingFileName: string;
     userId: string;
     generateESIndices: boolean;
     jobStatus: string;
