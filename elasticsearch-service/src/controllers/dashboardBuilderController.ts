@@ -10,9 +10,9 @@ import { IVisMarkup } from "../elasticsearchModels/visMarkupModel";
 import { IVisualization } from "../elasticsearchModels/visualizationModel";
 import { KibanaService } from "../services/kibana-service";
 import { MongodbService } from "../services/mongodb-service";
-import { DashboardController } from "./dashboardController";
-import { IndexPatternController } from "./indexPatternController";
-import { VisualizationController } from "./visualizationController";
+import { IndexPatternBuilder } from "../elasticsearchEntities/indexPatternBuilder";
+import { VisualizationBuilder } from "../elasticsearchEntities/visualizationBuilder";
+import { DashboardBuilder } from "../elasticsearchEntities/DashboardBuilder";
 
 /**
  * This class encapsulates the process of building the various types of dashboards.
@@ -21,14 +21,19 @@ import { VisualizationController } from "./visualizationController";
  */
 @Path("/es/dashboardBuilder")
 export class DashboardBuilderController {
-    private visualizationController: VisualizationController;
-    private indexPatternController: IndexPatternController;
-    private dashboardController: DashboardController;
+    private indexPatternBuilder: IndexPatternBuilder;
+    private visualizationBuilder: VisualizationBuilder;
+    private dashboardBuilder: DashboardBuilder;
 
-    public constructor(@Inject kibanaService: KibanaService, @Inject private mongodbService: MongodbService) {
-        this.visualizationController = new VisualizationController(kibanaService);
-        this.indexPatternController = new IndexPatternController(kibanaService);
-        this.dashboardController = new DashboardController(kibanaService);
+    public constructor(@Inject private kibanaService: KibanaService, @Inject private mongodbService: MongodbService) {
+    }
+
+    @Path("test/:name")
+    @GET
+    public sayHello(@PathParam("name") name: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+            resolve("Hello " + name);
+        });
     }
 
     /**
@@ -39,7 +44,7 @@ export class DashboardBuilderController {
      */
     @Path("basic/:id")
     @GET
-    public async createBasicDashboard(@PathParam("id") jobId: string) {        
+    public async createBasicDashboard(@PathParam("id") jobId: string) {
         const aggregations = await this.mongodbService.getAggsByJob(jobId);
         const job = await this.mongodbService.getJobById(jobId);
 
@@ -78,30 +83,40 @@ export class DashboardBuilderController {
         return dashboardSeed;
     }
 
-    private createIndexPattern(aggregationId: string, aggregations: Array<string>, featureColumns: Array<string>) {
-        const indexPattern: IIndexPattern = {
+    private async createIndexPattern(aggregationId: string, aggregations: Array<string>, featureColumns: Array<string>) {
+        const indexPatternSeed: IIndexPattern = {
             id: aggregationId,
             index: aggregationId,
             featureColumns,
             aggs: aggregations.map((e) => e.toLowerCase())
         };
 
-        return this.indexPatternController.createIndexPattern(indexPattern);
+        try {
+            const response = await this.kibanaService.createIndexPattern(this.indexPatternBuilder.getIndexPattern(indexPatternSeed));
+            return response.data;
+        } catch (error) {
+            return error;
+        }
     }
 
-    private createVisMarkup(visualizationId: string, contentText: string) {
-        const visualizationMarkup: IVisMarkup = {
+    private async createVisMarkup(visualizationId: string, contentText: string) {
+        const markupSeed: IVisMarkup = {
             id: visualizationId,
             type: "markdown",
             explorerTitle: visualizationId,
             displayTitle: contentText
         };
 
-        return this.visualizationController.createMarkupVisualization(visualizationMarkup);
+        try {
+            const response = await this.kibanaService.createMarkupVisualization(this.visualizationBuilder.getMarkup(markupSeed));
+            return response.data;
+        } catch (error) {
+            return error;
+        }
     }
 
-    private createVisBarChart(visualizationId: string, featureColumn: string, indexPatternId: string) {
-        const visualizationBarChart: IVisBarCHart = {
+    private async createVisBarChart(visualizationId: string, featureColumn: string, indexPatternId: string) {
+        const barChartSeed: IVisBarCHart = {
             id: visualizationId,
             type: "bar",
             explorerTitle: visualizationId,
@@ -109,17 +124,27 @@ export class DashboardBuilderController {
             index: indexPatternId
         };
 
-        return this.visualizationController.createBarChartVisualization(visualizationBarChart);
+        try {
+            const response = await this.kibanaService.createBarChartVisualization(this.visualizationBuilder.getBarChart(barChartSeed));
+            return response.data;
+        } catch (error) {
+            return error;
+        }
     }
 
-    private createDashboard(jobId: string, visualizations: Array<IVisualization>) {
-        const dashboard: IDashboard = {
+    private async createDashboard(jobId: string, visualizations: Array<IVisualization>) {
+        const dashboardSeed: IDashboard = {
             id: jobId,
             title: jobId,
             visualizations,
             description: "This is a dashboard description"
         };
 
-        return this.dashboardController.createSimpleDashboard(dashboard);
+        try {
+            const response = await this.kibanaService.createSimpleDashbaord(this.dashboardBuilder.getDashboard(dashboardSeed));
+            return response.data;
+        } catch (error) {
+            return error;
+        }
     }
 }

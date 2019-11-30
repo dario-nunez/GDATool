@@ -3,6 +3,11 @@ import { IDashboard } from "../elasticsearchModels/dashboardModel";
 export class DashboardBuilder {
     protected elasticSearchUrl: string;
     protected indexName: string;
+    
+    private FONT_SIZE: number = 30;
+    private TITLE_HEIGHT: number = 5;
+    private BADGE_HEIGHT: number = 5;
+    private BAR_CHART_HEIGHT: number = 16;
 
     constructor() {
         this.elasticSearchUrl = "http://localhost:9200/";
@@ -59,6 +64,12 @@ export class DashboardBuilder {
         let currentY: number = 0;
         let panelCounter = 0;
         let visualizationMetadata = "[";
+
+        //title
+
+        //badges
+
+        //barCharts
 
         for (const vis of dashboardModel.visualizations) {
             let visHeight = 0;
