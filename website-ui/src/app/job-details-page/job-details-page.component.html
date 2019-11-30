@@ -5,6 +5,10 @@
     <hr>
     <form class="was-validated" #userForm="ngForm" (ngSubmit)="updateJob()">
         <div class="form-group">
+            <label for="name">Apache Spark console arguments</label>
+            <input type="text" class="form-control" disabled value="{{job._id}} {{job.userId}}">
+        </div>
+        <div class="form-group">
             <label for="name">Name</label>
             <input type="text" class="form-control" id="name" name="name" [(ngModel)]="job.name" #name="ngModel">
         </div>
