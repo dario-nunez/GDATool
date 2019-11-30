@@ -26,6 +26,9 @@ export class DashboardBuilderController {
     private dashboardBuilder: DashboardBuilder;
 
     public constructor(@Inject private kibanaService: KibanaService, @Inject private mongodbService: MongodbService) {
+        this.indexPatternBuilder = new IndexPatternBuilder();
+        this.visualizationBuilder = new VisualizationBuilder();
+        this.dashboardBuilder = new DashboardBuilder();
     }
 
     @Path("test/:name")
@@ -59,23 +62,30 @@ export class DashboardBuilderController {
         const visualizationsForDashboard = new Array();
 
         dashboardSeed.aggregations.forEach((aggregation: IAggregation) => {
+            let aggSection = [];
             this.createIndexPattern(aggregation._id, aggregation.aggs, aggregation.featureColumns);
 
             const visualizationIdPrefix = aggregation.jobId + "_" + aggregation._id;
 
+            //Title
             this.createVisMarkup(visualizationIdPrefix + "_markdown", aggregation.name);
             const visualizationMarkup: IVisualization = {
                 id: visualizationIdPrefix,
                 type: "markdown"
             };
-            visualizationsForDashboard.push(visualizationMarkup);
+            aggSection.push(visualizationMarkup);
 
+            //BarCharts
             this.createVisBarChart(visualizationIdPrefix + "_bar", aggregation.featureColumns[0], aggregation._id);
             const visualizationBarChart: IVisualization = {
                 id: visualizationIdPrefix,
                 type: "bar"
             };
-            visualizationsForDashboard.push(visualizationBarChart);
+            aggSection.push(visualizationBarChart);
+            aggSection.push(visualizationBarChart);
+
+            //Adding the visualization section of this aggregation to the list of all visualizations
+            visualizationsForDashboard.push(aggSection);
         });
 
         this.createDashboard(dashboardSeed.job._id, visualizationsForDashboard);
@@ -106,7 +116,7 @@ export class DashboardBuilderController {
             explorerTitle: visualizationId,
             displayTitle: contentText
         };
-
+        
         try {
             const response = await this.kibanaService.createMarkupVisualization(this.visualizationBuilder.getMarkup(markupSeed));
             return response.data;
@@ -132,7 +142,7 @@ export class DashboardBuilderController {
         }
     }
 
-    private async createDashboard(jobId: string, visualizations: Array<IVisualization>) {
+    private async createDashboard(jobId: string, visualizations: Array<Array<IVisualization>>) {
         const dashboardSeed: IDashboard = {
             id: jobId,
             title: jobId,
