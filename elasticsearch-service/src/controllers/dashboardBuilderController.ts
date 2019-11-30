@@ -13,6 +13,7 @@ import { MongodbService } from "../services/mongodb-service";
 import { IndexPatternBuilder } from "../elasticsearchEntities/indexPatternBuilder";
 import { VisualizationBuilder } from "../elasticsearchEntities/visualizationBuilder";
 import { DashboardBuilder } from "../elasticsearchEntities/DashboardBuilder";
+import { IMetric } from "../elasticsearchModels/metricModel";
 
 /**
  * This class encapsulates the process of building the various types of dashboards.
@@ -70,20 +71,30 @@ export class DashboardBuilderController {
             //Title
             this.createVisMarkup(visualizationIdPrefix + "_markdown", aggregation.name);
             const visualizationMarkup: IVisualization = {
-                id: visualizationIdPrefix,
+                id: visualizationIdPrefix + "_markdown",
                 type: "markdown"
             };
             aggSection.push(visualizationMarkup);
 
-            //BarCharts
-            this.createVisBarChart(visualizationIdPrefix + "_bar", aggregation.featureColumns[0], aggregation._id);
-            const visualizationBarChart: IVisualization = {
-                id: visualizationIdPrefix,
-                type: "bar"
-            };
-            aggSection.push(visualizationBarChart);
-            aggSection.push(visualizationBarChart);
+            //Metrics   - one for each agg. Currently avg is beign hardcoded
+            for (const agg of aggregation.aggs) {
+                this.createMetric(visualizationIdPrefix + "_metric_" + agg.toLowerCase(), agg.toLowerCase(), aggregation._id);
+                const visualizationMetric: IVisualization = {
+                    id: visualizationIdPrefix + "_metric_" + agg.toLowerCase(),
+                    type: "metric"
+                };
+                aggSection.push(visualizationMetric);
+            }
 
+            //BarCharts - one for each agg
+            for (const agg of aggregation.aggs) {
+                this.createVisBarChart(visualizationIdPrefix + "_bar_" + agg.toLowerCase(), agg.toLowerCase(), aggregation.metricColumn, aggregation.featureColumns[0], aggregation._id);
+                const visualizationBarChart: IVisualization = {
+                    id: visualizationIdPrefix + "_bar_" + agg.toLowerCase(),
+                    type: "bar"
+                };
+                aggSection.push(visualizationBarChart);
+            }
             //Adding the visualization section of this aggregation to the list of all visualizations
             visualizationsForDashboard.push(aggSection);
         });
@@ -116,7 +127,7 @@ export class DashboardBuilderController {
             explorerTitle: visualizationId,
             displayTitle: contentText
         };
-        
+
         try {
             const response = await this.kibanaService.createMarkupVisualization(this.visualizationBuilder.getMarkup(markupSeed));
             return response.data;
@@ -125,17 +136,36 @@ export class DashboardBuilderController {
         }
     }
 
-    private async createVisBarChart(visualizationId: string, featureColumn: string, indexPatternId: string) {
+    private async createVisBarChart(visualizationId: string, aggregationName: string, metricColumn: string, featureColumn: string, indexPatternId: string) {
         const barChartSeed: IVisBarCHart = {
             id: visualizationId,
             type: "bar",
             explorerTitle: visualizationId,
+            aggregationName,
             featureColumn,
+            metricColumn,
             index: indexPatternId
         };
 
         try {
             const response = await this.kibanaService.createBarChartVisualization(this.visualizationBuilder.getBarChart(barChartSeed));
+            return response.data;
+        } catch (error) {
+            return error;
+        }
+    }
+
+    private async createMetric(visualizationId: string, aggregationName: string, indexPatternId: string) {
+        const metricSeed: IMetric = {
+            id: visualizationId,
+            type: "metric",
+            explorerTitle: visualizationId,
+            aggregationName,
+            index: indexPatternId
+        };
+
+        try {
+            const response = await this.kibanaService.createMetricVisualization(this.visualizationBuilder.getMetric(metricSeed));
             return response.data;
         } catch (error) {
             return error;

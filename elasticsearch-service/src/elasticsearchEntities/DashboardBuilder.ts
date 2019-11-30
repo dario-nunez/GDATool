@@ -1,13 +1,12 @@
 import { IDashboard } from "../elasticsearchModels/dashboardModel";
-import logger from "../../../common-service/src/logger/loggerFactory";
 
 export class DashboardBuilder {
     protected elasticSearchUrl: string;
     protected indexName: string;
 
-    //private FONT_SIZE: number = 30;
     private TITLE_HEIGHT: number = 5;
-    //private BADGE_HEIGHT: number = 5;
+    private BADGE_HEIGHT: number = 6;
+    private QUARTER_WIDTH: number = 12;
     private BAR_CHART_HEIGHT: number = 16;
     private MAX_WIDTH: number = 48;
     private HALF_WIDTH: number = 24;
@@ -53,7 +52,7 @@ export class DashboardBuilder {
                 referenceArray.push({
                     name: "panel_" + panelCounter,
                     type: "visualization",
-                    id: vis.id + "_" + vis.type
+                    id: vis.id
                 });
 
                 panelCounter = panelCounter + 1;
@@ -70,17 +69,17 @@ export class DashboardBuilder {
         let panelCounter = 0;
         let visualizationMetadata = "[";
 
-        logger.info("=========== ALL_VISUALIZATIONS ===========");
-        logger.info(dashboardModel.visualizations);
-
         for (const visArray of dashboardModel.visualizations) {
             let barCharts = new Array();
+            let metrics = new Array();
 
             for (const vis of visArray) {
-                if (vis.type === "markdown") {
-                    
-                } else {
+                if (vis.type === "metric") {
+                    metrics.push(vis);
+                } else if (vis.type === "bar") {
                     barCharts.push(vis);
+                } else {
+                    //title here...
                 }
             }
 
@@ -90,25 +89,59 @@ export class DashboardBuilder {
             panelIndex = panelIndex + 1;
             panelCounter = panelCounter + 1;
 
-            //BarCharts
-            for (let i: number = 0; i < barCharts.length; i++) {
-                if (i % 2 == 0) {
-                    logger.info("EVEN i = " + i);
-                    logger.info("Current y: " + currentY);
-                    logger.info("Current x: " + currentX);
-                    visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.HALF_WIDTH, currentX, currentY, panelIndex, panelCounter);
-                    currentX = currentX + this.HALF_WIDTH;
+            let partialRows = metrics.length / 4;
+            let extraMetrics = metrics.length % 4;
+            let dynamicWidth = this.MAX_WIDTH / extraMetrics;
+
+            //Metrics
+            for (let i: number = 1; i <= metrics.length; i++) {
+                if (i <= (Math.floor(partialRows) * 4)) {
+                    if (i % 4 > 0) {    //not the last one
+                        visualizationMetadata = visualizationMetadata + this.generateGridData(this.BADGE_HEIGHT, this.QUARTER_WIDTH, currentX, currentY, panelIndex, panelCounter);
+                        currentX = currentX + this.QUARTER_WIDTH;
+                        panelIndex = panelIndex + 1;
+                        panelCounter = panelCounter + 1;
+
+                        if (i == metrics.length) {
+                            currentY = currentY + this.BADGE_HEIGHT;
+                            currentX = 0;
+                        }
+                    } else {    //the last one
+                        visualizationMetadata = visualizationMetadata + this.generateGridData(this.BADGE_HEIGHT, this.QUARTER_WIDTH, currentX, currentY, panelIndex, panelCounter);
+                        currentX = 0;
+                        panelIndex = panelIndex + 1;
+                        panelCounter = panelCounter + 1;
+                        currentY = currentY + this.BADGE_HEIGHT;
+                    }
+                } else {
+                    visualizationMetadata = visualizationMetadata + this.generateGridData(this.BADGE_HEIGHT, dynamicWidth, currentX, currentY, panelIndex, panelCounter);
+                    currentX = currentX + dynamicWidth;
                     panelIndex = panelIndex + 1;
                     panelCounter = panelCounter + 1;
 
-                    if (i == barCharts.length - 1) {
-                        currentY = currentY + this.BAR_CHART_HEIGHT;
+                    if (i == metrics.length) {
+                        currentY = currentY + this.BADGE_HEIGHT;
                         currentX = 0;
                     }
+                }
+
+            }
+
+            //BarCharts
+            for (let i: number = 0; i < barCharts.length; i++) {
+                if (i % 2 == 0) {
+                    if (i == barCharts.length - 1) {    //if it is the only one
+                        visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.MAX_WIDTH, currentX, currentY, panelIndex, panelCounter);
+                        currentX = 0;
+                        currentY = currentY + this.BAR_CHART_HEIGHT;
+                    } else {    //if there is a second bar chart
+                        visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.HALF_WIDTH, currentX, currentY, panelIndex, panelCounter);
+                        currentX = currentX + this.HALF_WIDTH;    
+                    }
+
+                    panelIndex = panelIndex + 1;
+                    panelCounter = panelCounter + 1;
                 } else {
-                    logger.info("ODD i = " + i);
-                    logger.info("Current y: " + currentY);
-                    logger.info("Current x: " + currentX);
                     visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.HALF_WIDTH, currentX, currentY, panelIndex, panelCounter);
                     currentX = 0;
                     panelIndex = panelIndex + 1;
