@@ -46,11 +46,13 @@ public class DefaultJob extends Job {
     }
 
     public void run(String jobId, String userId) throws IOException, UnirestException {
+
         logger.info("job {} by user {} is starting", jobId, userId);
         List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
         JobModel job = mongodbRepository.getJobById(jobId);
 
-        Dataset<Row> dataset = read(String.format("%s/%s/%s/raw", configModel.rawFilePath(), userId, jobId));
+        //Dataset<Row> dataset = read(String.format("%s/%s/%s/raw", configModel.rawFilePath(), userId, jobId));
+        Dataset<Row> dataset = read(String.format("%s", configModel.rawFilePath()));
 
         sparkSession.udf().register("createMonthYearColumn", userDefinedFunctionsFactory.createMonthYearColumn(), DataTypes.StringType);
         dataset = dataset.withColumn("month", callUDF("createMonthYearColumn", col("transferDate"))).cache();
