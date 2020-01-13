@@ -8,3 +8,4 @@
 .factorypath
 .project
 .settings/
+/src/main/resources/common.properties

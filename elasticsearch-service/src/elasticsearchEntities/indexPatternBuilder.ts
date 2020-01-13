@@ -1,61 +1,32 @@
-import logger from "../../../common-service/src/logger/loggerFactory";
-import { Inject } from "typescript-ioc";
-import { Path, PUT } from "typescript-rest";
 import { IIndexPattern } from "../elasticsearchModels/indexPatternModel";
-import { KibanaService } from "../services/kibana-service";
-import { ElasticServiceBaseController } from "./elasticServerBaseController";
 
-@Path("/es/indexPattern")
-export class IndexPatternController extends ElasticServiceBaseController {
+export class IndexPatternBuilder {
+    protected elasticSearchUrl: string;
+    protected indexName: string;
 
-    constructor(@Inject private kibanaService: KibanaService) {
-        super();
+    constructor() {
+        this.elasticSearchUrl = "http://localhost:9200/";
+        this.indexName = ".kibana/";
     }
 
-    /**
-     * Creates a new index pattern.
-     * @param newIndexPattern The index pattern object to be created and stored in the database.
-     */
-    @PUT
-    public async createIndexPattern(newIndexPattern: IIndexPattern): Promise<any> {
-        logger.info("Create index pattern: ");
-        logger.info(newIndexPattern);
-        const indexPatternJSON = this.getIndexPatternJSON(newIndexPattern);
-
-        let featureColumnsJSONLines = "";
-
-        for (const columnName of newIndexPattern.featureColumns) {
-            featureColumnsJSONLines = featureColumnsJSONLines + ',{\"name\":\"' + columnName + '\",\"type\":\"string\",\"esTypes\":[\"text\"],\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false}';
-            featureColumnsJSONLines = featureColumnsJSONLines + ',{\"name\":\"' + columnName + '.keyword\",\"type\":\"string\",\"esTypes\":[\"keyword\"],\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true,\"parent\":\"Id\",\"subType\":\"multi\"}';
-        }
-
-
-        try {
-            const response = await this.kibanaService.createIndexPattern(indexPatternJSON);
-            return response.data;
-        } catch (error) {
-            return error;
-        }
-    }
-
-    public getIndexPatternJSON(indexPattern: IIndexPattern) {
+    public getIndexPattern(indexPatternModel: IIndexPattern) {
         const defaultJSONLines = "{\"name\":\"_id\",\"type\":\"string\",\"esTypes\":[\"_id\"],\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false}," +
             "{\"name\":\"_index\",\"type\":\"string\",\"esTypes\":[\"_index\"],\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false}," +
             "{\"name\":\"_score\",\"type\":\"number\",\"count\":0,\"scripted\":false,\"searchable\":false,\"aggregatable\":false,\"readFromDocValues\":false}," +
             "{\"name\":\"_source\",\"type\":\"_source\",\"esTypes\":[\"_source\"],\"count\":0,\"scripted\":false,\"searchable\":false,\"aggregatable\":false,\"readFromDocValues\":false}," +
             "{\"name\":\"_type\",\"type\":\"string\",\"esTypes\":[\"_type\"],\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false}";
 
-        const featureColumnsJSONLines = this.getFeatureColumnJSONLines(indexPattern);
-        const aggsJSONLines = this.getAggregationJSONLines(indexPattern);
+        const featureColumnsJSONLines = this.getFeatureColumnJSONLines(indexPatternModel);
+        const aggsJSONLines = this.getAggregationJSONLines(indexPatternModel);
 
         return {
             method: "PUT",
-            url: this.elasticSearchUrl + this.indexName + "_doc/index-pattern:" + indexPattern.id,
+            url: this.elasticSearchUrl + this.indexName + "_doc/index-pattern:" + indexPatternModel.id,
             data:
             {
                 "index-pattern":
                 {
-                    title: indexPattern.index,
+                    title: indexPatternModel.index,
                     fields: "[" + defaultJSONLines + featureColumnsJSONLines + aggsJSONLines + "]"
                 },
                 "migrationVersion": { "index-pattern": "6.5.0" },
@@ -65,20 +36,20 @@ export class IndexPatternController extends ElasticServiceBaseController {
         };
     }
 
-    private getAggregationJSONLines(indexPattern: IIndexPattern) {
+    private getAggregationJSONLines(indexPatternModel: IIndexPattern) {
         let aggsJSONLines = "";
 
-        for (const agg of indexPattern.aggs) {
+        for (const agg of indexPatternModel.aggs) {
             aggsJSONLines = aggsJSONLines + ',{\"name\":\"' + agg + '\",\"type\":\"number\",\"esTypes\":[\"long\"],\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true}';
         }
 
         return aggsJSONLines;
     }
 
-    private getFeatureColumnJSONLines(indexPattern: IIndexPattern) {
+    private getFeatureColumnJSONLines(indexPatternModel: IIndexPattern) {
         let featureColumnsJSONLines = "";
 
-        for (const columnName of indexPattern.featureColumns) {
+        for (const columnName of indexPatternModel.featureColumns) {
             featureColumnsJSONLines = featureColumnsJSONLines + ',{\"name\":\"' + columnName + '\",\"type\":\"string\",\"esTypes\":[\"text\"],\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":false,\"readFromDocValues\":false}';
             featureColumnsJSONLines = featureColumnsJSONLines + ',{\"name\":\"' + columnName + '.keyword\",\"type\":\"string\",\"esTypes\":[\"keyword\"],\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true,\"parent\":\"Id\",\"subType\":\"multi\"}';
         }

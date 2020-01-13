@@ -17,4 +17,8 @@ export class KibanaService {
     public createBarChartVisualization(newBarChartVisualization: any): Promise<any> {
         return axios(newBarChartVisualization);
     }
+
+    public createMetricVisualization(metricVisualization: any): Promise<any> {
+        return axios(metricVisualization);
+    }
 }

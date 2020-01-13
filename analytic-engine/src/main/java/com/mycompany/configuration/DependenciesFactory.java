@@ -48,7 +48,7 @@ public class DependenciesFactory implements Log {
     }
 
     public SparkSession sparkSession() {
-        if (env == Environment.LOCAL || env == Environment.DOCKER) {
+        if (env == Environment.LOCAL || env == Environment.DEV) {
             SparkConf conf = new SparkConf()
                     .setAppName(configModel.appName())
                     .set("fs.s3a.access.key", configModel.accessKeyId())
