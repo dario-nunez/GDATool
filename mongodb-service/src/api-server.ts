@@ -6,6 +6,7 @@ import * as morgan from 'morgan';
 import { ExtractJwt, Strategy, StrategyOptions } from 'passport-jwt';
 import * as path from 'path';
 import { PassportAuthenticator, Server } from 'typescript-rest';
+import { AWSConfig } from "./AWSConfig";
 
 export class ApiServer {
     public PORT: number = +process.env.PORT || 5000;
@@ -14,6 +15,7 @@ export class ApiServer {
     private server: http.Server = null;
 
     constructor() {
+        this.initialiseAwsAccessInfo();
         this.app = express();
         this.config();
 
@@ -83,5 +85,17 @@ export class ApiServer {
         });
         Server.registerAuthenticator(authenticator);
         Server.registerAuthenticator(authenticator, 'secondAuthenticator');
+    }
+
+    private initialiseAwsAccessInfo(): void {
+        logger.info(process.argv);
+        if (process.argv.length === 4) {
+            AWSConfig.awsAccessKeyId = process.argv[0];
+            AWSConfig.awsSecretAccessKey = process.argv[1];
+        } else {
+            AWSConfig.awsAccessKeyId = process.env.AWS_ACCESS_KEY_ID;
+            AWSConfig.awsSecretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+            logger.info(`Loading AWS access key ${AWSConfig.awsAccessKeyId} and secret !--!`);
+        }
     }
 }
