@@ -9,6 +9,7 @@ import { IAggregation } from 'src/models/aggregation.model';
   templateUrl: './create-job-page.component.html',
   styleUrls: ['./create-job-page.component.css']
 })
+
 export class CreateJobPageComponent implements OnInit {
   FEATURE_COLUMNS: Array<string> = ["city", "county", "id"];
   AGGS: Array<string> = ["SUM", "AVG", "MAX"];

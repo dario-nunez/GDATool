@@ -89,13 +89,21 @@ export class ApiServer {
 
     private initialiseAwsAccessInfo(): void {
         logger.info(process.argv);
-        if (process.argv.length === 4) {
-            AWSConfig.awsAccessKeyId = process.argv[0];
-            AWSConfig.awsSecretAccessKey = process.argv[1];
-        } else {
-            AWSConfig.awsAccessKeyId = process.env.AWS_ACCESS_KEY_ID;
-            AWSConfig.awsSecretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
-            logger.info(`Loading AWS access key ${AWSConfig.awsAccessKeyId} and secret !--!`);
-        }
+
+        //Just for testing purposes, these should be environment variables specified in the docker file
+
+        AWSConfig.awsAccessKeyId = "shhh";
+        AWSConfig.awsSecretAccessKey = "shhh";
+
+        logger.info(`Loading AWS access key ${AWSConfig.awsAccessKeyId} and secret !--!`);
+
+        // if (process.argv.length === 4) {
+        //     AWSConfig.awsAccessKeyId = process.argv[0];
+        //     AWSConfig.awsSecretAccessKey = process.argv[1];
+        // } else {
+        //     AWSConfig.awsAccessKeyId = process.env.AWS_ACCESS_KEY_ID;
+        //     AWSConfig.awsSecretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+        //     logger.info(`Loading AWS access key ${AWSConfig.awsAccessKeyId} and secret !--!`);
+        // }
     }
 }
