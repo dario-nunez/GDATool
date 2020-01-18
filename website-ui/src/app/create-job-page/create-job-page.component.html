@@ -25,9 +25,79 @@
             </div>
         </div>
 
+        <div>
+            <label><b>Define Schema</b></label>
+            <div class="shadow p-3 mb-3 bg-white rounded">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm text-center">
+                            <label><b>Features</b></label>
+                            <div *ngFor="let column of SELECTED_FEATURES">
+                                <div class="container border border-primary mb-2 bg-light rounded">
+                                    <div class="row" style="align-items: center;">
+                                        <div class="col-sm">
+                                            {{column}}
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-success m-1"
+                                                (click)="moveColumn($event, column, SELECTED_FEATURES, COLUMNS)">
+                                                &gt;
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm text-center">
+                            <label><b>Columns</b></label>
+                            <div *ngFor="let column of COLUMNS">
+                                <div class="container border border-primary mb-2 bg-light rounded">
+                                    <div class="row" style="align-items: center;">
+                                        <div class="col-sm">
+                                            <button class="btn btn-success m-1"
+                                                (click)="moveColumn($event, column, COLUMNS, SELECTED_FEATURES)">
+                                                &lt;
+                                            </button>
+                                        </div>
+                                        <div class="col-sm">
+                                            {{column}}
+                                        </div>
+                                        <div class="col-sm">
+                                            <button class="btn btn-success m-1"
+                                                (click)="moveColumn($event, column, COLUMNS, SELECTED_METRICS)">
+                                                &gt;
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm text-center">
+                            <label><b>Metrics</b></label>
+                            <div *ngFor="let column of SELECTED_METRICS">
+                                <div class="container border border-primary mb-2 bg-light rounded">
+                                    <div class="row" style="align-items: center;">
+                                        <div class="col-sm">
+                                            <button class="btn btn-success m-1"
+                                                (click)="moveColumn($event, column, SELECTED_METRICS, COLUMNS)">
+                                                &lt;
+                                            </button>
+                                        </div>
+                                        <div class="col-sm">
+                                            {{column}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="form-group">
             <label><b>Aggregations</b></label>
-            <div class="">
+            <div>
                 <input class="" type="checkbox" value="" id="defaultCheck1" name="customAggregations"
                     [(ngModel)]="customAggregations">
                 <label class="" for="defaultCheck1">Custom Aggregations</label>

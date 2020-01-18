@@ -51,8 +51,8 @@ public class DefaultJob extends Job {
         List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
         JobModel job = mongodbRepository.getJobById(jobId);
 
-        //Dataset<Row> dataset = read(String.format("%s/%s/%s/raw", configModel.rawFilePath(), userId, jobId));
-        Dataset<Row> dataset = read(String.format("%s", configModel.rawFilePath()));
+        Dataset<Row> dataset = read(String.format("%s/%s/%s/raw", configModel.rawFilePath(), userId, jobId));
+        //Dataset<Row> dataset = read(String.format("%s", configModel.rawFilePath()));
 
         sparkSession.udf().register("createMonthYearColumn", userDefinedFunctionsFactory.createMonthYearColumn(), DataTypes.StringType);
         dataset = dataset.withColumn("month", callUDF("createMonthYearColumn", col("transferDate"))).cache();

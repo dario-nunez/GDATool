@@ -12,8 +12,11 @@ import { IAggregation } from 'src/models/aggregation.model';
 
 export class CreateJobPageComponent implements OnInit {
   FEATURE_COLUMNS: Array<string> = ["city", "county", "id"];
-  AGGS: Array<string> = ["SUM", "AVG", "MAX"];
+  AGGS: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
   METRIC_COLUMNS: Array<string> = ["price"];
+  COLUMNS: Array<string> = ["city", "county", "id", "price", "etc..."];
+  SELECTED_METRICS: Array<string> = [];
+  SELECTED_FEATURES: Array<string> = [];
 
   job: IJob;
   aggregations: IAggregation[];
@@ -22,7 +25,7 @@ export class CreateJobPageComponent implements OnInit {
   currentAggregationMetricColumn: string;
 
   possibleFeatureColumns: Array<string> = ["city", "county", "id"];
-  possibleAggs: Array<string> = ["SUM", "AVG", "MAX"];
+  possibleAggs: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
   possibleMetricColumns: Array<string> = ["price"];
 
   selectedFeatureColumns: Array<string> = [];
@@ -154,6 +157,26 @@ export class CreateJobPageComponent implements OnInit {
       if (!this.possibleFeatureColumns.includes(element)) {
         this.possibleFeatureColumns.push(element);
       }
+    }
+  }
+
+  moveColumn(event, element:string, originArray: Array<string>, destinationArray: Array<string>) {
+    console.log("from " + originArray + " to " + destinationArray)
+
+    if (originArray == this.COLUMNS) {
+      this.COLUMNS = this.COLUMNS.filter(obj => obj !== element);
+    } else if (originArray == this.SELECTED_FEATURES) {
+      this.SELECTED_FEATURES = this.SELECTED_FEATURES.filter(obj => obj !== element);
+    } else {
+      this.SELECTED_METRICS = this.SELECTED_METRICS.filter(obj => obj !== element);
+    }
+
+    if (destinationArray == this.COLUMNS) {
+      this.COLUMNS.push(element)
+    } else if (destinationArray == this.SELECTED_FEATURES) {
+      this.SELECTED_FEATURES.push(element)
+    } else {
+      this.SELECTED_METRICS.push(element)
     }
   }
 }
