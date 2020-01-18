@@ -7,6 +7,7 @@ import com.mycompany.models.ConfigModel;
 import com.mycompany.models.JobModel;
 import com.mycompany.services.bi.BiRepository;
 import com.mycompany.services.mongodb.MongodbRepository;
+import org.apache.commons.io.FileUtils;
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.types.DataTypes;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
@@ -20,6 +21,7 @@ import org.elasticsearch.spark.sql.api.java.JavaEsSparkSQL;
 import org.slf4j.LoggerFactory;
 import scala.collection.Seq;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -51,8 +53,18 @@ public class DefaultJob extends Job {
         List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
         JobModel job = mongodbRepository.getJobById(jobId);
 
-        Dataset<Row> dataset = read(String.format("%s/%s/%s/raw", configModel.rawFilePath(), userId, jobId));
+        Dataset<Row> dataset = read(String.format("%s/%s/%s/raw/pp-2018-part1.csv", configModel.rawFilePath(), userId, jobId));
         //Dataset<Row> dataset = read(String.format("%s", configModel.rawFilePath()));
+
+        List OGDataset = dataset.collectAsList();
+        FileUtils.writeStringToFile(new File(String.format("%s/%s/%s/raw/ogDataset.txt", configModel.rawFilePath(), userId, jobId)), OGDataset.toString());
+
+        //Dataset<Row> filteredDataset = dataset.where("price > 500000");
+        //Dataset<Row> filteredDataset = dataset.where("price = 350000");
+        Dataset<Row> filteredDataset = dataset.where("city = 'NOTTINGHAM'");
+
+        List filteredDatasetList = filteredDataset.collectAsList();
+        FileUtils.writeStringToFile(new File(String.format("%s/%s/%s/raw/filteredDataset.txt", configModel.rawFilePath(), userId, jobId)), filteredDatasetList.toString());
 
         sparkSession.udf().register("createMonthYearColumn", userDefinedFunctionsFactory.createMonthYearColumn(), DataTypes.StringType);
         dataset = dataset.withColumn("month", callUDF("createMonthYearColumn", col("transferDate"))).cache();
