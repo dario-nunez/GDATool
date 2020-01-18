@@ -214,4 +214,163 @@
             </div>
         </div>
     </form>
+
+    <!-- NEW FORM ----------------------------- NEW FORM ----------------------------- NEW FORM ----------------------------- NEW FORM----------------------------- NEW FORM -->
+
+    <!-- <div class="accordion" id="accordionExample">
+        <div class="card">
+            <div class="card-header" id="headingOne">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne"
+                        aria-expanded="true" aria-controls="collapseOne">
+                        Job details
+                    </button>
+                </h5>
+            </div>
+
+            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+                <div class="card-body">
+                    <form class="was-validated" #userForm="ngForm" (ngSubmit)="createJob()">
+                        <div class="form-group">
+                            <label for="name"><b>Name</b></label>
+                            <input type="text" class="form-control" id="name" name="name" required
+                                [(ngModel)]="job.name" #name="ngModel">
+                        </div>
+                        <div class="form-group">
+                            <label for="description"><b>Description</b></label>
+                            <input type="text" class="form-control" id="description" name="description"
+                                [(ngModel)]="job.description" #description="ngModel">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                        data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        Data Upload
+                    </button>
+                </h5>
+            </div>
+            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+                <div class="card-body">
+                    asdasdasdasdasd
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                        data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        Schema
+                    </button>
+                </h5>
+            </div>
+            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+                <div class="card-body">
+                    <div>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm text-center">
+                                    <label><b>Features</b></label>
+                                    <div *ngFor="let column of SELECTED_FEATURES">
+                                        <div class="container border border-primary mb-2 bg-light rounded">
+                                            <div class="row" style="align-items: center;">
+                                                <div class="col-sm">
+                                                    {{column}}
+                                                </div>
+                                                <div class="col-sm">
+                                                    <button class="btn btn-success m-1"
+                                                        (click)="moveColumn($event, column, SELECTED_FEATURES, COLUMNS)">
+                                                        &gt;
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm text-center">
+                                    <label><b>Columns</b></label>
+                                    <div *ngFor="let column of COLUMNS">
+                                        <div class="container border border-primary mb-2 bg-light rounded">
+                                            <div class="row" style="align-items: center;">
+                                                <div class="col-sm">
+                                                    <button class="btn btn-success m-1"
+                                                        (click)="moveColumn($event, column, COLUMNS, SELECTED_FEATURES)">
+                                                        &lt;
+                                                    </button>
+                                                </div>
+                                                <div class="col-sm">
+                                                    {{column}}
+                                                </div>
+                                                <div class="col-sm">
+                                                    <button class="btn btn-success m-1"
+                                                        (click)="moveColumn($event, column, COLUMNS, SELECTED_METRICS)">
+                                                        &gt;
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm text-center">
+                                    <label><b>Metrics</b></label>
+                                    <div *ngFor="let column of SELECTED_METRICS">
+                                        <div class="container border border-primary mb-2 bg-light rounded">
+                                            <div class="row" style="align-items: center;">
+                                                <div class="col-sm">
+                                                    <button class="btn btn-success m-1"
+                                                        (click)="moveColumn($event, column, SELECTED_METRICS, COLUMNS)">
+                                                        &lt;
+                                                    </button>
+                                                </div>
+                                                <div class="col-sm">
+                                                    {{column}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingFour">
+                <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                        data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        Query
+                    </button>
+                </h5>
+            </div>
+            <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
+                <div class="card-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
+                    wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header" id="headingFive">
+                <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse"
+                        data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                        Execute
+                    </button>
+                </h5>
+            </div>
+            <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordionExample">
+                <div class="card-body">
+                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3
+                    wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum
+                </div>
+            </div>
+        </div>
+    </div> -->
 </div>

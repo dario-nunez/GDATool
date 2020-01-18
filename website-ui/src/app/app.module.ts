@@ -12,7 +12,6 @@ import { SignUpPageComponent } from './sign-up-page/sign-up-page.component';
 import { PasswordMathcValidatorDirective } from "./sign-up-page/password-match.directive";
 import { JobsPageComponent } from './jobs-page/jobs-page.component';
 import { JobComponent } from './jobs-page/job/job.component';
-import { RunComponent } from './jobs-page/run/run.component';
 
 import { AuthenticationGuardService } from '../services/routeGuards/authentication-guard.service';
 import { AuthenticationService } from '../services/authentication/authentication.service';
@@ -32,7 +31,6 @@ import { DashboardPageComponent } from './dashboard-page/dashboard-page.componen
     PasswordMathcValidatorDirective,
     JobsPageComponent,
     JobComponent,
-    RunComponent,
     UserPageComponent,
     TopNavbarComponent,
     JobDetailsPageComponent,
