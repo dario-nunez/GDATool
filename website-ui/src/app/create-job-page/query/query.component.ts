@@ -1,27 +1,22 @@
 import { Component, OnInit } from '@angular/core';
-import { IJob } from 'src/models/job.model';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { Router } from '@angular/router';
+import { IJob } from 'src/models/job.model';
 import { IAggregation } from 'src/models/aggregation.model';
-import { $ } from 'protractor';
 
 @Component({
-  selector: 'app-create-job-page',
-  templateUrl: './create-job-page.component.html',
-  styleUrls: ['./create-job-page.component.css']
+  selector: 'app-query',
+  templateUrl: './query.component.html',
+  styleUrls: ['./query.component.css']
 })
 
-export class CreateJobPageComponent implements OnInit {
+export class QueryComponent implements OnInit {
   FEATURE_COLUMNS: Array<string> = ["city", "county", "id"];
-  AGGS: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
+  OPERATIONS: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
   METRIC_COLUMNS: Array<string> = ["price"];
-  COLUMNS: Array<string> = ["city", "county", "id", "price", "etc..."];
-  SELECTED_METRICS: Array<string> = [];
-  SELECTED_FEATURES: Array<string> = [];
 
   job: IJob;
   aggregations: IAggregation[];
-  customAggregations: boolean;
   currentAggregationName: string;
   currentAggregationMetricColumn: string;
 
@@ -35,7 +30,6 @@ export class CreateJobPageComponent implements OnInit {
   constructor(private mongodbService: MongodbService, private router: Router) { }
 
   ngOnInit() {
-    this.customAggregations = false;
     this.currentAggregationName = "";
     this.currentAggregationMetricColumn = "Choose one";
 
@@ -50,59 +44,26 @@ export class CreateJobPageComponent implements OnInit {
       runs: []
     }
 
-    const mockAggregation: IAggregation = {
-      aggs: ["SUM", "AVG", "MAX"],
-      featureColumns: ["city", "county"],
-      jobId: "121212121212",
-      metricColumn: "price",
-      name: "City & County by Price",
-      sortColumnName: "price"
-    }
-
     this.aggregations = [];
-    // this.aggregations.push(mockAggregation);
+
+    this.addDefaultAggregations();
   }
 
-  createJob() {
-    this.mongodbService.createJob(this.job).subscribe(
-      retJob => {
-        if (this.customAggregations) {
-          for (let agg of this.aggregations) {
-            agg.jobId = retJob._id;
-          }
-
-          this.mongodbService.createMultipleAggregations(this.aggregations).subscribe(
-            aggs => {
-              console.log("Job created!");
-              this.router.navigate(['/jobsPage']);
-            });
-        } else {
-          let allAggs: IAggregation[] = [];
-
-          for (let mc of this.METRIC_COLUMNS) {
-            for (let fc of this.FEATURE_COLUMNS) {
-              let agg: IAggregation = {
-                aggs: this.AGGS,
-                featureColumns: [fc],
-                jobId: retJob._id,
-                metricColumn: mc,
-                name: "Aggregation of " + fc + " by " + mc,
-                sortColumnName: fc
-              }
-
-              allAggs.push(agg);
-            }
-          }
-
-          this.mongodbService.createMultipleAggregations(allAggs).subscribe(
-            aggs => {
-              console.log("Job created!");
-              this.router.navigate(['/jobsPage']);
-            }
-          );
+  addDefaultAggregations() {
+    for (let mc of this.METRIC_COLUMNS) {
+      for (let fc of this.FEATURE_COLUMNS) {
+        let agg: IAggregation = {
+          aggs: this.OPERATIONS,
+          featureColumns: [fc],
+          jobId: this.job._id,
+          metricColumn: mc,
+          name: "Aggregation of " + fc + " by " + mc,
+          sortColumnName: fc
         }
+
+        this.aggregations.push(agg);
       }
-    );
+    }
   }
 
   createAggregation() {
@@ -121,7 +82,7 @@ export class CreateJobPageComponent implements OnInit {
 
     this.currentAggregationMetricColumn = "Choose one";
     this.currentAggregationName = "";
-    this.possibleAggs = this.AGGS;
+    this.possibleAggs = this.OPERATIONS;
     this.possibleFeatureColumns = this.FEATURE_COLUMNS;
     this.possibleMetricColumns = this.METRIC_COLUMNS;
     this.selectedFeatureColumns = [];
@@ -161,10 +122,11 @@ export class CreateJobPageComponent implements OnInit {
     }
   }
 
-  accordion() {
-    console.log("accordion executed")
-    // $('#collapseOne').collapse({
-    //   toggle:false
-    // })
+  createJob() {
+    
+  }
+
+  next() {
+    this.router.navigate(['/execute']);
   }
 }

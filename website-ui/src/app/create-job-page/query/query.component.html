@@ -1,0 +1,131 @@
+<app-top-navbar></app-top-navbar>
+
+<div class="container p-5">
+    <h2>Create job</h2>
+    <hr>
+
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: 60%"></div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <span class="badge badge-success">Details</span>
+        </div>
+        <div class="col text-center">
+            <span class="badge badge-success">Upload</span>
+        </div>
+        <div class="col text-center">
+            <span class="badge badge-success">Schema</span>
+        </div>
+        <div class="col text-center">
+            <h3><span class="badge badge-warning">Query</span></h3>
+        </div>
+        <div class="col text-center">
+            <span class="badge badge-danger">Execute</span>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="form-group">
+        <div class="shadow p-3 mb-3 bg-white rounded">
+            <label><b>Current aggregations</b></label>
+            <div class="pl-2">
+                <button class="btn btn-light m-1" *ngIf="aggregations.length == 0" disabled>
+                    No aggregations selected
+                </button>
+            </div>
+
+            <ul class="pl-2 list-group">
+                <li style="list-style-type:none" *ngFor="let agg of aggregations">
+                    <button type="button" (click)="deleteAggregation($event, agg)" class="btn btn-light m-1">
+                        {{agg.name}}: [{{agg.aggs}}] on [{{agg.metricColumn}}] by [{{agg.featureColumns}}]
+                        <span class="badge badge-danger">X</span>
+                    </button>
+                </li>
+            </ul>
+
+            <hr>
+
+            <form class="mt-3" (ngSubmit)="createAggregation()">
+                <label><b>Add new Aggregation</b></label>
+                <div class="form-row">
+                    <!-- Name -->
+                    <div class="form-group col-md-6">
+                        <label for="aggregationName">Name</label>
+                        <input type="text" class="form-control" id="aggregationName" name="aggregationName"
+                            placeholder="Name" [(ngModel)]="currentAggregationName" #aggregationName="ngModel">
+                    </div>
+                    <!-- Metric Column -->
+                    <div class="form-group col-md-6">
+                        <label for="metricSelector">Metric Column</label>
+                        <select id="metricSelector" class="form-control" name="metricSelector"
+                            [(ngModel)]="currentAggregationMetricColumn" #metricSelector="ngModel">
+                            <option selected>Choose one</option>
+                            <option *ngFor="let sCol of possibleMetricColumns">{{sCol}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <!-- Feature Columns -->
+                    <div class="form-group col-md-6">
+                        <label for="featureCols">Feature Columns</label>
+                        <select #featureDevice (change)="addElement($event, featureDevice.value, 'featureColumn')"
+                            id="featureCols" class="form-control">
+                            <option selected>Choose</option>
+                            <option *ngFor="let sCol of possibleFeatureColumns">{{sCol}}</option>
+                        </select>
+                        <hr>
+                        <button class="btn btn-light m-1" *ngIf="selectedFeatureColumns.length == 0" disabled>
+                            No aggregations selected
+                        </button>
+                        <button (click)="removeElement($event, sCol, 'featureColumn')" class="btn btn-light m-1"
+                            *ngFor="let sCol of selectedFeatureColumns">{{sCol}}
+                            <span class="badge badge-danger">X</span>
+                        </button>
+                    </div>
+                    <!-- Aggregations -->
+                    <div class="form-group col-md-6">
+                        <label for="aggregationCols">Aggregations</label>
+                        <select #AggregationDevice (change)="addElement($event, AggregationDevice.value, 'aggregation')"
+                            id="aggregationCols" class="form-control">
+                            <option selected>Choose</option>
+                            <option *ngFor="let sCol of possibleAggs">{{sCol}}</option>
+                        </select>
+                        <hr>
+                        <button class="btn btn-light m-1" *ngIf="selectedAggregations.length == 0" disabled>
+                            No aggregations selected
+                        </button>
+                        <button (click)="removeElement($event, sCol, 'aggregation')" class="btn btn-light m-1"
+                            *ngFor="let sCol of selectedAggregations">{{sCol}}
+                            <span class="badge badge-danger">X</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col col text-left">
+                        <button
+                            [disabled]="currentAggregationName == '' || currentAggregationMetricColumn == 'Choose one' || selectedAggregations.length == 0 || selectedFeatureColumns.length == 0"
+                            type="submit" class="btn btn-primary">Add Aggregation</button> </div>
+                    <div class="col text-right">
+                        <label class="text-danger"
+                            *ngIf="currentAggregationName == '' || currentAggregationMetricColumn == 'Choose one' || selectedAggregations.length == 0 || selectedFeatureColumns.length == 0">Incomplete
+                            form</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col text-left">
+            <button class="btn btn-primary" [routerLink]="['/jobsPage']">Save and Exit</button>
+        </div>
+        <div class="col text-right">
+            <button class="btn btn-primary" (click)="next()">Next</button>
+        </div>
+    </div>
+</div>

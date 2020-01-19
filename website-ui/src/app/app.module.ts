@@ -21,6 +21,11 @@ import { TopNavbarComponent } from './top-navbar/top-navbar.component';
 import { JobDetailsPageComponent } from './job-details-page/job-details-page.component';
 import { CreateJobPageComponent } from './create-job-page/create-job-page.component';
 import { DashboardPageComponent } from './dashboard-page/dashboard-page.component';
+import { DetailsComponent } from './create-job-page/details/details.component';
+import { UploadComponent } from './create-job-page/upload/upload.component';
+import { SchemaComponent } from './create-job-page/schema/schema.component';
+import { QueryComponent } from './create-job-page/query/query.component';
+import { ExecuteComponent } from './create-job-page/execute/execute.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +40,12 @@ import { DashboardPageComponent } from './dashboard-page/dashboard-page.componen
     TopNavbarComponent,
     JobDetailsPageComponent,
     CreateJobPageComponent,
-    DashboardPageComponent
+    DashboardPageComponent,
+    DetailsComponent,
+    UploadComponent,
+    SchemaComponent,
+    QueryComponent,
+    ExecuteComponent
   ],
   imports: [
     BrowserModule,

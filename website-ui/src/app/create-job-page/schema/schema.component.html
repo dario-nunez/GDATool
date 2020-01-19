@@ -1,0 +1,107 @@
+<app-top-navbar></app-top-navbar>
+
+<div class="container p-5">
+    <h2>Create job</h2>
+    <hr>
+
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: 40%"></div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <span class="badge badge-success">Details</span>
+        </div>
+        <div class="col text-center">
+            <span class="badge badge-success">Upload</span>
+        </div>
+        <div class="col text-center">
+            <h3><span class="badge badge-warning">Schema</span></h3>
+        </div>
+        <div class="col text-center">
+            <span class="badge badge-danger">Query</span>
+        </div>
+        <div class="col text-center">
+            <span class="badge badge-danger">Execute</span>
+        </div>
+    </div>
+
+    <hr>
+
+    <div>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm text-center">
+                    <label><b>Features</b></label>
+                    <div *ngFor="let column of SELECTED_FEATURES">
+                        <div class="container border border-secondary mb-2 bg-light rounded">
+                            <div class="row" style="align-items: center;">
+                                <div class="col-sm">
+                                    {{column}}
+                                </div>
+                                <div class="col-sm">
+                                    <button class="btn btn-success m-1"
+                                        (click)="moveColumn($event, column, SELECTED_FEATURES, COLUMNS)">
+                                        &gt;
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm text-center">
+                    <label><b>Columns</b></label>
+                    <div *ngFor="let column of COLUMNS">
+                        <div class="container border border-secondary mb-2 bg-light rounded">
+                            <div class="row" style="align-items: center;">
+                                <div class="col-sm">
+                                    <button class="btn btn-success m-1"
+                                        (click)="moveColumn($event, column, COLUMNS, SELECTED_FEATURES)">
+                                        &lt;
+                                    </button>
+                                </div>
+                                <div class="col-sm">
+                                    {{column}}
+                                </div>
+                                <div class="col-sm">
+                                    <button class="btn btn-success m-1"
+                                        (click)="moveColumn($event, column, COLUMNS, SELECTED_METRICS)">
+                                        &gt;
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm text-center">
+                    <label><b>Metrics</b></label>
+                    <div *ngFor="let column of SELECTED_METRICS">
+                        <div class="container border border-secondary mb-2 bg-light rounded">
+                            <div class="row" style="align-items: center;">
+                                <div class="col-sm">
+                                    <button class="btn btn-success m-1"
+                                        (click)="moveColumn($event, column, SELECTED_METRICS, COLUMNS)">
+                                        &lt;
+                                    </button>
+                                </div>
+                                <div class="col-sm">
+                                    {{column}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col text-left">
+            <button class="btn btn-primary" [routerLink]="['/jobsPage']">Save and Exit</button>
+        </div>
+        <div class="col text-right">
+            <button class="btn btn-primary" (click)="next()">Next</button>
+        </div>
+    </div>
+</div>
