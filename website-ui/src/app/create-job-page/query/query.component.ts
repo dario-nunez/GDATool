@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { IJob } from 'src/models/job.model';
 import { IAggregation } from 'src/models/aggregation.model';
+import { SchemaService } from 'src/services/schema/schema.service';
 
 @Component({
   selector: 'app-query',
@@ -11,42 +12,46 @@ import { IAggregation } from 'src/models/aggregation.model';
 })
 
 export class QueryComponent implements OnInit {
-  FEATURE_COLUMNS: Array<string> = ["city", "county", "id"];
-  OPERATIONS: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
-  METRIC_COLUMNS: Array<string> = ["price"];
-
+  ioDisabled: boolean = true;
+  jobId: string;
   job: IJob;
+
+  FEATURE_COLUMNS: Array<string> = [];
+  OPERATIONS: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
+  METRIC_COLUMNS: Array<string> = [];
+
   aggregations: IAggregation[];
   currentAggregationName: string;
   currentAggregationMetricColumn: string;
 
-  possibleFeatureColumns: Array<string> = ["city", "county", "id"];
+  possibleFeatureColumns: Array<string> = [];
   possibleAggs: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
-  possibleMetricColumns: Array<string> = ["price"];
+  possibleMetricColumns: Array<string> = [];
 
   selectedFeatureColumns: Array<string> = [];
   selectedAggregations: Array<string> = [];
 
-  constructor(private mongodbService: MongodbService, private router: Router) { }
+  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, private router: Router) { }
 
   ngOnInit() {
-    this.currentAggregationName = "";
-    this.currentAggregationMetricColumn = "Choose one";
+    this.FEATURE_COLUMNS = this.schemaService.featureColumns;
+    this.possibleFeatureColumns = this.schemaService.featureColumns;
+    this.METRIC_COLUMNS = this.schemaService.metricColumns;
+    this.possibleMetricColumns = this.schemaService.metricColumns;
 
-    this.job = {
-      name: "",
-      description: "",
-      rawInputDirectory: "raw",
-      stagingFileName: "staging",
-      userId: JSON.parse(localStorage.getItem("user")).id,
-      generateESIndices: true,
-      jobStatus: "",
-      runs: []
-    }
+    this.currentAggregationName = "";
+    this.currentAggregationMetricColumn = "";
 
     this.aggregations = [];
 
-    this.addDefaultAggregations();
+    this.route.params.subscribe(params => {
+      this.jobId = params["job._id"];
+      this.mongodbService.getJobById(this.jobId).subscribe(job => {
+        this.job = job;
+        this.ioDisabled = false;
+        this.addDefaultAggregations();
+      });
+    });
   }
 
   addDefaultAggregations() {
@@ -70,7 +75,7 @@ export class QueryComponent implements OnInit {
     const newAgg: IAggregation = {
       aggs: this.selectedAggregations,
       featureColumns: this.selectedFeatureColumns,
-      jobId: "tbd",
+      jobId: this.schemaService.job._id,
       metricColumn: this.currentAggregationMetricColumn,
       name: this.currentAggregationName,
       sortColumnName: this.currentAggregationMetricColumn
@@ -122,11 +127,10 @@ export class QueryComponent implements OnInit {
     }
   }
 
-  createJob() {
-    
-  }
-
   next() {
-    this.router.navigate(['/execute']);
+    this.mongodbService.createMultipleAggregations(this.aggregations).subscribe(aggs => {
+      console.log("Job created!");
+      this.router.navigate(['/execute', this.jobId]);
+    });
   }
 }

@@ -22,10 +22,10 @@ const routes: Routes = [
   {path: "userPage", component: UserPageComponent, canActivate: [AuthenticationGuardService]},
   {path: "jobDetailsPage/:job._id", component: JobDetailsPageComponent, canActivate: [AuthenticationGuardService]},
   {path: "details", component: DetailsComponent, canActivate: [AuthenticationGuardService]},
-  {path: "upload", component: UploadComponent, canActivate: [AuthenticationGuardService]},
-  {path: "schema", component: SchemaComponent, canActivate: [AuthenticationGuardService]},
-  {path: "query", component: QueryComponent, canActivate: [AuthenticationGuardService]},
-  {path: "execute", component: ExecuteComponent, canActivate: [AuthenticationGuardService]},
+  {path: "upload/:job._id", component: UploadComponent, canActivate: [AuthenticationGuardService]},
+  {path: "schema/:job._id", component: SchemaComponent, canActivate: [AuthenticationGuardService]},
+  {path: "query/:job._id", component: QueryComponent, canActivate: [AuthenticationGuardService]},
+  {path: "execute/:job._id", component: ExecuteComponent, canActivate: [AuthenticationGuardService]},
   {path: "dashboardPage/:job._id", component: DashboardPageComponent, canActivate: [AuthenticationGuardService]}
 ];
 

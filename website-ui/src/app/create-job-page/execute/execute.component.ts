@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-execute',
@@ -8,13 +8,20 @@ import { Router } from '@angular/router';
   styleUrls: ['./execute.component.css']
 })
 export class ExecuteComponent implements OnInit {
-
-  constructor(private mongodbService: MongodbService, private router: Router) { }
+  jobId: string;
+  ioDisabled: boolean = true;
+  
+  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
+    this.route.params.subscribe(params => {
+      this.jobId = params["job._id"];
+      this.ioDisabled = false;
+    });
   }
 
-  next() {
+  submitAndRun() {
+    console.log("Trigger Spark job")
     this.router.navigate(['/jobsPage']);
   }
 }
