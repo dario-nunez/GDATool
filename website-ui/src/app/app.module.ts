@@ -19,7 +19,6 @@ import { MongodbService } from '../services/mongodb/mongodb.service';
 import { UserPageComponent } from './user-page/user-page.component';
 import { TopNavbarComponent } from './top-navbar/top-navbar.component';
 import { JobDetailsPageComponent } from './job-details-page/job-details-page.component';
-import { CreateJobPageComponent } from './create-job-page/create-job-page.component';
 import { DashboardPageComponent } from './dashboard-page/dashboard-page.component';
 import { DetailsComponent } from './create-job-page/details/details.component';
 import { UploadComponent } from './create-job-page/upload/upload.component';
@@ -39,7 +38,6 @@ import { ExecuteComponent } from './create-job-page/execute/execute.component';
     UserPageComponent,
     TopNavbarComponent,
     JobDetailsPageComponent,
-    CreateJobPageComponent,
     DashboardPageComponent,
     DetailsComponent,
     UploadComponent,

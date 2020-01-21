@@ -12,7 +12,7 @@ export interface IJobModel {
     userId: string;
     generateESIndices: boolean;
     runs: Array<string>;
-    jobStatus: string;
+    jobStatus: number;
 }
 
 export interface IJob extends IJobModel, mongoose.Document {
@@ -48,8 +48,9 @@ export const JobSchema = new mongoose.Schema({
         type: Array
     },
     jobStatus: {
-        required: false,
-        type: String
+        default: 0,
+        required: true,
+        type: Number
     },
     userId: {
         default: "dummy",

@@ -20,13 +20,11 @@ export class JobComponent implements OnInit {
 
         console.log(this.job)
 
-        if (this.job.jobStatus == "success") {
-            this.cardColor = "border-success mb-3";
-        } else if (this.job.jobStatus == "pending") {
-            this.pending = true;
+        if (this.job.jobStatus < 5) {
             this.cardColor = "border-warning mb-3";
         } else {
-            this.cardColor = "border-danger mb-3"
+            this.pending = true;
+            this.cardColor = "border-success mb-3";
         }
     }
 }

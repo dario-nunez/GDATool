@@ -27,7 +27,7 @@ export class DetailsComponent implements OnInit {
       stagingFileName: "",
       userId: JSON.parse(localStorage.getItem("user")).id,
       generateESIndices: true,
-      jobStatus: "",
+      jobStatus: 1,
       runs: []
     }
   }

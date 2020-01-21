@@ -75,7 +75,7 @@ export class QueryComponent implements OnInit {
     const newAgg: IAggregation = {
       aggs: this.selectedAggregations,
       featureColumns: this.selectedFeatureColumns,
-      jobId: this.schemaService.job._id,
+      jobId: this.jobId,
       metricColumn: this.currentAggregationMetricColumn,
       name: this.currentAggregationName,
       sortColumnName: this.currentAggregationMetricColumn

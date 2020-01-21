@@ -20,8 +20,7 @@ public interface JobModel {
     String name();
     @Nullable
     List<String> runs();
-    @Nullable
-    String jobStatus();
+    Integer jobStatus();
     String description();
     String userId();
     String rawInputDirectory();

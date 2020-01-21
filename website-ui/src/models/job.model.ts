@@ -8,6 +8,6 @@ export interface IJob {
     stagingFileName: string;
     userId: string;
     generateESIndices: boolean;
-    jobStatus: string;
+    jobStatus: number;
     runs: IRun[];
 }

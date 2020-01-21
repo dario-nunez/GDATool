@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { IJob } from 'src/models/job.model';
 
 @Injectable({
   providedIn: 'root'
@@ -8,20 +7,8 @@ export class SchemaService {
 
   featureColumns: Array<string> = [];
   metricColumns: Array<string> = [];
-  job: IJob;
 
-  constructor() { 
-    this.job = {
-      name: "",
-      description: "",
-      rawInputDirectory: "",
-      stagingFileName: "",
-      userId: "",
-      generateESIndices: true,
-      jobStatus: "",
-      runs: []
-    }
-  }
+  constructor() { }
 
   getFeatureColumns() {
     return this.featureColumns;
@@ -37,42 +24,5 @@ export class SchemaService {
 
   setMetricColumns(newMetricColumns: Array<string>) {
     this.metricColumns = newMetricColumns;
-  }
-
-  getJob() {
-    console.log(this.job)
-    return this.job;
-  }
-
-  updateJob(newJob: IJob): IJob {
-    if (newJob._id != "") {
-      this.job._id = newJob._id;
-    }
-
-    if (newJob.name != "") {
-      this.job.name = newJob.name;
-    }
-
-    if (newJob.description != "") {
-      this.job.description = newJob.description
-    }
-
-    if (newJob.rawInputDirectory != "") {
-      this.job.rawInputDirectory = newJob.rawInputDirectory
-    }
-
-    if (newJob.stagingFileName != "") {
-      this.job.stagingFileName = newJob.stagingFileName
-    }
-
-    if (newJob.userId != "") {
-      this.job.userId = newJob.userId
-    }
-
-    if (newJob.jobStatus != "") {
-      this.job.jobStatus = newJob.jobStatus
-    }
-
-    return this.job;
   }
 }

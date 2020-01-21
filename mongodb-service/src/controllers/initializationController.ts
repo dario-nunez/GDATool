@@ -75,7 +75,7 @@ export class DatabaseController {
                 userId: "111111111111111111111111",
                 generateESIndeces: true,
                 runs: [],
-                jobStatus: "success"
+                jobStatus: 4
             }
         );
 
@@ -131,7 +131,7 @@ export class DatabaseController {
                 userId: "121212121212121212121212",
                 generateESIndeces: true,
                 runs: [],
-                jobStatus: "success"
+                jobStatus: 4
             }
         );
 
@@ -223,7 +223,7 @@ export class DatabaseController {
                 userId: "222222222222222222222222",
                 generateESIndeces: true,
                 runs: [],
-                jobStatus: "success"
+                jobStatus: 4
             }
         );
 
