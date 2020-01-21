@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IJob } from '../../models/job.model';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
-import { IRun } from 'src/models/run.model';
 
 @Component({
   selector: 'app-jobs-page',

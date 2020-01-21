@@ -17,13 +17,14 @@ export class SchemaComponent implements OnInit {
   SELECTED_METRICS: Array<string> = [];
   SELECTED_FEATURES: Array<string> = [];
 
-  constructor(private mongodbService: MongodbService, private schemaService: SchemaService, private route: ActivatedRoute, private router: Router) {}
+  constructor(private mongodbService: MongodbService, private schemaService: SchemaService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.jobId = params["job._id"];
       this.mongodbService.getJobById(this.jobId).subscribe(job => {
         this.job = job;
+        job.jobStatus = 3;
         this.ioDisabled = false;
       });
     });
@@ -50,8 +51,10 @@ export class SchemaComponent implements OnInit {
   }
 
   next() {
-    this.schemaService.setFeatureColumns(this.SELECTED_FEATURES);
-    this.schemaService.setMetricColumns(this.SELECTED_METRICS);
-    this.router.navigate(['/query', this.jobId]);
+    this.mongodbService.updateJob(this.job).subscribe(retJob => {
+      this.schemaService.setFeatureColumns(this.SELECTED_FEATURES);
+      this.schemaService.setMetricColumns(this.SELECTED_METRICS);
+      this.router.navigate(['/query', this.jobId]);
+    });
   }
 }

@@ -25,6 +25,7 @@ import { UploadComponent } from './create-job-page/upload/upload.component';
 import { SchemaComponent } from './create-job-page/schema/schema.component';
 import { QueryComponent } from './create-job-page/query/query.component';
 import { ExecuteComponent } from './create-job-page/execute/execute.component';
+import { StatusLineComponent } from './jobs-page/job/status-line/status-line.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { ExecuteComponent } from './create-job-page/execute/execute.component';
     UploadComponent,
     SchemaComponent,
     QueryComponent,
-    ExecuteComponent
+    ExecuteComponent,
+    StatusLineComponent
   ],
   imports: [
     BrowserModule,

@@ -48,6 +48,7 @@ export class QueryComponent implements OnInit {
       this.jobId = params["job._id"];
       this.mongodbService.getJobById(this.jobId).subscribe(job => {
         this.job = job;
+        job.jobStatus = 4;
         this.ioDisabled = false;
         this.addDefaultAggregations();
       });
@@ -128,9 +129,11 @@ export class QueryComponent implements OnInit {
   }
 
   next() {
-    this.mongodbService.createMultipleAggregations(this.aggregations).subscribe(aggs => {
-      console.log("Job created!");
-      this.router.navigate(['/execute', this.jobId]);
+    this.mongodbService.updateJob(this.job).subscribe(retJob => {
+      this.mongodbService.createMultipleAggregations(this.aggregations).subscribe(aggs => {
+        console.log("Aggregations added");
+        this.router.navigate(['/execute', this.jobId]);
+      });
     });
   }
 }

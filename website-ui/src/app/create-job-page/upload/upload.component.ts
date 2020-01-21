@@ -10,6 +10,7 @@ import { IJob } from 'src/models/job.model';
 })
 export class UploadComponent implements OnInit {
   jobId: string;
+  job: IJob;
   ioDisabled: boolean = true;
 
   constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) { }
@@ -17,11 +18,17 @@ export class UploadComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.jobId = params["job._id"];
-      this.ioDisabled = false;
+      this.mongodbService.getJobById(this.jobId).subscribe(job => {
+        this.job = job;
+        job.jobStatus = 2;
+        this.ioDisabled = false;
+      });
     });
   }
 
   next() {
-    this.router.navigate(['/schema', this.jobId]);
+    this.mongodbService.updateJob(this.job).subscribe(retJob => {
+      this.router.navigate(['/schema', this.jobId]);
+    });
   }
 }

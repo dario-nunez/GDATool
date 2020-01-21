@@ -2,8 +2,8 @@
     <div class="card-header border-0">
         <div class="d-flex align-items-center">
             <div>
-                <a class="card-title h5" [routerLink]="['/jobDetailsPage', job._id]"
-                    style="margin: 0%">{{job.name}}</a>
+                <!-- <a class="card-title h5" (click)="jobNameLink()" style="margin: 0%">{{job.name}}</a> -->
+                <button class="btn btn-link p-0" (click)="jobNameLink()">{{job.name}}</button>
             </div>
             <div class="ml-auto">
                 <div *ngIf="pending" class="spinner-border-sm spinner-border text-warning" role="status"
@@ -11,57 +11,12 @@
             </div>
         </div>
     </div>
+    
     <div class="card-body">
-        <!-- <h5>Status:</h5> -->
-
-        <div class="row">
-            <div class="col-8">
-                <!-- <span class="badge badge-white p-1">1. Job Details</span> -->
-                <label class="m-0 p-0"><b>1. </b>Job Details</label>
-            </div>
-            <div class="col-4">
-                <span class="badge badge-success p-1">Done</span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-8">
-                <!-- <span class="badge badge-white p-1">2. Data Upload</span> -->
-                <label class="m-0 p-0"><b>2. </b>Data Upload</label>
-            </div>
-            <div class="col-4">
-                <span class="badge badge-warning p-1">In progress</span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-8">
-                <!-- <span class="badge badge-white p-1">3. Schema specification</span> -->
-                <label class="m-0 p-0"><b>3. </b>Schema</label>
-            </div>
-            <div class="col-4">
-                <span class="badge badge-danger p-1">To do</span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-8">
-                <!-- <span class="badge badge-white p-1">4. Aggregation specification</span> -->
-                <label class="m-0 p-0"><b>4. </b>Query</label>
-            </div>
-            <div class="col-4">
-                <span class="badge badge-danger p-1">To do</span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-8">
-                <!-- <span class="badge badge-white p-1">5. Execute</span> -->
-                <label class="m-0 p-0"><b>5. </b>Execute</label>
-            </div>
-            <div class="col-4">
-                <span class="badge badge-danger p-1">To do</span>
-            </div>
-        </div>
+        <app-status-line *ngFor="let statusLine of statusLines" [statusLine]="statusLine"></app-status-line>
     </div>
 
     <div class="card-footer border-0">
-        <a [routerLink]="['/dashboardPage', job._id]" class="card-link">Go to Dashboard</a>
+        <button class="btn btn-link p-0" [routerLink]="['/dashboardPage', job._id]">Go to Dashboard</button>
     </div>
 </div>
