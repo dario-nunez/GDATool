@@ -107,6 +107,6 @@ export class MongodbService {
     const options: any = {
       responseType: "text"
     };
-    return this.http.post<string>("ms/job/getUploadFileUrl", { jobId, fileName }, options);
+    return this.http.post<string>("http://localhost:5000/ms/job/getUploadFileUrl", { jobId, fileName }, options);
   }
 }

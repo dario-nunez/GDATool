@@ -4,6 +4,7 @@ import { Inject } from "typescript-ioc";
 import { DELETE, GET, Path, PathParam, POST, PUT } from "typescript-rest";
 import { JobRepository } from "../../../common-service/src/repositories/jobRepository";
 import { S3BucketServiceProxy } from "../s3/s3BucketServiceProxy";
+import { UploadUrlModel } from "../../../common-service/src/models/uploadUrlModel";
 
 @Path("/ms/job")
 export class JobController extends Controller<IJob> {
@@ -62,5 +63,13 @@ export class JobController extends Controller<IJob> {
     @GET
     public async getJobsByUser(@PathParam("id") id: string): Promise<Array<IJobModel>> {
         return await this.jobRepository.getjobsByUserId(id);
+    }
+
+    @Path("getUploadFileUrl")
+    @POST
+    public async getUploadFileUrl(uploadUrlModel: UploadUrlModel): Promise<string> {
+        const job: IJob = await this.jobRepository.getById(uploadUrlModel.jobId);
+        const filePath = `${job.rawInputDirectory}/${uploadUrlModel.fileName}`;
+        return this.s3BucketServiceProxy.getSignedUrlValidFor30minutes(process.env.BUCKET_NAME, filePath);
     }
 }
