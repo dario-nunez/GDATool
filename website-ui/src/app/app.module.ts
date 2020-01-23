@@ -26,6 +26,13 @@ import { SchemaComponent } from './create-job-page/schema/schema.component';
 import { QueryComponent } from './create-job-page/query/query.component';
 import { ExecuteComponent } from './create-job-page/execute/execute.component';
 import { StatusLineComponent } from './jobs-page/job/status-line/status-line.component';
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { JwtHelperService, JwtModule } from "@auth0/angular-jwt";
+import { FileSelectDirective } from 'ng2-file-upload';
+
+export function tokenGetter(): string {
+  return localStorage.getItem("auth_token");
+}
 
 @NgModule({
   declarations: [
@@ -45,18 +52,28 @@ import { StatusLineComponent } from './jobs-page/job/status-line/status-line.com
     SchemaComponent,
     QueryComponent,
     ExecuteComponent,
-    StatusLineComponent
+    StatusLineComponent,
+    FileSelectDirective
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter,
+        whitelistedDomains: [],
+        blacklistedRoutes: ["/ms/user/createAndGetJWT", "/auth/jwt/getToken"]
+      }
+    }),
+    NgbModule
   ],
   providers: [
     AuthenticationService,
     MongodbService,
-    AuthenticationGuardService
+    AuthenticationGuardService,
+    JwtHelperService
   ],
   bootstrap: [AppComponent]
 })

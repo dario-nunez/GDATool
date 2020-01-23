@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IJob } from 'src/models/job.model';
+import { FileUploader } from "ng2-file-upload";
 
 @Component({
   selector: 'app-upload',
@@ -12,8 +13,25 @@ export class UploadComponent implements OnInit {
   jobId: string;
   job: IJob;
   ioDisabled: boolean = true;
+  uploader: FileUploader;
 
-  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) { }
+  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) {
+    this.jobId = this.route.snapshot.paramMap.get("job._id");
+    this.job = {} as IJob;
+    this.uploader = new FileUploader({
+      method: "PUT",
+      disableMultipart: true // 'DisableMultipart' must be 'true' for formatDataFunction to be called.
+    });
+
+    this.uploader.onAfterAddingFile = (item => {
+      this.mongodbService.getUploadFileUrl(item.file.name, this.jobId).subscribe(
+        value => {
+          item.url = value;
+        },
+        error => console.log(error)
+      );
+    });
+  }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
