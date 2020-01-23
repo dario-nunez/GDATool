@@ -82,7 +82,7 @@ public class Module extends AbstractModule {
                 .elasticsearchPort(Integer.parseInt(prop.getProperty("elasticsearchPort", "9200")))
                 .elasticsearchUrl(prop.getProperty("elasticsearchUrl", "localhost"))
                 .master(prop.getProperty("master"))
-                .rawFilePath(prop.getProperty("rawFilePath"))
+                .rawFileRoot(prop.getProperty("rawFileRoot"))
                 .secretAccessKey(System.getenv(prop.getProperty("awsSecretAccessKeyEnvVariable")))
                 .stagingFileName(prop.getProperty("stagingFileName"))
                 .stagingFolder(prop.getProperty("stagingFolder"))

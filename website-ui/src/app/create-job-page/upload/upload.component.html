@@ -27,11 +27,13 @@
 
     <hr>
 
-    <!-- ---------------------------------------------------------------------------------------------- -->
-
     <form>
         <div class="form-group">
-            <input type="file" ng2FileSelect [uploader]="uploader"/>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="customFile" ng2FileSelect [uploader]="uploader" />
+                <label class="custom-file-label" for="customFile">Choose file</label>
+            </div>
+            <!-- <input type="file" ng2FileSelect [uploader]="uploader"/> -->
         </div>
         <div id="uploadQueue" *ngIf="uploader.queue.length" class="form-group">
             <table class="table .table-sm">
@@ -41,7 +43,7 @@
                         <th>Size</th>
                         <th>Progress</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        <!-- <th>Actions</th> -->
                     </tr>
                 </thead>
                 <tbody>
@@ -60,7 +62,7 @@
                             <span *ngIf="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
                             <span *ngIf="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
                         </td>
-                        <td nowrap>
+                        <!-- <td nowrap>
                             <button type="button" class="btn btn-outline-success btn-sm upload-file-btn"
                                 (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">
                                 <span class="glyphicon glyphicon-upload"></span> Upload
@@ -73,7 +75,7 @@
                                 (click)="item.remove()">
                                 <span class="glyphicon glyphicon-trash"></span> Remove
                             </button>
-                        </td>
+                        </td> -->
                     </tr>
                 </tbody>
             </table>
@@ -87,17 +89,17 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <button type="button" class="btn btn-success btn-sm upload-file-btn"
+                        <button type="button" class="m-1 btn btn-success btn-sm upload-file-btn"
                             (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
-                            <span class="glyphicon glyphicon-upload"></span> Upload all
+                            <span class="glyphicon glyphicon-upload"></span> Upload
                         </button>
-                        <button type="button" class="btn btn-warning btn-sm upload-file-btn"
+                        <button type="button" class="m-1 btn btn-warning btn-sm upload-file-btn"
                             (click)="uploader.cancelAll()" [disabled]="!uploader.isUploading">
-                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+                            <span class="glyphicon glyphicon-ban-circle"></span> Cancel
                         </button>
-                        <button type="button" class="btn btn-danger btn-sm upload-file-btn"
+                        <button type="button" class="m-1 btn btn-danger btn-sm upload-file-btn"
                             (click)="uploader.clearQueue()" [disabled]="!uploader.queue.length">
-                            <span class="glyphicon glyphicon-trash"></span> Remove all
+                            <span class="glyphicon glyphicon-trash"></span> Remove
                         </button>
                     </div>
                 </div>
@@ -105,11 +107,9 @@
         </div>
     </form>
 
-    <!-- ---------------------------------------------------------------------------------------------- -->
-
     <div class="row">
         <div class="col text-left">
-            <button class="btn btn-primary" [routerLink]="['/jobsPage']" [disabled]="ioDisabled">Save and Exit</button>
+            <button class="btn btn-primary" [routerLink]="['/jobsPage']">Save and Exit</button>
         </div>
         <div class="col text-right">
             <button class="btn btn-primary" (click)="next()" [disabled]="ioDisabled">Next</button>

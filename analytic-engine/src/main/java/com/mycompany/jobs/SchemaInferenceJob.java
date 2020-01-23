@@ -58,7 +58,7 @@ public class SchemaInferenceJob extends Job {
     }
 
     public void run(String jobId, String userId) throws IOException, UnirestException {
-        Dataset<Row> dataset = read(String.format("%s/%s/%s/raw/pp-2018-part1.csv", configModel.rawFilePath(), userId, jobId));
+        Dataset<Row> dataset = read(String.format("%s/%s/%s/raw/pp-2018-part1.csv", configModel.rawFileRoot(), userId, jobId));
 
         HashMap<String, String> schema = new HashMap<>();
 
@@ -69,10 +69,10 @@ public class SchemaInferenceJob extends Job {
         ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
 
         List OGDataset = dataset.collectAsList();
-        FileUtils.writeStringToFile(new File(String.format("%s/%s/%s/raw/ogdataset.txt", configModel.rawFilePath(), userId, jobId)), OGDataset.toString());
+        FileUtils.writeStringToFile(new File(String.format("%s/%s/%s/raw/ogdataset.txt", configModel.rawFileRoot(), userId, jobId)), OGDataset.toString());
 
         String jsonSchema = objectWriter.writeValueAsString(schema);
-        FileUtils.writeStringToFile(new File(String.format("%s/%s/%s/raw/schema.json", configModel.rawFilePath(), userId, jobId)), jsonSchema);
+        FileUtils.writeStringToFile(new File(String.format("%s/%s/%s/raw/schema.json", configModel.rawFileRoot(), userId, jobId)), jsonSchema);
         System.out.println(jsonSchema);
     }
 }

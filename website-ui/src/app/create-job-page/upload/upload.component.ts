@@ -17,17 +17,28 @@ export class UploadComponent implements OnInit {
 
   constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) {
     this.jobId = this.route.snapshot.paramMap.get("job._id");
+    console.log(this.jobId)
     this.job = {} as IJob;
     this.uploader = new FileUploader({
       method: "PUT",
       disableMultipart: true // 'DisableMultipart' must be 'true' for formatDataFunction to be called.
     });
 
+    this.uploader.onCompleteItem = (item => {
+      console.log("File just uploaded:")
+      console.log(item.file.name)
+      this.job.rawInputDirectory = this.job.rawInputDirectory + "/" + item.file.name;
+      this.ioDisabled = false;
+    });
+
     this.uploader.onAfterAddingFile = (item => {
-      this.mongodbService.getUploadFileUrl(item.file.name, this.jobId).subscribe(
-        value => {
-          item.url = value;
-        },
+      if (this.uploader.queue.length > 0) {
+        this.uploader.queue = [item];
+      }
+      this.mongodbService.getUploadFileUrl(item.file.name, this.jobId).subscribe(value => {
+        item.url = value;
+        console.log("File has been added")
+      },
         error => console.log(error)
       );
     });
@@ -39,7 +50,6 @@ export class UploadComponent implements OnInit {
       this.mongodbService.getJobById(this.jobId).subscribe(job => {
         this.job = job;
         job.jobStatus = 2;
-        this.ioDisabled = false;
       });
     });
   }

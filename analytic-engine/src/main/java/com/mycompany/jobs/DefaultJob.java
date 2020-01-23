@@ -48,23 +48,25 @@ public class DefaultJob extends Job {
     }
 
     public void run(String jobId, String userId) throws IOException, UnirestException {
-
         logger.info("job {} by user {} is starting", jobId, userId);
         List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
         JobModel job = mongodbRepository.getJobById(jobId);
 
-        Dataset<Row> dataset = read(String.format("%s/%s/%s/raw/pp-2018-part1.csv", configModel.rawFilePath(), userId, jobId));
-        //Dataset<Row> dataset = read(String.format("%s", configModel.rawFilePath()));
+        //Dev path
+        Dataset<Row> dataset = read(String.format("%s/%s", configModel.rawFileRoot(), job.rawInputDirectory()));
 
-        List OGDataset = dataset.collectAsList();
-        FileUtils.writeStringToFile(new File(String.format("%s/%s/%s/raw/ogDataset.txt", configModel.rawFilePath(), userId, jobId)), OGDataset.toString());
+        //Local path
+//        Dataset<Row> dataset = read(String.format("%s/%s/%s/raw/pp-2018-part1.csv", configModel.rawFileRoot(), userId, jobId));
 
-        //Dataset<Row> filteredDataset = dataset.where("price > 500000");
-        //Dataset<Row> filteredDataset = dataset.where("price = 350000");
-        Dataset<Row> filteredDataset = dataset.where("city = 'NOTTINGHAM'");
-
-        List filteredDatasetList = filteredDataset.collectAsList();
-        FileUtils.writeStringToFile(new File(String.format("%s/%s/%s/raw/filteredDataset.txt", configModel.rawFilePath(), userId, jobId)), filteredDatasetList.toString());
+//        List OGDataset = dataset.collectAsList();
+//        FileUtils.writeStringToFile(new File(String.format("%s/%s/%s/raw/ogDataset.txt", configModel.rawFilePath(), userId, jobId)), OGDataset.toString());
+//
+//        //Dataset<Row> filteredDataset = dataset.where("price > 500000");
+//        //Dataset<Row> filteredDataset = dataset.where("price = 350000");
+//        Dataset<Row> filteredDataset = dataset.where("city = 'NOTTINGHAM'");
+//
+//        List filteredDatasetList = filteredDataset.collectAsList();
+//        FileUtils.writeStringToFile(new File(String.format("%s/%s/%s/raw/filteredDataset.txt", configModel.rawFilePath(), userId, jobId)), filteredDatasetList.toString());
 
         sparkSession.udf().register("createMonthYearColumn", userDefinedFunctionsFactory.createMonthYearColumn(), DataTypes.StringType);
         dataset = dataset.withColumn("month", callUDF("createMonthYearColumn", col("transferDate"))).cache();
@@ -74,7 +76,7 @@ public class DefaultJob extends Job {
 
             long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
 
-            saveToStaging(groupByDataset, String.format("%s/%s/staging/%d/%s",
+            saveToStaging(groupByDataset, String.format("/%s/%s/staging/%d/%s",
                     userId, jobId, dateEpoch, agg._id()));
             if (configModel.elasticsearchUrl() != null && job.generateESIndices()) {
                 saveToES(groupByDataset, job, agg, hlClient, dateEpoch);
