@@ -109,4 +109,11 @@ export class MongodbService {
     };
     return this.http.post<string>("http://localhost:5000/ms/job/getUploadFileUrl", { jobId, fileName }, options);
   }
+
+  readFile(job: IJob): Observable<any> {
+    const options: any = {
+      responseType: "text"
+    };
+    return this.http.post<any>("http://localhost:5000/ms/job/readFile", job, options)
+  }
 }

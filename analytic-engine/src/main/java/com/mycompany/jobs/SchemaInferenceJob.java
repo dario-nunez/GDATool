@@ -58,7 +58,10 @@ public class SchemaInferenceJob extends Job {
     }
 
     public void run(String jobId, String userId) throws IOException, UnirestException {
-        Dataset<Row> dataset = read(String.format("%s/%s/%s/raw/pp-2018-part1.csv", configModel.rawFileRoot(), userId, jobId));
+        logger.info("Inference job {} by user {} is starting", jobId, userId);
+        JobModel job = mongodbRepository.getJobById(jobId);
+        //Dev path
+        Dataset<Row> dataset = read(String.format("%s/%s", configModel.rawFileRoot(), job.rawInputDirectory()));
 
         HashMap<String, String> schema = new HashMap<>();
 

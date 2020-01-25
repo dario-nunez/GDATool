@@ -104,4 +104,17 @@ export class S3BucketService {
             Expires: signedUrlExpireSeconds
         });
     }
+
+    public readFile(bucket: string, key: string): Promise<any> {
+        const params = {
+            Bucket: bucket,
+            Key: key,
+        };
+
+        return this.s3.getObject(params, (err, data) => {
+            if (err) { 
+                logger.error(err);
+            }
+        }).promise();
+    }
 }

@@ -72,4 +72,11 @@ export class JobController extends Controller<IJob> {
         const filePath = `${job.rawInputDirectory}/${uploadUrlModel.fileName}`;
         return this.s3BucketServiceProxy.getSignedUrlValidFor30minutes(process.env.BUCKET_NAME, filePath);
     }
+
+    @Path("readFile")
+    @POST
+    public async readFile(job: IJobModel) {
+        const res = await this.s3BucketServiceProxy.readFile(process.env.BUCKET_NAME, job.rawInputDirectory);
+        return res.Body.toString();
+    }
 }

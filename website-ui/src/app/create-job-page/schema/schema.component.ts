@@ -26,6 +26,9 @@ export class SchemaComponent implements OnInit {
         this.job = job;
         job.jobStatus = 3;
         this.ioDisabled = false;
+        this.mongodbService.readFile(job).subscribe(file => {
+          console.log(file)
+        })
       });
     });
   }

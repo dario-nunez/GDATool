@@ -20,16 +20,16 @@ public class Main {
         DependenciesFactory dependenciesFactory = new DependenciesFactory(env, jobId);
 
         // Have an extra argument specifying which job to run: inference or analysis
-//        SchemaInferenceJob schemaInferenceJob = new SchemaInferenceJob(dependenciesFactory.sparkSession(), dependenciesFactory.configModel(),
-//                dependenciesFactory.mongodbRepository(), dependenciesFactory.biRepository(),
-//                dependenciesFactory.userDefinedFunctionsFactory(),
-//                dependenciesFactory.restHighLevelClient());
-//        schemaInferenceJob.run(jobId, userId);
-
-        DefaultJob job = new DefaultJob(dependenciesFactory.sparkSession(), dependenciesFactory.configModel(),
+        SchemaInferenceJob schemaInferenceJob = new SchemaInferenceJob(dependenciesFactory.sparkSession(), dependenciesFactory.configModel(),
                 dependenciesFactory.mongodbRepository(), dependenciesFactory.biRepository(),
                 dependenciesFactory.userDefinedFunctionsFactory(),
                 dependenciesFactory.restHighLevelClient());
-        job.run(jobId, userId);
+        schemaInferenceJob.run(jobId, userId);
+
+//        DefaultJob job = new DefaultJob(dependenciesFactory.sparkSession(), dependenciesFactory.configModel(),
+//                dependenciesFactory.mongodbRepository(), dependenciesFactory.biRepository(),
+//                dependenciesFactory.userDefinedFunctionsFactory(),
+//                dependenciesFactory.restHighLevelClient());
+//        job.run(jobId, userId);
     }
 }
