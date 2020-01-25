@@ -76,7 +76,8 @@ export class JobController extends Controller<IJob> {
     @Path("readFile")
     @POST
     public async readFile(job: IJobModel) {
-        const res = await this.s3BucketServiceProxy.readFile(process.env.BUCKET_NAME, job.rawInputDirectory);
+        const filePath = `${job.userId}/${job._id}/raw/schema.json`;
+        const res = await this.s3BucketServiceProxy.readFile(process.env.BUCKET_NAME, filePath);
         return res.Body.toString();
     }
 }

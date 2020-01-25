@@ -1,46 +1,36 @@
 package com.mycompany.jobs;
 
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.model.S3Object;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.inject.Inject;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mycompany.models.AggregationModel;
-import com.mycompany.models.ConfigModel;
-import com.mycompany.models.JobModel;
+import com.mycompany.models.*;
 import com.mycompany.services.bi.BiRepository;
 import com.mycompany.services.mongodb.MongodbRepository;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.output.FileWriterWithEncoding;
 import org.apache.spark.sql.*;
-import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
-import org.apache.spark.util.ShutdownHookManager;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
-import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
-import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest.AliasActions;
-import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.action.admin.indices.get.GetIndexRequest;
-import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.spark.sql.api.java.JavaEsSparkSQL;
-import org.joda.time.field.FieldUtils;
+import org.json.simple.JSONObject;
+import org.mortbay.util.ajax.JSON;
 import org.slf4j.LoggerFactory;
-import scala.collection.Seq;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.apache.spark.sql.functions.*;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 
+import static org.apache.spark.sql.functions.*;
 
 public class SchemaInferenceJob extends Job {
 
@@ -60,22 +50,74 @@ public class SchemaInferenceJob extends Job {
     public void run(String jobId, String userId) throws IOException, UnirestException {
         logger.info("Inference job {} by user {} is starting", jobId, userId);
         JobModel job = mongodbRepository.getJobById(jobId);
+
         //Dev path
         Dataset<Row> dataset = read(String.format("%s/%s", configModel.rawFileRoot(), job.rawInputDirectory()));
 
-        HashMap<String, String> schema = new HashMap<>();
+        //Prints the dataset in tabular format
+        //dataset.show();
+
+        List<ColumnModel> columns = new ArrayList<>();
 
         for (StructField field : dataset.schema().fields()) {
-            schema.put(field.name(), field.dataType().typeName());
+            String columnName = field.name();
+            String columnType = field.dataType().typeName();
+            List<String> range = new ArrayList<>();
+
+            if (columnType.equals("string")) {  // saving categorical range
+                range = dataset.select(columnName).distinct().collectAsList().stream().map(n -> (String) n.get(0)).map(n -> n==null? "null" : n).collect(Collectors.toList());
+            } else {    // saving numeric range
+                Row minMax = dataset.agg(min(columnName), max(columnName)).head();
+                System.out.println(minMax.get(0));
+                System.out.println(minMax.get(1));
+
+                double min = Double.parseDouble(minMax.get(0).toString());
+                double max = Double.parseDouble(minMax.get(1).toString());
+
+                range.add(Double.toString(min));
+                range.add(Double.toString(max));
+            }
+
+            ColumnModel column = ImmutableColumnModel.builder()
+                    .name(columnName)
+                    .type(columnType)
+                    .range(range)
+                    .build();
+
+            columns.add(column);
         }
 
-        ObjectWriter objectWriter = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        SchemaModel schema = ImmutableSchemaModel.builder()
+            .datasetName(String.format("%s/%s", configModel.rawFileRoot(), job.rawInputDirectory()))
+            .schema(columns)
+            .build();
 
-        List OGDataset = dataset.collectAsList();
-        FileUtils.writeStringToFile(new File(String.format("%s/%s/%s/raw/ogdataset.txt", configModel.rawFileRoot(), userId, jobId)), OGDataset.toString());
+        ObjectMapper mapper = new ObjectMapper();
+        String jsonSchema = mapper.writeValueAsString(schema);
 
-        String jsonSchema = objectWriter.writeValueAsString(schema);
-        FileUtils.writeStringToFile(new File(String.format("%s/%s/%s/raw/schema.json", configModel.rawFileRoot(), userId, jobId)), jsonSchema);
-        System.out.println(jsonSchema);
+        /**
+         * AWS upload bit
+         */
+
+        AWSCredentials credentials = new BasicAWSCredentials(
+                configModel.accessKeyId(),
+                configModel.secretAccessKey()
+        );
+
+        String bucketName = configModel.appName();
+        String fileObjKeyName = String.format("%s/%s/raw", job.userId(), job._id());
+        String fileName = "schema.json";
+
+        try {
+            AmazonS3 s3Client = AmazonS3ClientBuilder
+                    .standard()
+                    .withCredentials(new AWSStaticCredentialsProvider(credentials))
+                    .withRegion(Regions.EU_WEST_2)
+                    .build();
+
+            s3Client.putObject(bucketName, fileObjKeyName + "/" + fileName, jsonSchema);
+        } catch (SdkClientException e) {
+            e.printStackTrace();
+        }
     }
 }

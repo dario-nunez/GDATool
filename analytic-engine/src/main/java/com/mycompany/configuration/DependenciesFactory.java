@@ -85,7 +85,7 @@ public class DependenciesFactory implements Log {
 
         return ImmutableConfigModel.builder()
                 .accessKeyId(prop.getProperty("awsAccessKeyIdEnvVariable"))
-                .appName("appName")
+                .appName(prop.getProperty("appName"))
                 .elasticsearchPort(Integer.parseInt(prop.getProperty("elasticsearchPort", "9200")))
                 .elasticsearchUrl(prop.getProperty("elasticsearchUrl", "localhost"))
                 .master(prop.getProperty("master"))
