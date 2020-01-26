@@ -17,18 +17,13 @@ import org.json.simple.JSONObject;
 import org.mortbay.util.ajax.JSON;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
 
 import static org.apache.spark.sql.functions.*;
 
@@ -95,10 +90,15 @@ public class SchemaInferenceJob extends Job {
         ObjectMapper mapper = new ObjectMapper();
         String jsonSchema = mapper.writeValueAsString(schema);
 
-        /**
-         * AWS upload bit
-         */
+        uploadSchemaToS3(job, jsonSchema);
+    }
 
+    /**
+     * Uploads the schema in json format to the raw file of the user directory in s3
+     * @param job that own the data file the schema is based on
+     * @param jsonSchema the schema json in string format
+     */
+    private void uploadSchemaToS3(JobModel job, String jsonSchema) {
         AWSCredentials credentials = new BasicAWSCredentials(
                 configModel.accessKeyId(),
                 configModel.secretAccessKey()

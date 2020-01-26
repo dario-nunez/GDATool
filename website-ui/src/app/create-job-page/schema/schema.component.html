@@ -30,15 +30,22 @@
     <div>
         <div class="container">
             <div class="row">
-                <div class="col-sm text-center">
+                <div class="col-md text-center">
                     <label><b>Features</b></label>
                     <div *ngFor="let column of SELECTED_FEATURES">
                         <div class="container border border-secondary mb-2 bg-light rounded">
-                            <div class="row" style="align-items: center;">
-                                <div class="col-sm">
-                                    {{column}}
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col">
+                                    <div class="col">
+                                        <div class="row justify-content-center">
+                                            <span>{{column[0]}}</span>
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            <span class="font-weight-light">{{column[1]}}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-sm">
+                                <div class="col-xs">
                                     <button class="btn btn-success m-1"
                                         (click)="moveColumn($event, column, SELECTED_FEATURES, COLUMNS)">
                                         &gt;
@@ -48,22 +55,29 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-md text-center">
                     <label><b>Columns</b></label>
                     <div *ngFor="let column of COLUMNS">
                         <div class="container border border-secondary mb-2 bg-light rounded">
-                            <div class="row" style="align-items: center;">
-                                <div class="col-sm">
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-xs">
                                     <button class="btn btn-success m-1"
                                         (click)="moveColumn($event, column, COLUMNS, SELECTED_FEATURES)">
                                         &lt;
                                     </button>
                                 </div>
-                                <div class="col-sm">
-                                    {{column}}
+                                <div class="col">
+                                    <div class="col">
+                                        <div class="row justify-content-center">
+                                            <span>{{column[0]}}</span>
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            <span class="font-weight-light">{{column[1]}}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-sm">
-                                    <button class="btn btn-success m-1"
+                                <div class="col-xs">
+                                    <button [disabled]="column[1] != 'integer'" class="btn btn-success m-1"
                                         (click)="moveColumn($event, column, COLUMNS, SELECTED_METRICS)">
                                         &gt;
                                     </button>
@@ -72,19 +86,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm text-center">
+                <div class="col-md text-center">
                     <label><b>Metrics</b></label>
                     <div *ngFor="let column of SELECTED_METRICS">
                         <div class="container border border-secondary mb-2 bg-light rounded">
-                            <div class="row" style="align-items: center;">
-                                <div class="col-sm">
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-xs">
                                     <button class="btn btn-success m-1"
                                         (click)="moveColumn($event, column, SELECTED_METRICS, COLUMNS)">
                                         &lt;
                                     </button>
                                 </div>
-                                <div class="col-sm">
-                                    {{column}}
+                                <div class="col">
+                                    <div class="col">
+                                        <div class="row justify-content-center">
+                                            <span>{{column[0]}}</span>
+                                        </div>
+                                        <div class="row justify-content-center">
+                                            <span class="font-weight-light">{{column[1]}}</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -101,7 +122,7 @@
             <button class="btn btn-primary" [routerLink]="['/jobsPage']" [disabled]="ioDisabled">Save and Exit</button>
         </div>
         <div class="col text-right">
-            <button class="btn btn-primary" (click)="next()" [disabled]="ioDisabled">Next</button>
+            <button class="btn btn-primary" (click)="next()" [disabled]="ioDisabled || SELECTED_METRICS.length <= 0 || SELECTED_FEATURES.length <= 0">Next</button>
         </div>
     </div>
 </div>

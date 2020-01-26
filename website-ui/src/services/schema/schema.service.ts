@@ -5,8 +5,8 @@ import { Injectable } from '@angular/core';
 })
 export class SchemaService {
 
-  featureColumns: Array<string> = [];
-  metricColumns: Array<string> = [];
+  featureColumns: Array<[string, string]> = [];
+  metricColumns: Array<[string, string]> = [];
 
   constructor() { }
 
@@ -18,11 +18,11 @@ export class SchemaService {
     return this.metricColumns;
   }
 
-  setFeatureColumns(newFeatureColumns: Array<string>) {
+  setFeatureColumns(newFeatureColumns: Array<[string, string]>) {
     this.featureColumns = newFeatureColumns;
   }
 
-  setMetricColumns(newMetricColumns: Array<string>) {
+  setMetricColumns(newMetricColumns: Array<[string, string]>) {
     this.metricColumns = newMetricColumns;
   }
 }

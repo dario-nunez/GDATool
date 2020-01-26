@@ -3,6 +3,7 @@ import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SchemaService } from 'src/services/schema/schema.service';
 import { IJob } from 'src/models/job.model';
+import { ISchema } from 'src/models/schema.model';
 
 @Component({
   selector: 'app-schema',
@@ -13,9 +14,11 @@ export class SchemaComponent implements OnInit {
   ioDisabled: boolean = true;
   job: IJob;
   jobId: string;
-  COLUMNS: Array<string> = ["city", "county", "id", "price", "etc..."];
-  SELECTED_METRICS: Array<string> = [];
-  SELECTED_FEATURES: Array<string> = [];
+  // COLUMNS: Array<[string, string]> = [["city", "string"], ["county", "string"], ["id", "string"], ["price", "integer"], ["kindaLongNameLong", "string"]];
+  COLUMNS: Array<[string, string]> = [];
+  SELECTED_METRICS: Array<[string, string]> = [];
+  SELECTED_FEATURES: Array<[string, string]> = [];
+  schema: ISchema;
 
   constructor(private mongodbService: MongodbService, private schemaService: SchemaService, private route: ActivatedRoute, private router: Router) { }
 
@@ -26,22 +29,25 @@ export class SchemaComponent implements OnInit {
         this.job = job;
         job.jobStatus = 3;
         this.ioDisabled = false;
-        this.mongodbService.readFile(job).subscribe(file => {
-          console.log(file)
+        this.mongodbService.readFile(job).subscribe(fileContents => {
+          this.schema = JSON.parse(fileContents);
+          this.schema.schema.forEach(column => {
+            this.COLUMNS.push([column.name, column.type])
+          });
         })
       });
     });
   }
 
-  moveColumn(event, element: string, originArray: Array<string>, destinationArray: Array<string>) {
+  moveColumn(event, element: [string, string], originArray: Array<[string, string]>, destinationArray: Array<[string, string]>) {
     console.log("from " + originArray + " to " + destinationArray)
 
     if (originArray == this.COLUMNS) {
-      this.COLUMNS = this.COLUMNS.filter(obj => obj !== element);
+      this.COLUMNS = this.COLUMNS.filter(obj => obj[0] !== element[0]);
     } else if (originArray == this.SELECTED_FEATURES) {
-      this.SELECTED_FEATURES = this.SELECTED_FEATURES.filter(obj => obj !== element);
+      this.SELECTED_FEATURES = this.SELECTED_FEATURES.filter(obj => obj[0] !== element[0]);
     } else {
-      this.SELECTED_METRICS = this.SELECTED_METRICS.filter(obj => obj !== element);
+      this.SELECTED_METRICS = this.SELECTED_METRICS.filter(obj => obj[0] !== element[0]);
     }
 
     if (destinationArray == this.COLUMNS) {

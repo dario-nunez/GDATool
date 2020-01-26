@@ -34,10 +34,15 @@ export class QueryComponent implements OnInit {
   constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, private router: Router) { }
 
   ngOnInit() {
-    this.FEATURE_COLUMNS = this.schemaService.featureColumns;
-    this.possibleFeatureColumns = this.schemaService.featureColumns;
-    this.METRIC_COLUMNS = this.schemaService.metricColumns;
-    this.possibleMetricColumns = this.schemaService.metricColumns;
+    this.schemaService.featureColumns.forEach(element => {
+      this.FEATURE_COLUMNS.push(element[0]);
+      this.possibleFeatureColumns.push(element[0]);
+    });
+
+    this.schemaService.metricColumns.forEach(element => {
+      this.METRIC_COLUMNS.push(element[0]);
+      this.possibleMetricColumns.push(element[0]);
+    });
 
     this.currentAggregationName = "";
     this.currentAggregationMetricColumn = "";
