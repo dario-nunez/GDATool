@@ -3,7 +3,6 @@ package com.mycompany.run;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mycompany.configuration.DependenciesFactory;
 import com.mycompany.configuration.Environment;
-import com.mycompany.jobs.DefaultJob;
 import com.mycompany.jobs.SchemaInferenceJob;
 
 import java.io.IOException;
