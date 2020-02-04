@@ -1,7 +1,6 @@
 package com.mycompany;
 
 import com.mycompany.configuration.Environment;
-import com.mycompany.configuration.Module;
 import com.mycompany.models.ConfigModel;
 import com.mycompany.models.ImmutableConfigModel;
 
