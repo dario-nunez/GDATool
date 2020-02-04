@@ -84,7 +84,6 @@ public class Module extends AbstractModule {
                 .master(prop.getProperty("master"))
                 .rawFileRoot(prop.getProperty("rawFileRoot"))
                 .secretAccessKey(System.getenv(prop.getProperty("awsSecretAccessKeyEnvVariable")))
-                .stagingFileName(prop.getProperty("stagingFileName"))
                 .stagingFolder(prop.getProperty("stagingFolder"))
                 .mongodbRootUrl(prop.getProperty("mongodbRootUrl"))
                 .elasticsearchServiceRootUrl(prop.getProperty("elasticsearchServiceRootUrl"))
