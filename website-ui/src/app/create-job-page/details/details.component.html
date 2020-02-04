@@ -1,0 +1,48 @@
+<app-top-navbar></app-top-navbar>
+
+<div class="container p-5">
+    <h2>Create job</h2>
+    <hr>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <h3><span class="badge badge-warning">Details</span></h3>
+        </div>
+        <div class="col text-center">
+            <span class="badge badge-danger">Upload</span>
+        </div>
+        <div class="col text-center">
+            <span class="badge badge-danger">Schema</span>
+        </div>
+        <div class="col text-center">
+            <span class="badge badge-danger">Query</span>
+        </div>
+        <div class="col text-center">
+            <span class="badge badge-danger">Execute</span>
+        </div>
+    </div>
+
+    <hr>
+
+    <form class="was-validated" #userForm="ngForm" (ngSubmit)="createJob()">
+        <div class="form-group">
+            <label for="name"><b>Name</b></label>
+            <input type="text" class="form-control" id="name" name="name" required [(ngModel)]="job.name"
+                #name="ngModel">
+        </div>
+
+        <div class="form-group">
+            <label for="description"><b>Description</b></label>
+            <input type="text" class="form-control" id="description" name="description" [(ngModel)]="job.description"
+                #description="ngModel">
+        </div>
+
+        <hr>
+
+        <div class="text-right">
+            <button type="submit" class="btn btn-primary" [disabled]="!userForm.form.valid">Next</button>
+        </div>
+    </form>
+</div>

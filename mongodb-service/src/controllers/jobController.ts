@@ -3,12 +3,18 @@ import {Controller} from "../../../common-service/src/controllers/controller";
 import { Inject } from "typescript-ioc";
 import { DELETE, GET, Path, PathParam, POST, PUT } from "typescript-rest";
 import { JobRepository } from "../../../common-service/src/repositories/jobRepository";
+import { S3BucketServiceProxy } from "../s3/s3BucketServiceProxy";
+import { UploadUrlModel } from "../../../common-service/src/models/uploadUrlModel";
 
 @Path("/ms/job")
 export class JobController extends Controller<IJob> {
 
-    constructor(@Inject private jobRepository: JobRepository) {
+    private bucketName: string;
+
+    constructor(@Inject private jobRepository: JobRepository,
+        @Inject private s3BucketServiceProxy: S3BucketServiceProxy) {
         super(jobRepository);
+        this.bucketName = process.env.BUCKET_NAME;       
     }
 
     @Path("getAll")
@@ -25,7 +31,14 @@ export class JobController extends Controller<IJob> {
 
     @POST
     public async createJob(job: IJobModel): Promise<IJobModel> {
-        return await this.jobRepository.create(job);
+        const newJob: IJob = await this.jobRepository.create(job);
+        newJob.rawInputDirectory = `${newJob.userId}/${newJob._id}/raw`;
+        newJob.stagingFileName = `${newJob.userId}/${newJob._id}/staging`;
+        
+        await this.s3BucketServiceProxy.createFolder(this.bucketName, newJob.rawInputDirectory + "/schema.json");
+        await this.s3BucketServiceProxy.createFolder(this.bucketName, newJob.stagingFileName + "/foo");
+        
+        return this.updateJob(newJob._id, newJob);
     }
 
     @Path(":id")
@@ -50,5 +63,21 @@ export class JobController extends Controller<IJob> {
     @GET
     public async getJobsByUser(@PathParam("id") id: string): Promise<Array<IJobModel>> {
         return await this.jobRepository.getjobsByUserId(id);
+    }
+
+    @Path("getUploadFileUrl")
+    @POST
+    public async getUploadFileUrl(uploadUrlModel: UploadUrlModel): Promise<string> {
+        const job: IJob = await this.jobRepository.getById(uploadUrlModel.jobId);
+        const filePath = `${job.rawInputDirectory}/${uploadUrlModel.fileName}`;
+        return this.s3BucketServiceProxy.getSignedUrlValidFor30minutes(process.env.BUCKET_NAME, filePath);
+    }
+
+    @Path("readFile")
+    @POST
+    public async readFile(job: IJobModel) {
+        const filePath = `${job.userId}/${job._id}/raw/schema.json`;
+        const res = await this.s3BucketServiceProxy.readFile(process.env.BUCKET_NAME, filePath);
+        return res.Body.toString();
     }
 }

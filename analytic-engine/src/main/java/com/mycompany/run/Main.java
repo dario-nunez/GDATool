@@ -4,6 +4,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mycompany.configuration.DependenciesFactory;
 import com.mycompany.configuration.Environment;
 import com.mycompany.jobs.DefaultJob;
+import com.mycompany.jobs.SchemaInferenceJob;
 
 import java.io.IOException;
 
@@ -17,10 +18,18 @@ public class Main {
 //        Injector injector = Guice.createInjector(new Module(env));
 //        DefaultJob job = injector.getInstance(DefaultJob.class);
         DependenciesFactory dependenciesFactory = new DependenciesFactory(env, jobId);
-        DefaultJob job = new DefaultJob(dependenciesFactory.sparkSession(), dependenciesFactory.configModel(),
+
+        // Have an extra argument specifying which job to run: inference or analysis
+        SchemaInferenceJob schemaInferenceJob = new SchemaInferenceJob(dependenciesFactory.sparkSession(), dependenciesFactory.configModel(),
                 dependenciesFactory.mongodbRepository(), dependenciesFactory.biRepository(),
                 dependenciesFactory.userDefinedFunctionsFactory(),
                 dependenciesFactory.restHighLevelClient());
-        job.run(jobId, userId);
+        schemaInferenceJob.run(jobId, userId);
+
+//        DefaultJob job = new DefaultJob(dependenciesFactory.sparkSession(), dependenciesFactory.configModel(),
+//                dependenciesFactory.mongodbRepository(), dependenciesFactory.biRepository(),
+//                dependenciesFactory.userDefinedFunctionsFactory(),
+//                dependenciesFactory.restHighLevelClient());
+//        job.run(jobId, userId);
     }
 }

@@ -8,8 +8,7 @@ public interface ConfigModel {
 
     String accessKeyId();
     String secretAccessKey();
-    String rawFilePath();
-    String stagingFileName();
+    String rawFileRoot();
     String elasticsearchUrl();
     int elasticsearchPort();
     String stagingFolder();

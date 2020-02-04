@@ -1,7 +1,7 @@
+import * as mongoose from "mongoose";
+import Aggregation, { IAggregation } from "../../../common-service/src/models/aggregationModel";
 import Job, { IJob } from "../models/jobModel";
 import { Repository } from "./repository";
-import Aggregation, { IAggregation } from "../../../common-service/src/models/aggregationModel";
-import * as mongoose from "mongoose";
 
 export class JobRepository extends Repository<IJob> {
     constructor() {

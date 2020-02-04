@@ -1,0 +1,40 @@
+<app-top-navbar></app-top-navbar>
+
+<div class="container p-5">
+    <h2>Create job</h2>
+    <hr>
+
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" style="width: 80%"></div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <span class="badge badge-success">Details</span>
+        </div>
+        <div class="col text-center">
+            <span class="badge badge-success">Upload</span>
+        </div>
+        <div class="col text-center">
+            <span class="badge badge-success">Schema</span>
+        </div>
+        <div class="col text-center">
+            <span class="badge badge-success">Query</span>
+        </div>
+        <div class="col text-center">
+            <h3><span class="badge badge-warning">Execute</span></h3>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Display a summary of the job and give the option to FINISH -->
+
+    <div class="row">
+        <div class="col text-left">
+            <button class="btn btn-primary" [routerLink]="['/jobsPage']" [disabled]="ioDisabled">Save and Exit</button>
+        </div>
+        <div class="col text-right">
+            <button class="btn btn-primary" (click)="submitAndRun()" [disabled]="ioDisabled">Submit and Run</button>
+        </div>
+    </div>
+</div>

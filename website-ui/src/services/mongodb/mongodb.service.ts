@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { IUser } from 'src/models/user.model';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -10,6 +10,15 @@ import { IAggregation } from 'src/models/aggregation.model';
   providedIn: 'root'
 })
 export class MongodbService {
+
+  private upsertUserUrl = "ms/user";
+  private createAndGetJWT = "ms/user/createAndGetJWT";
+
+  dashboardLink: string;
+  private corsHeaders = new HttpHeaders({
+    "Content-Type": "application/json",
+    Accept: "application/json"
+  });
 
   constructor(private http: HttpClient) { }
 
@@ -92,5 +101,19 @@ export class MongodbService {
     return this.http.post<IUser>("http://localhost:5000/ms/aggregation/multiple", aggregations).pipe(
       catchError(err => of(null))
     );
+  }
+
+  getUploadFileUrl(fileName: string, jobId: string): Observable<any> {
+    const options: any = {
+      responseType: "text"
+    };
+    return this.http.post<string>("http://localhost:5000/ms/job/getUploadFileUrl", { jobId, fileName }, options);
+  }
+
+  readFile(job: IJob): Observable<any> {
+    const options: any = {
+      responseType: "text"
+    };
+    return this.http.post<any>("http://localhost:5000/ms/job/readFile", job, options)
   }
 }

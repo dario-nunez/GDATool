@@ -16,8 +16,6 @@ export class JobDetailsPageComponent implements OnInit {
   constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
-    //this.getMockJob();
-
     this.job = {
       _id: "",
       name: "",
@@ -26,7 +24,7 @@ export class JobDetailsPageComponent implements OnInit {
       stagingFileName: "",
       userId: "",
       generateESIndices: true,
-      jobStatus: "",
+      jobStatus: 0,
       runs: []
     }
 
@@ -42,36 +40,6 @@ export class JobDetailsPageComponent implements OnInit {
       console.log(job);
       this.job = job;
     });
-  }
-
-  getMockJob() {
-    this.job = {
-      _id: "e5362300-bf75-11e9-909f-6f48786f343d",
-      name: "UK Properties",
-      description: "Sold properties in UK cities",
-      rawInputDirectory: "raw",
-      stagingFileName: "staging",
-      userId: "121212121212121212121212",
-      generateESIndices: true,
-      jobStatus: "success",
-      runs: [
-        {
-          timeStarted: new Date(),
-          timeFinished: new Date(),
-          runStatus: "success"
-        },
-        {
-          timeStarted: new Date(),
-          timeFinished: new Date(),
-          runStatus: "success"
-        },
-        {
-          timeStarted: new Date(),
-          timeFinished: new Date(),
-          runStatus: "fail"
-        }
-      ]
-    }
   }
 
   updateJob() {

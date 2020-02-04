@@ -1,10 +1,10 @@
-import User, { IUser } from "../models/userModel";
-import { Repository } from "./repository";
-import { IJob } from "../models/jobModel";
-import Job from "../models/jobModel";
 import * as mongoose from "mongoose";
 import Aggregation from "../models/aggregationModel";
 import { IAggregation } from "../models/aggregationModel";
+import { IJob } from "../models/jobModel";
+import Job from "../models/jobModel";
+import User, { IUser } from "../models/userModel";
+import { Repository } from "./repository";
 
 export class UserRepository extends Repository<IUser> {
     constructor() {
@@ -33,9 +33,9 @@ export class UserRepository extends Repository<IUser> {
 
     public async deleteRecursive(id: any): Promise<IUser> {
         const jobIds = await Job.find({ userId: id }).exec();
-        let aggIds: any[] = [];
+        const aggIds: Array<any> = [];
 
-        for (let job of jobIds){
+        for (const job of jobIds){
             const jobAggs = await Aggregation.find({ jobId: job._id }).exec();
             jobAggs.forEach(element => {
                 aggIds.push(element);
