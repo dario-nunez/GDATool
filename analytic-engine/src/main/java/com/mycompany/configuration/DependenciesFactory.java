@@ -5,7 +5,7 @@ import com.mycompany.models.ConfigModel;
 import com.mycompany.models.ImmutableConfigModel;
 import com.mycompany.services.HttpService;
 import com.mycompany.services.bi.BiRepository;
-import com.mycompany.services.mongodb.MongodbRepository;
+import com.mycompany.services.MongodbRepository;
 import org.apache.http.HttpHost;
 import org.apache.spark.SparkConf;
 import org.apache.spark.sql.SparkSession;

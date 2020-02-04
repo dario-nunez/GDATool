@@ -7,7 +7,7 @@ import com.mycompany.models.AggregationModel;
 import com.mycompany.models.ConfigModel;
 import com.mycompany.models.ImmutableAggregationModel;
 import com.mycompany.services.bi.BiRepository;
-import com.mycompany.services.mongodb.MongodbRepository;
+import com.mycompany.services.MongodbRepository;
 import org.apache.spark.sql.SparkSession;
 import org.junit.Before;
 import org.junit.Test;

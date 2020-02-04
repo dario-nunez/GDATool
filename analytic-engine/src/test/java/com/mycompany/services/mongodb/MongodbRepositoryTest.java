@@ -11,6 +11,7 @@ import com.mycompany.TestModule;
 import com.mycompany.models.AggregationModel;
 import com.mycompany.models.ConfigModel;
 import com.mycompany.services.HttpService;
+import com.mycompany.services.MongodbRepository;
 import org.apache.commons.io.FileUtils;
 import org.apache.http.HttpResponseFactory;
 import org.apache.http.HttpStatus;

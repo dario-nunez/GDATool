@@ -6,7 +6,7 @@ import com.mycompany.models.AggregationEnum;
 import com.mycompany.models.AggregationModel;
 import com.mycompany.models.ConfigModel;
 import com.mycompany.services.bi.BiRepository;
-import com.mycompany.services.mongodb.MongodbRepository;
+import com.mycompany.services.MongodbRepository;
 import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;

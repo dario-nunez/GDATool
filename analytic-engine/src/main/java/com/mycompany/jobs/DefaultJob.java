@@ -6,8 +6,7 @@ import com.mycompany.models.AggregationModel;
 import com.mycompany.models.ConfigModel;
 import com.mycompany.models.JobModel;
 import com.mycompany.services.bi.BiRepository;
-import com.mycompany.services.mongodb.MongodbRepository;
-import org.apache.commons.io.FileUtils;
+import com.mycompany.services.MongodbRepository;
 import org.apache.spark.sql.*;
 import org.apache.spark.sql.types.DataTypes;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
@@ -21,7 +20,6 @@ import org.elasticsearch.spark.sql.api.java.JavaEsSparkSQL;
 import org.slf4j.LoggerFactory;
 import scala.collection.Seq;
 
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;

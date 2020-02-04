@@ -6,7 +6,7 @@ import com.mycompany.jobs.UserDefinedFunctionsFactory;
 import com.mycompany.models.ConfigModel;
 import com.mycompany.models.ImmutableConfigModel;
 import com.mycompany.services.HttpService;
-import com.mycompany.services.mongodb.MongodbRepository;
+import com.mycompany.services.MongodbRepository;
 import org.apache.http.HttpHost;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
