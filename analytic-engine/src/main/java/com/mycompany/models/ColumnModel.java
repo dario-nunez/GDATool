@@ -1,15 +1,15 @@
 package com.mycompany.models;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.immutables.value.Value;
 import java.util.List;
 
-@Value.Immutable
-@JsonDeserialize(as = ImmutableColumnModel.class)
-@JsonSerialize(as = ImmutableColumnModel.class)
-public interface ColumnModel {
-    String name();
-    String type();
-    List<String> range();
+public class ColumnModel {
+    public String name;
+    public String type;
+    public List<String> range;
+
+    public ColumnModel(String name, String type, List<String> range) {
+        this.name = name;
+        this.type = type;
+        this.range = range;
+    }
 }
