@@ -7,6 +7,10 @@ import com.mycompany.jobs.SchemaInferenceJob;
 
 import java.io.IOException;
 
+/**
+ * Schema inference job.
+ * Creates a detailed schema file from the data in the /raw directory of the job and saves it in the same location
+ */
 public class SchemaInferenceMain {
     public static void main(String[] args) throws IOException, UnirestException {
         // Parse command line arguments

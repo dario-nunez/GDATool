@@ -7,6 +7,11 @@ import com.mycompany.jobs.DataAnalysisJob;
 
 import java.io.IOException;
 
+/**
+ * Data analysis job.
+ * Performs aggregations on a given dataset found in the /raw directory of the given job. Stores the results in the
+ * /staging folder and also in Elasticsearch.
+ */
 public class DataAnalysisMain {
     public static void main(String[] args) throws IOException, UnirestException {
         // Parse command line arguments
