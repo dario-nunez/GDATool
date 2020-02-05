@@ -66,8 +66,8 @@ public class DataAnalysisJob extends Job {
 
             long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
 
-//            saveToStaging(groupByDataset, String.format("/%s/%s/staging/%d/%s",
-//                    userId, jobId, dateEpoch, agg._id));
+            saveToStaging(groupByDataset, String.format("/%s/%s/staging/%d/%s",
+                    userId, jobId, dateEpoch, agg._id));
             if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
                 saveToES(groupByDataset, job, agg, restHighLevelClient, dateEpoch);
             }

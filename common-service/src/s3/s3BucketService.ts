@@ -64,7 +64,7 @@ export class S3BucketService {
     constructor(protected s3: S3 | null) {
         if (!s3) {
             this.s3 = S3BucketService.createS3Client({
-                region: process.env.AWS_REGION || "eu-west-2",
+                region: process.env.AWS_REGION || "eu-west-1",
                 accessKeyId: process.env.AWS_ACCESS_KEY_ID,
                 secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
             } as ConfigurationOptions

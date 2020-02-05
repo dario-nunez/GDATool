@@ -29,14 +29,11 @@ import java.util.stream.Collectors;
 import static org.apache.spark.sql.functions.*;
 
 public class SchemaInferenceJob extends Job {
-    private RestHighLevelClient restHighLevelClient;
-
     public SchemaInferenceJob(SparkSession sparkSession, ConfigModel configModel,
                               MongodbRepository mongodbRepository, ElasticsearchRepository elasticsearchRepository,
                               UserDefinedFunctionsFactory userDefinedFunctionsFactory,
                               RestHighLevelClient restHighLevelClient) {
         super(sparkSession, configModel, mongodbRepository, elasticsearchRepository, userDefinedFunctionsFactory);
-        this.restHighLevelClient = restHighLevelClient;
         logger = LoggerFactory.getLogger(SchemaInferenceJob.class);
     }
 
@@ -45,6 +42,8 @@ public class SchemaInferenceJob extends Job {
         JobModel job = mongodbRepository.getJobById(jobId);
 
         Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
+
+        // Temporary assurance print
         dataset.show();
 
         List<ColumnModel> columns = new ArrayList<>();
@@ -79,7 +78,7 @@ public class SchemaInferenceJob extends Job {
         String jsonSchema = mapper.writeValueAsString(schema);
 
         // Save the SchemaModel to the user's s3 bucket
-        //saveSchemaToS3(job, jsonSchema);
+        saveSchemaToS3(job, jsonSchema);
 
         sparkSession.close();
         System.out.println("------- JOB SHOULD HAVE ENDED -------");
