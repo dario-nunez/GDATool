@@ -12,6 +12,8 @@ docker cp /home/dario/github/GDATool/analytic-engine/target/analytic-engine-1.0-
 
 docker cp Documents/GitHub/GDATool/analytic-engine/target/analytic-engine-1.0-SNAPSHOT-shaded.jar be07446bf2a2:/spark/examples/jars
 
+docker cp Documents/GitHub/GDATool/spark-service/target/spark-service-1.0-SNAPSHOT.jar f4581838eb9c:/spark
+
 # Spark_submit arguments for running an application on a Spark standalone cluster in CLIENT deploy mode
 ./bin/spark-submit \
   --class <main-class> \
@@ -26,3 +28,12 @@ docker cp Documents/GitHub/GDATool/analytic-engine/target/analytic-engine-1.0-SN
 
 # Maven routine to create the shaded jar:
 Clean, Compile, Package
+
+# Running jar files
+java -jar <filename>.jar
+
+# List open ports on Mac
+lsof -nP +c 15 | grep LISTEN
+
+# Hitting an endpoint on a container
+use localhost:exposed_port...
