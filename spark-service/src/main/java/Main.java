@@ -23,7 +23,7 @@ public class Main {
 
     static class Triggerer implements HttpHandler {
         public void handle(HttpExchange httpExchange) throws IOException {
-            String submitScript = "./bin/spark-submit --class com.mycompany.run.SchemaInferenceMain --master spark://d5dfb1fe502c:7077 --executor-memory 2G /spark/examples/jars/analytic-engine-1.0-SNAPSHOT-shaded.jar DOCKER 5e39de14114a0621c760d9ab 5e39de29114a0621c760d9ac";
+            String submitScript = "./schemaInferenceJob.sh 5e39de14114a0621c760d9ab 5e39de29114a0621c760d9ac d5dfb1fe502c";
             Process process = Runtime.getRuntime().exec(submitScript);
             String output = "";
             try {
@@ -51,19 +51,20 @@ public class Main {
             String lsScript = "ls";
             Process process = Runtime.getRuntime().exec(lsScript);
             String output = "";
-            try {
-                process.waitFor();
-                BufferedReader stdin = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                String currentStdin = "";
 
-                while ((currentStdin = stdin.readLine()) != null) {
-                    output = output + currentStdin;
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                process.waitFor();
+//                BufferedReader stdin = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//                String currentStdin = "";
+//
+//                while ((currentStdin = stdin.readLine()) != null) {
+//                    output = output + currentStdin;
+//                }
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
 
-            String response = "Response, " + output;
+            String response = "Trigger and forget script, " + output;
             httpExchange.sendResponseHeaders(200, response.length());
             OutputStream outputStream = httpExchange.getResponseBody();
             outputStream.write(response.getBytes());
