@@ -16,7 +16,6 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.types.StructField;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.slf4j.LoggerFactory;
 import com.mycompany.services.ElasticsearchRepository;
 import com.mycompany.services.MongodbRepository;
@@ -31,8 +30,7 @@ import static org.apache.spark.sql.functions.*;
 public class SchemaInferenceJob extends Job {
     public SchemaInferenceJob(SparkSession sparkSession, ConfigModel configModel,
                               MongodbRepository mongodbRepository, ElasticsearchRepository elasticsearchRepository,
-                              UserDefinedFunctionsFactory userDefinedFunctionsFactory,
-                              RestHighLevelClient restHighLevelClient) {
+                              UserDefinedFunctionsFactory userDefinedFunctionsFactory) {
         super(sparkSession, configModel, mongodbRepository, elasticsearchRepository, userDefinedFunctionsFactory);
         logger = LoggerFactory.getLogger(SchemaInferenceJob.class);
     }
@@ -42,6 +40,9 @@ public class SchemaInferenceJob extends Job {
         JobModel job = mongodbRepository.getJobById(jobId);
 
         Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
+
+        // No AWS version
+        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1 lite.csv"));
 
         // Temporary assurance print
         dataset.show();
@@ -79,9 +80,6 @@ public class SchemaInferenceJob extends Job {
 
         // Save the SchemaModel to the user's s3 bucket
         saveSchemaToS3(job, jsonSchema);
-
-        sparkSession.close();
-        System.out.println("------- JOB SHOULD HAVE ENDED -------");
     }
 
     /**

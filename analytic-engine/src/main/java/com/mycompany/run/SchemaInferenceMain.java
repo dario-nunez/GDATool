@@ -24,8 +24,7 @@ public class SchemaInferenceMain {
         // Create and run the SchemaInferenceJob
         SchemaInferenceJob schemaInferenceJob = new SchemaInferenceJob(dependencyFactory.getSparkSession(),
                 dependencyFactory.getConfigModel(), dependencyFactory.getMongodbRepository(),
-                dependencyFactory.getElasticsearchRepository(), dependencyFactory.getUserDefinedFunctionsFactory(),
-                dependencyFactory.getRestHighLevelClient());
+                dependencyFactory.getElasticsearchRepository(), dependencyFactory.getUserDefinedFunctionsFactory());
 
         schemaInferenceJob.run(userId, jobId);
     }
