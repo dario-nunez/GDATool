@@ -27,7 +27,7 @@
 
     <hr>
 
-    <div>
+    <div *ngIf=schemaFilePresent>
         <div class="container">
             <div class="row">
                 <div class="col-md text-center">
@@ -113,6 +113,11 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div *ngIf=!schemaFilePresent>
+        <label for="name">Run the data inference job with the following arguments</label>
+        <input type="text" class="form-control" disabled value="{{job.userId}} {{job._id}}">
     </div>
 
     <hr>

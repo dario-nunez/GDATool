@@ -1,5 +1,6 @@
 package com.mycompany.services;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,6 +41,17 @@ public class MongodbRepository implements Log {
                 new HashMap<String, String>(){{
                     put("cache-control", "no-cache");
                 }});
+        String jsonData = response.getBody();
+        return objectMapper.readValue(jsonData, new TypeReference<JobModel>(){});
+    }
+
+    public JobModel markJobAsComplete(JobModel job) throws UnirestException, IOException {
+        String jobJson = objectMapper.writeValueAsString(job);
+        HttpResponse<String> response = httpService.put(String.format("%sjob/%s", configModel.mongodbServiceUrl(), job._id),
+                new HashMap<String, String>() {{
+                    put("Content-Type", "application/json");
+                    put("cache-control", "no-cache");
+                }}, jobJson);
         String jsonData = response.getBody();
         return objectMapper.readValue(jsonData, new TypeReference<JobModel>(){});
     }

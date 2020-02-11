@@ -5,7 +5,6 @@ import com.mycompany.models.AggregationModel;
 import com.mycompany.models.ConfigModel;
 import com.mycompany.models.JobModel;
 import org.apache.spark.sql.*;
-import org.apache.spark.sql.types.DataTypes;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
@@ -52,13 +51,7 @@ public class DataAnalysisJob extends Job {
 
         // Read data
         Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
-
-        // Register the function that formats dates in the Spark session
-        sparkSession.udf().register("createMonthYearColumn", userDefinedFunctionsFactory.createMonthYearColumn(),
-                DataTypes.StringType);
-
-        // Iterate through the dataset and update the values in that column with the result of the user date function
-        dataset = dataset.withColumn("month", callUDF("createMonthYearColumn", col("transferDate"))).cache();
+        dataset = HelperFunctions.getValidDataset(dataset).cache();
 
         // Iterate through the defined aggregations and perform their gorupby
         for (AggregationModel agg : aggregations) {
@@ -81,6 +74,9 @@ public class DataAnalysisJob extends Job {
                 e.printStackTrace();
             }
         }
+
+        markJobAsComplete(job);
+        restHighLevelClient.close();
     }
 
     /**
@@ -216,5 +212,10 @@ public class DataAnalysisJob extends Job {
         GetAliasesRequest request = new GetAliasesRequest();
         request.aliases(alias);
         return restHighLevelClient.indices().existsAlias(request, RequestOptions.DEFAULT);
+    }
+
+    private void markJobAsComplete(JobModel job) throws IOException, UnirestException {
+        job.jobStatus = 5;
+        mongodbRepository.markJobAsComplete(job);
     }
 }

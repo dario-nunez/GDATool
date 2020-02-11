@@ -39,13 +39,13 @@ public class SchemaInferenceJob extends Job {
     public void run(String userId, String jobId) throws IOException, UnirestException {
         JobModel job = mongodbRepository.getJobById(jobId);
 
+        // AWS version
         Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
 
         // No AWS version
-        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1 lite.csv"));
+        // Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "zikaVirusReportedCases.csv"));
 
-        // Temporary assurance print
-        dataset.show();
+        dataset = HelperFunctions.getValidDataset(dataset).cache();
 
         List<ColumnModel> columns = new ArrayList<>();
 
@@ -77,6 +77,8 @@ public class SchemaInferenceJob extends Job {
         SchemaModel schema = new SchemaModel(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory), columns);
         ObjectMapper mapper = new ObjectMapper();
         String jsonSchema = mapper.writeValueAsString(schema);
+
+        System.out.println(jsonSchema);
 
         // Save the SchemaModel to the user's s3 bucket
         saveSchemaToS3(job, jsonSchema);

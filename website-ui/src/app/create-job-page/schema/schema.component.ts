@@ -14,7 +14,7 @@ export class SchemaComponent implements OnInit {
   ioDisabled: boolean = true;
   job: IJob;
   jobId: string;
-  // COLUMNS: Array<[string, string]> = [["city", "string"], ["county", "string"], ["id", "string"], ["price", "integer"], ["kindaLongNameLong", "string"]];
+  schemaFilePresent = false;
   COLUMNS: Array<[string, string]> = [];
   SELECTED_METRICS: Array<[string, string]> = [];
   SELECTED_FEATURES: Array<[string, string]> = [];
@@ -23,6 +23,18 @@ export class SchemaComponent implements OnInit {
   constructor(private mongodbService: MongodbService, private schemaService: SchemaService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
+    this.job = {
+      _id: "",
+      name: "",
+      description: "",
+      rawInputDirectory: "",
+      stagingFileName: "",
+      userId: "",
+      generateESIndices: true,
+      jobStatus: 0,
+      runs: []
+    }
+    
     this.route.params.subscribe(params => {
       this.jobId = params["job._id"];
       this.mongodbService.getJobById(this.jobId).subscribe(job => {
@@ -30,10 +42,15 @@ export class SchemaComponent implements OnInit {
         job.jobStatus = 3;
         this.ioDisabled = false;
         this.mongodbService.readFile(job).subscribe(fileContents => {
-          this.schema = JSON.parse(fileContents);
-          this.schema.schema.forEach(column => {
-            this.COLUMNS.push([column.name, column.type])
-          });
+          if (fileContents.toString().length == 0) {
+            console.log("The schema file is empty!");
+          } else {
+            this.schemaFilePresent = true;
+            this.schema = JSON.parse(fileContents);
+            this.schema.schema.forEach(column => {
+              this.COLUMNS.push([column.name, column.type])
+            });
+          }
         })
       });
     });

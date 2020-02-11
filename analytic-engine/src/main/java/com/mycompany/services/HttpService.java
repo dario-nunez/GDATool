@@ -8,7 +8,7 @@ import com.mycompany.models.ConfigModel;
 
 import java.util.Map;
 
-public class HttpService implements Log {
+public class HttpService<S> implements Log {
     private ConfigModel configModel;
     private String jodId;
 
@@ -24,7 +24,7 @@ public class HttpService implements Log {
                 .asString();
     }
 
-    public HttpResponse<String> post(String url, Map<String, String> headers, String body, String email, String password) throws UnirestException {
+    public HttpResponse<String> post(String url, Map<String, String> headers, String body, String jobId) throws UnirestException {
         logger().info("Http post to {} with body {}", url, body);
         return Unirest.post(url)
                 .headers(headers)
@@ -32,9 +32,9 @@ public class HttpService implements Log {
                 .asString();
     }
 
-    public HttpResponse<String> post(String url, Map<String, String> headers, String body, String jobId) throws UnirestException {
-        logger().info("Http post to {} with body {}", url, body);
-        return Unirest.post(url)
+    public HttpResponse<String> put(String url, Map<String, String> headers, String body) throws UnirestException {
+        logger().info("Http put to {} with body {}", url, body);
+        return Unirest.put(url)
                 .headers(headers)
                 .body(body)
                 .asString();
