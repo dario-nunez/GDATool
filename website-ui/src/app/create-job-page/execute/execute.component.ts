@@ -47,4 +47,14 @@ export class ExecuteComponent implements OnInit {
       this.router.navigate(['/jobsPage']);
     });
   }
+
+  deleteJob() {
+    if (confirm("This job will be lost forever. Are you sure you want to delete it?")) {
+      this.mongodbService.deleteJobRecusrive(this.job._id).subscribe(job => {
+        console.log("Deleted Job: ");
+        console.log(job);
+        this.router.navigate(['/jobsPage']);
+      });
+    }
+  }
 }

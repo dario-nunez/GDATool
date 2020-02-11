@@ -110,6 +110,7 @@
     <div class="row">
         <div class="col text-left">
             <button class="btn btn-primary" [routerLink]="['/jobsPage']">Save and Exit</button>
+            <button class="btn btn-danger ml-2" (click)="deleteJob()">Delete Job</button>
         </div>
         <div class="col text-right">
             <button class="btn btn-primary" (click)="next()" [disabled]="ioDisabled">Next</button>
