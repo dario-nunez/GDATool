@@ -86,25 +86,41 @@ public class DataAnalysisJob extends Job {
      * @return
      */
     private Dataset<Row> groupBy(Dataset<Row> dataset, AggregationModel aggregationModel) {
+        // Feature columns
         List<Column> catColumns = aggregationModel.featureColumns.stream().map(functions::col).collect(Collectors.toList());
+
+        // Creates a Column with the name of the metric column in the AggregationModel
         Column metricColumn = col(aggregationModel.metricColumn);
 
         logger.info("Grouping by {}", catColumns.stream().map(Column::logName).collect(Collectors.joining(",")));
+
+        // Creates a list of columns with all the feature columns and the one metric column
         List<Column> selColumns = new ArrayList<>(catColumns);
         selColumns.add(metricColumn);
 
+        // Feature columns in an array of Column
         Column[] categoriesColumns = new Column[catColumns.size()];
         for (int i = 0; i < categoriesColumns.length; i++) {
             categoriesColumns[i] = catColumns.get(i);
         }
+
+        // Features and metric columns in an array of Column
         Column[] selectColumns = new Column[selColumns.size()];
         for (int i = 0; i < selColumns.size(); i++) {
             selectColumns[i] = selColumns.get(i);
         }
 
+        // A list of Column objects, one for each operation requested in the AggregationModel
         List<Column> columns = getAggregationColumns(aggregationModel);
+
+        // A scala Seq object containing the operation columns in the AggregationModel
         Seq<Column> aggregationColumns = scala.collection.JavaConversions.asScalaBuffer(columns.subList(1, columns.size()));
 
+        // Ensure feature columns are of type String
+        dataset = HelperFunctions.stringifyFeatureColumns(dataset, aggregationModel.featureColumns).cache();
+
+        // A new dataset is created and returned, containing only the feature column and a column for each operation over
+        // the metric column/s
         return dataset.select(selectColumns)
                 .groupBy(categoriesColumns)
                 .agg(columns.get(0), aggregationColumns)

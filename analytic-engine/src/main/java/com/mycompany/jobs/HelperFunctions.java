@@ -8,6 +8,8 @@ import scala.collection.Seq;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.apache.spark.sql.functions.col;
+
 public class HelperFunctions {
     public static String replaceCharacter = "_";
 
@@ -38,5 +40,13 @@ public class HelperFunctions {
         Seq<String> newColumnNamesSeq = HelperFunctions.convertListToSeqString(newColumnNames);
 
         return dataset.toDF(newColumnNamesSeq);
+    }
+
+    public static Dataset<Row> stringifyFeatureColumns(Dataset<Row> dataset, List<String> featureColumns) {
+        for (String featureColumn : featureColumns) {
+            dataset = dataset.withColumn(featureColumn, col(featureColumn).cast("String"));
+        }
+
+        return dataset;
     }
 }

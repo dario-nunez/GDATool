@@ -92,8 +92,8 @@ export class ApiServer {
 
         //Just for testing purposes, these should be environment variables specified in the docker file
 
-        AWSConfig.awsAccessKeyId = "shh";
-        AWSConfig.awsSecretAccessKey = "shh";
+        // AWSConfig.awsAccessKeyId = "shh";
+        // AWSConfig.awsSecretAccessKey = "shh";
 
         logger.info(`Loading AWS access key ${AWSConfig.awsAccessKeyId} and secret !--!`);
 

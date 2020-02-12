@@ -74,7 +74,7 @@ public abstract class Job {
     }
 
     /**
-     * Creates groupbys
+     * Returns a list of columns representing all the operations to be done on the data as a result of the groupbys
      * @param aggregationModel
      * @return
      */
