@@ -6,6 +6,17 @@
 </div>
 
 <div class="container p-1">
+    <div *ngIf="jobs.length == 0" class="d-flex justify-content-center m-5">
+        <div class="col">
+            <div class="row d-flex justify-content-center">
+                <h1 style="color: gainsboro">You have no jobs</h1>
+            </div>
+            <div class="row d-flex justify-content-center">
+                <h5 style="color: gainsboro">Add some using the blue button</h5>
+            </div>
+        </div>
+    </div>
+
     <div class="card-deck justify-content-center align-items-center">
         <app-job *ngFor="let job of jobs" [job]="job"></app-job>
     </div>

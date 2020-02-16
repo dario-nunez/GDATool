@@ -28,13 +28,20 @@
     <hr>
 
     <!-- Display a summary of the job and give the option to FINISH -->
+    <div *ngIf=!analysisJobExecuted>
+        <label for="name">Run the data analytic job with the following arguments</label>
+        <input type="text" class="form-control" disabled value="{{job.userId}} {{job._id}}">
+        
+        <hr>
+    </div>
 
     <div class="row">
         <div class="col text-left">
             <button class="btn btn-primary" [routerLink]="['/jobsPage']" [disabled]="ioDisabled">Save and Exit</button>
+            <button class="btn btn-danger ml-2" (click)="deleteJob()" [disabled]="ioDisabled">Delete Job</button>
         </div>
         <div class="col text-right">
-            <button class="btn btn-primary" (click)="submitAndRun()" [disabled]="ioDisabled">Submit and Run</button>
+            <button class="btn btn-primary" (click)="submitAndRun()" [disabled]="ioDisabled || !analysisJobExecuted">Submit and Run</button>
         </div>
     </div>
 </div>

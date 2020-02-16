@@ -9,7 +9,7 @@ import { MongodbService } from 'src/services/mongodb/mongodb.service';
 })
 export class JobsPageComponent implements OnInit {
 
-  jobs: IJob[];
+  jobs: IJob[] = [];
 
   constructor(private mongodbService: MongodbService) { }
 

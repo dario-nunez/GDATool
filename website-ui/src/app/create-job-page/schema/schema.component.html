@@ -27,7 +27,7 @@
 
     <hr>
 
-    <div>
+    <div *ngIf=schemaFilePresent>
         <div class="container">
             <div class="row">
                 <div class="col-md text-center">
@@ -115,11 +115,17 @@
         </div>
     </div>
 
+    <div *ngIf=!schemaFilePresent>
+        <label for="name">Run the data inference job with the following arguments</label>
+        <input type="text" class="form-control" disabled value="{{job.userId}} {{job._id}}">
+    </div>
+
     <hr>
 
     <div class="row">
         <div class="col text-left">
             <button class="btn btn-primary" [routerLink]="['/jobsPage']" [disabled]="ioDisabled">Save and Exit</button>
+            <button class="btn btn-danger ml-2" (click)="deleteJob()" [disabled]="ioDisabled">Delete Job</button>
         </div>
         <div class="col text-right">
             <button class="btn btn-primary" (click)="next()" [disabled]="ioDisabled || SELECTED_METRICS.length <= 0 || SELECTED_FEATURES.length <= 0">Next</button>

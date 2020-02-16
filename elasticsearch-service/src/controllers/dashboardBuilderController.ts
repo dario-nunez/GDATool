@@ -62,8 +62,12 @@ export class DashboardBuilderController {
 
         const visualizationsForDashboard = new Array();
 
+        // For each aggregation, generate it dashboard section
         dashboardSeed.aggregations.forEach((aggregation: IAggregation) => {
+            // Holds the aggregation/dashboard section for each aggregation
             let aggSection = [];
+
+            // Creates the index pattern for that aggreagtion
             this.createIndexPattern(aggregation._id, aggregation.aggs, aggregation.featureColumns);
 
             const visualizationIdPrefix = aggregation.jobId + "_" + aggregation._id;
@@ -104,6 +108,7 @@ export class DashboardBuilderController {
         return dashboardSeed;
     }
 
+    // Create an index pattern
     private async createIndexPattern(aggregationId: string, aggregations: Array<string>, featureColumns: Array<string>) {
         const indexPatternSeed: IIndexPattern = {
             id: aggregationId,
@@ -120,6 +125,7 @@ export class DashboardBuilderController {
         }
     }
 
+    // Create a markup visualization
     private async createVisMarkup(visualizationId: string, contentText: string) {
         const markupSeed: IVisMarkup = {
             id: visualizationId,
@@ -136,6 +142,7 @@ export class DashboardBuilderController {
         }
     }
 
+    // Create a bar chart visualization
     private async createVisBarChart(visualizationId: string, aggregationName: string, metricColumn: string, featureColumn: string, indexPatternId: string) {
         const barChartSeed: IVisBarCHart = {
             id: visualizationId,
@@ -155,6 +162,7 @@ export class DashboardBuilderController {
         }
     }
 
+    // Create metric visualization
     private async createMetric(visualizationId: string, aggregationName: string, indexPatternId: string) {
         const metricSeed: IMetric = {
             id: visualizationId,
@@ -172,6 +180,7 @@ export class DashboardBuilderController {
         }
     }
 
+    // Create dashboard
     private async createDashboard(jobId: string, visualizations: Array<Array<IVisualization>>) {
         const dashboardSeed: IDashboard = {
             id: jobId,

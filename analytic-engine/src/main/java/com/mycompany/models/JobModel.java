@@ -1,34 +1,18 @@
 package com.mycompany.models;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.immutables.value.Value;
-import org.immutables.value.Value.Immutable;
-
-import javax.annotation.Nullable;
 import java.util.List;
 
-@Immutable
-@JsonDeserialize(as = ImmutableJobModel.class)
-@JsonSerialize(as = ImmutableJobModel.class)
-public interface JobModel {
-    @Nullable
-    String _id();
-    @Nullable
-    String __v();
-    @Nullable
-    String name();
-    @Nullable
-    List<String> runs();
-    Integer jobStatus();
-    String description();
-    String userId();
-    String rawInputDirectory();
-    String stagingFileName();
-    String createdAt();
-    String updatedAt();
-    @Value.Default
-    default boolean generateESIndices() {
-        return false;
-    }
+public class JobModel {
+    public String _id;
+    public String __v;
+    public String name;
+    public List<String> runs;
+    public Integer jobStatus;
+    public String description;
+    public String userId;
+    public String rawInputDirectory;
+    public String stagingFileName;
+    public String createdAt;
+    public String updatedAt;
+    public boolean generateESIndices;
 }

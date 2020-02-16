@@ -1,20 +1,17 @@
 package com.mycompany.models;
 
-import org.immutables.value.Value.Immutable;
-import javax.annotation.Nullable;
+import org.immutables.value.Value;
 
-@Immutable
+@Value.Immutable
 public interface ConfigModel {
-
-    String accessKeyId();
-    String secretAccessKey();
-    String rawFileRoot();
-    String elasticsearchUrl();
-    int elasticsearchPort();
-    String stagingFolder();
-    @Nullable
-    String master();
+    String awsAccessKeyIdEnvVariable();
+    String awsSecretAccessKeyEnvVariable();
     String appName();
-    String mongodbRootUrl();
-    String elasticsearchServiceRootUrl();
+    String bucketRoot();
+    String stagingFolder();
+    String elasticsearchUrl();
+    String elasticsearchPort();
+    String master();
+    String mongodbServiceUrl();
+    String elasticsearchServiceUrl();
 }

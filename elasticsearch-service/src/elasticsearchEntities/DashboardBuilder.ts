@@ -69,6 +69,7 @@ export class DashboardBuilder {
         let panelCounter = 0;
         let visualizationMetadata = "[";
 
+        // For each visualization in the dashboard
         for (const visArray of dashboardModel.visualizations) {
             let barCharts = new Array();
             let metrics = new Array();
@@ -83,7 +84,7 @@ export class DashboardBuilder {
                 }
             }
 
-            //Title
+            //Title: Added at the top
             visualizationMetadata = visualizationMetadata + this.generateGridData(this.TITLE_HEIGHT, this.MAX_WIDTH, currentX, currentY, panelIndex, panelCounter);
             currentY = currentY + this.TITLE_HEIGHT;
             panelIndex = panelIndex + 1;
@@ -93,7 +94,7 @@ export class DashboardBuilder {
             let extraMetrics = metrics.length % 4;
             let dynamicWidth = this.MAX_WIDTH / extraMetrics;
 
-            //Metrics
+            //Metrics: 
             for (let i: number = 1; i <= metrics.length; i++) {
                 if (i <= (Math.floor(partialRows) * 4)) {
                     if (i % 4 > 0) {    //not the last one

@@ -8,3 +8,4 @@ public interface Log {
         return LoggerFactory.getLogger(this.getClass());
     }
 }
+
