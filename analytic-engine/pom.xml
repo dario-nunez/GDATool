@@ -145,6 +145,15 @@
             <artifactId>elasticsearch-spark-20_2.11</artifactId>
             <version>7.3.0</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.spark/spark-mllib -->
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-mllib_2.11</artifactId>
+            <version>2.4.5</version>
+        </dependency>
+
+        <!-- Other stuff -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

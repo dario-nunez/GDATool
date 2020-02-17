@@ -8,5 +8,6 @@ public enum Environment {
     DEV,
     DOCKER,
     QA,
-    PROD
+    PROD,
+    LOCDEV
 }

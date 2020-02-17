@@ -141,6 +141,7 @@ export class QueryComponent implements OnInit {
 
   selectMetricColumn(event, element) {
     console.log("metric column: " + element);
+    this.selectedFeatureColumns = []
     this.possibleFeatureColumns = this.FEATURE_COLUMNS.filter(obj => obj !== element);
     this.metricSelected = true;
   }
