@@ -14,6 +14,7 @@ import { IndexPatternBuilder } from "../elasticsearchEntities/indexPatternBuilde
 import { VisualizationBuilder } from "../elasticsearchEntities/visualizationBuilder";
 import { DashboardBuilder } from "../elasticsearchEntities/DashboardBuilder";
 import { IMetric } from "../elasticsearchModels/metricModel";
+import { IDataTable } from "../elasticsearchModels/dataTableModel";
 
 /**
  * This class encapsulates the process of building the various types of dashboards.
@@ -90,7 +91,7 @@ export class DashboardBuilderController {
                 aggSection.push(visualizationMetric);
             }
 
-            //BarCharts - one for each agg
+            //BarCharts - one for each agg (operation)
             for (const agg of aggregation.aggs) {
                 this.createVisBarChart(visualizationIdPrefix + "_bar_" + agg.toLowerCase(), agg.toLowerCase(), aggregation.metricColumn, aggregation.featureColumns[0], aggregation._id);
                 const visualizationBarChart: IVisualization = {
@@ -99,6 +100,15 @@ export class DashboardBuilderController {
                 };
                 aggSection.push(visualizationBarChart);
             }
+
+            //DataTables - one per aggregation record
+            this.createDataTable(visualizationIdPrefix + "_table", aggregation.metricColumn, aggregation.aggs, aggregation.featureColumns, aggregation._id);
+            const visualizationDataTable: IVisualization = {
+                id: visualizationIdPrefix + "_table",
+                type: "table"
+            };
+            aggSection.push(visualizationDataTable);
+
             //Adding the visualization section of this aggregation to the list of all visualizations
             visualizationsForDashboard.push(aggSection);
         });
@@ -174,6 +184,25 @@ export class DashboardBuilderController {
 
         try {
             const response = await this.kibanaService.createMetricVisualization(this.visualizationBuilder.getMetric(metricSeed));
+            return response.data;
+        } catch (error) {
+            return error;
+        }
+    }
+
+    // Create data table
+    private async createDataTable(visualizationId: string, aggregationName: string, operations: string[], featureColumns: string[], indexPatternId: string) {
+        const dataTableSeed: IDataTable = {
+            id: visualizationId,
+            type: "table",
+            explorerTitle: visualizationId,
+            operations: operations,
+            featureColumns: featureColumns,
+            index: indexPatternId
+        }
+
+        try {
+            const response = await this.kibanaService.createDataTable(this.visualizationBuilder.getDataTable(dataTableSeed));
             return response.data;
         } catch (error) {
             return error;

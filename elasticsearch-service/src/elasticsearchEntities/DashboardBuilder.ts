@@ -80,7 +80,7 @@ export class DashboardBuilder {
                 } else if (vis.type === "bar") {
                     barCharts.push(vis);
                 } else {
-                    //title here...
+                    //title and table here...
                 }
             }
 
@@ -150,6 +150,13 @@ export class DashboardBuilder {
                     currentY = currentY + this.BAR_CHART_HEIGHT;
                 }
             }
+
+            // Data tables: added at the bottom
+            visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.MAX_WIDTH, currentX, currentY, panelIndex, panelCounter);
+            currentX = 0;
+            panelIndex = panelIndex + 1;
+            panelCounter = panelCounter + 1;
+            currentY = currentY + this.BAR_CHART_HEIGHT
         }
 
         visualizationMetadata = visualizationMetadata.substring(0, visualizationMetadata.length - 1) + "]";
