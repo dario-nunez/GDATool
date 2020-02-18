@@ -59,19 +59,37 @@ export class SchemaComponent implements OnInit {
   moveColumn(event, element: [string, string], originArray: Array<[string, string]>, destinationArray: Array<[string, string]>) {
     console.log("from " + originArray + " to " + destinationArray)
 
-    if (originArray == this.COLUMNS) {
-      this.COLUMNS = this.COLUMNS.filter(obj => obj[0] !== element[0]);
-    } else if (originArray == this.SELECTED_FEATURES) {
+    if (originArray == this.COLUMNS) {                   // From columns
+      if (element[1] == "integer") {  // Integer
+        if (destinationArray == this.SELECTED_FEATURES) {
+          if (this.SELECTED_METRICS.includes(element)) {
+            this.COLUMNS = this.COLUMNS.filter(obj => obj[0] !== element[0]);
+          }
+        } else {
+          if (this.SELECTED_FEATURES.includes(element)) {
+            this.COLUMNS = this.COLUMNS.filter(obj => obj[0] !== element[0]);
+          }
+        }
+      } else {  // Non integer
+        this.COLUMNS = this.COLUMNS.filter(obj => obj[0] !== element[0]);
+      }
+    } else if (originArray == this.SELECTED_FEATURES) { // From features
       this.SELECTED_FEATURES = this.SELECTED_FEATURES.filter(obj => obj[0] !== element[0]);
-    } else {
+    } else {                                            // From metrics
       this.SELECTED_METRICS = this.SELECTED_METRICS.filter(obj => obj[0] !== element[0]);
     }
 
     if (destinationArray == this.COLUMNS) {
-      this.COLUMNS.push(element)
-    } else if (destinationArray == this.SELECTED_FEATURES) {
+      if (element[1] == "integer") {  // Integer
+        if (!destinationArray.includes(element)) {
+          this.COLUMNS.push(element)
+        }
+      } else {  // Non integer
+        this.COLUMNS.push(element)
+      }
+    } else if (destinationArray == this.SELECTED_FEATURES && !this.SELECTED_FEATURES.includes(element)) {
       this.SELECTED_FEATURES.push(element)
-    } else {
+    } else if (destinationArray == this.SELECTED_METRICS && !this.SELECTED_METRICS.includes(element)) {
       this.SELECTED_METRICS.push(element)
     }
   }

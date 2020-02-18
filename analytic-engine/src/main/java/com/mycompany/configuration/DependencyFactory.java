@@ -84,7 +84,7 @@ public class DependencyFactory {
      * @return The SparkSession object.
      */
     public SparkSession getSparkSession(){
-        if (env == Environment.LOCAL || env == Environment.DOCKER) {
+        if (env == Environment.LOCAL || env == Environment.DOCKER || env == Environment.LOCDEV) {
             SparkConf sparkConf = new SparkConf()
                     .setAppName(configModel.appName())
                     .set("spark.hadoop.fs.s3a.access.key", configModel.awsAccessKeyIdEnvVariable())

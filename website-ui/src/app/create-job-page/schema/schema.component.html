@@ -61,7 +61,7 @@
                         <div class="container border border-secondary mb-2 bg-light rounded">
                             <div class="row justify-content-center align-items-center">
                                 <div class="col-xs">
-                                    <button class="btn btn-success m-1"
+                                    <button [disabled]="SELECTED_FEATURES.includes(column)" class="btn btn-success m-1"
                                         (click)="moveColumn($event, column, COLUMNS, SELECTED_FEATURES)">
                                         &lt;
                                     </button>
@@ -77,7 +77,7 @@
                                     </div>
                                 </div>
                                 <div class="col-xs">
-                                    <button [disabled]="column[1] != 'integer'" class="btn btn-success m-1"
+                                    <button [disabled]="column[1] != 'integer' || SELECTED_METRICS.includes(column)" class="btn btn-success m-1"
                                         (click)="moveColumn($event, column, COLUMNS, SELECTED_METRICS)">
                                         &gt;
                                     </button>

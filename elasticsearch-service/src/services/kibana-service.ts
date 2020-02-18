@@ -21,4 +21,8 @@ export class KibanaService {
     public createMetricVisualization(metricVisualization: any): Promise<any> {
         return axios(metricVisualization);
     }
+
+    public createDataTable(dataTableVisualization: any): Promise<any> {
+        return axios(dataTableVisualization);
+    }
 }

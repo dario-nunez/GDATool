@@ -13,6 +13,7 @@ import { SchemaService } from 'src/services/schema/schema.service';
 
 export class QueryComponent implements OnInit {
   ioDisabled: boolean = true;
+  metricSelected: boolean = false;
   jobId: string;
   job: IJob;
 
@@ -34,11 +35,13 @@ export class QueryComponent implements OnInit {
   constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, private router: Router) { }
 
   ngOnInit() {
+    // Load feature columns
     this.schemaService.featureColumns.forEach(element => {
       this.FEATURE_COLUMNS.push(element[0]);
       this.possibleFeatureColumns.push(element[0]);
     });
 
+    // Load metric columns
     this.schemaService.metricColumns.forEach(element => {
       this.METRIC_COLUMNS.push(element[0]);
       this.possibleMetricColumns.push(element[0]);
@@ -49,6 +52,7 @@ export class QueryComponent implements OnInit {
 
     this.aggregations = [];
 
+    // Load job information and generate default aggregations
     this.route.params.subscribe(params => {
       this.jobId = params["job._id"];
       this.mongodbService.getJobById(this.jobId).subscribe(job => {
@@ -62,13 +66,13 @@ export class QueryComponent implements OnInit {
 
   addDefaultAggregations() {
     for (let mc of this.METRIC_COLUMNS) {
-      for (let fc of this.FEATURE_COLUMNS) {
+      for (let fc of this.FEATURE_COLUMNS.filter(obj => obj !== mc)) {
         let agg: IAggregation = {
           aggs: this.OPERATIONS,
           featureColumns: [fc],
           jobId: this.job._id,
           metricColumn: mc,
-          name: "Aggregation of " + fc + " by " + mc,
+          name: "Aggregation of " + mc + " by " + fc,
           sortColumnName: fc
         }
 
@@ -84,7 +88,7 @@ export class QueryComponent implements OnInit {
       jobId: this.jobId,
       metricColumn: this.currentAggregationMetricColumn,
       name: this.currentAggregationName,
-      sortColumnName: this.currentAggregationMetricColumn
+      sortColumnName: this.selectedFeatureColumns[0]
     }
 
     console.log("Agg created");
@@ -98,6 +102,8 @@ export class QueryComponent implements OnInit {
     this.possibleMetricColumns = this.METRIC_COLUMNS;
     this.selectedFeatureColumns = [];
     this.selectedAggregations = [];
+
+    this.metricSelected = false;
   }
 
   deleteAggregation(event, agg: any) {
@@ -131,6 +137,13 @@ export class QueryComponent implements OnInit {
         this.possibleFeatureColumns.push(element);
       }
     }
+  }
+
+  selectMetricColumn(event, element) {
+    console.log("metric column: " + element);
+    this.selectedFeatureColumns = []
+    this.possibleFeatureColumns = this.FEATURE_COLUMNS.filter(obj => obj !== element);
+    this.metricSelected = true;
   }
 
   next() {

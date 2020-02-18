@@ -39,7 +39,7 @@
             <ul class="pl-2 list-group">
                 <li style="list-style-type:none" *ngFor="let agg of aggregations">
                     <button type="button" (click)="deleteAggregation($event, agg)" class="btn btn-light m-1">
-                        {{agg.name}}: [{{agg.aggs}}] on [{{agg.metricColumn}}] by [{{agg.featureColumns}}]
+                        {{agg.name}}: [{{agg.aggs}}] on [{{agg.metricColumn}}] grouped by [{{agg.featureColumns}}]
                         <span class="badge badge-danger">X</span>
                     </button>
                 </li>
@@ -59,7 +59,7 @@
                     <!-- Metric Column -->
                     <div class="form-group col-md-6">
                         <label for="metricSelector">Metric Column</label>
-                        <select id="metricSelector" class="form-control" name="metricSelector" required
+                        <select id="metricSelector" class="form-control" name="metricSelector" required (change)="selectMetricColumn($event, metricSelector.value)"
                             [(ngModel)]="currentAggregationMetricColumn" #metricSelector="ngModel">
                             <option class="placeholder" selected disabled value="">Choose one</option>
                             <option *ngFor="let sCol of possibleMetricColumns">{{sCol}}</option>
@@ -70,7 +70,7 @@
                     <!-- Feature Columns -->
                     <div class="form-group col-md-6">
                         <label>Feature Columns</label>
-                        <select id="featureDevice" class="form-control" name="featureSelector" required #featureDevice
+                        <select id="featureDevice" class="form-control" name="featureSelector" required #featureDevice [disabled]="!metricSelected"
                             (change)="addElement($event, featureDevice.value, 'featureColumn')">
                             <option selected>Choose one</option>
                             <option *ngFor="let sCol of possibleFeatureColumns">{{sCol}}</option>

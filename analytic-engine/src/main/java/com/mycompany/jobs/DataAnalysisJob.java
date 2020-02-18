@@ -4,6 +4,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mycompany.models.AggregationModel;
 import com.mycompany.models.ConfigModel;
 import com.mycompany.models.JobModel;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.*;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
@@ -16,6 +17,11 @@ import org.slf4j.LoggerFactory;
 import scala.collection.Seq;
 import com.mycompany.services.ElasticsearchRepository;
 import com.mycompany.services.MongodbRepository;
+
+import org.apache.spark.ml.clustering.KMeans;
+import org.apache.spark.ml.clustering.KMeansModel;
+import org.apache.spark.ml.linalg.Vector;
+import org.apache.spark.ml.evaluation.ClusteringEvaluator;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -43,22 +49,19 @@ public class DataAnalysisJob extends Job {
     public void run(String userId, String jobId) throws IOException, UnirestException {
         logger.info("job {} by user {} is starting", jobId, userId);
 
-        // Load aggregations
+        // ------------------ LOAD RESOURCES AND CLEAN DATA ------------------
+        // Load aggregation
         List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
-
         // Load job
         JobModel job = mongodbRepository.getJobById(jobId);
-
         // Read data
         Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
-        dataset = HelperFunctions.getValidDataset(dataset).cache();
 
+        // ------------------ PERFORM GROUPBYS & SAVE RESULTS ------------------
         // Iterate through the defined aggregations and perform their gorupby
         for (AggregationModel agg : aggregations) {
             Dataset<Row> groupByDataset = groupBy(dataset, agg).cache();
-
             long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-
             saveToStaging(groupByDataset, String.format("/%s/%s/staging/%d/%s",
                     userId, jobId, dateEpoch, agg._id));
             if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
@@ -66,6 +69,23 @@ public class DataAnalysisJob extends Job {
             }
         }
 
+//        // ------------------ PERFORM CLUSTERING & SAVE RESULTS ------------------
+//        // Must convert the selected columns into a LibSVMDataSource object before ML can be done
+//        // Use the bookmarked resource to convert a record of 2 numeric columns to a 2 vectors of 2 numeric columns and the label one with just 1.
+//        // For each the dataset and build this other dataset or apply a .format to it somehow.
+//        // The run the OG clustering algorithm on it.
+//        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "zikaVirusReportedCases-lite.csv"));
+//        dataset = HelperFunctions.getValidDataset(dataset).cache();
+//
+//        dataset.show();
+//
+//        JavaRDD<Row> javaRDDDataset = dataset.toJavaRDD().cache();
+//
+//        javaRDDDataset.foreach(data -> {
+//            System.out.println(data);
+//        });
+
+        // ------------------ CLEANUP ENVIRONMENT ------------------
         if (job.generateESIndices) {
             elasticsearchRepository.generateBasicDashboard(job);
             try {
@@ -74,7 +94,6 @@ public class DataAnalysisJob extends Job {
                 e.printStackTrace();
             }
         }
-
         markJobAsComplete(job);
         restHighLevelClient.close();
     }
@@ -137,7 +156,7 @@ public class DataAnalysisJob extends Job {
         String ext = "parquet";
         String fullFilename = configModel.bucketRoot() + filename + "." + ext;
         logger.info("Writing to {}", fullFilename);
-        dataset.write().mode(SaveMode.Overwrite).format(ext).save(fullFilename);
+        //dataset.write().mode(SaveMode.Overwrite).format(ext).save(fullFilename);
     }
 
     /**
