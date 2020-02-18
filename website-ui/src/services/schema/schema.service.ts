@@ -5,8 +5,8 @@ import { Injectable } from '@angular/core';
 })
 export class SchemaService {
 
-  featureColumns: Array<[string, string]> = [];
-  metricColumns: Array<[string, string]> = [];
+  featureColumns: Array<[string, string]> = [["city", "string"], ["county", "string"]];
+  metricColumns: Array<[string, string]> = [["price", "integer"]];
 
   constructor() { }
 
