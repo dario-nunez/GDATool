@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SchemaService } from 'src/services/schema/schema.service';
@@ -14,7 +14,7 @@ import { IAggregation } from 'src/models/aggregation.model';
 export class AggregationsComponent implements OnInit {
   metricSelected: boolean = false;
   jobId: string;
-  job: IJob;
+  public job: IJob;
 
   FEATURE_COLUMNS: Array<string> = [];
   OPERATIONS: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
@@ -141,26 +141,5 @@ export class AggregationsComponent implements OnInit {
     this.selectedFeatureColumns = []
     this.possibleFeatureColumns = this.FEATURE_COLUMNS.filter(obj => obj !== element);
     this.metricSelected = true;
-  }
-
-  next() {
-    console.log("Aggregations added");
-    console.log(this.queryService.aggregations);
-    // this.mongodbService.updateJob(this.job).subscribe(retJob => {
-    //   this.mongodbService.createMultipleAggregations(this.queryService.aggregations).subscribe(aggs => {
-    //     console.log("Aggregations added");
-    //     this.router.navigate(['/execute', this.jobId]);
-    //   });
-    // });
-  }
-
-  deleteJob() {
-    if (confirm("This job will be lost forever. Are you sure you want to delete it?")) {
-      this.mongodbService.deleteJobRecusrive(this.job._id).subscribe(job => {
-        console.log("Deleted Job: ");
-        console.log(job);
-        this.router.navigate(['/jobsPage']);
-      });
-    }
   }
 }
