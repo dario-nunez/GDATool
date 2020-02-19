@@ -1,6 +1,6 @@
 import { Controller } from "../../../common-service/src/controllers/controller";
 import { Inject } from "typescript-ioc";
-import { GET, Path, POST } from "typescript-rest";
+import { GET, Path, POST, PathParam } from "typescript-rest";
 import { PlotRepository } from "../../../common-service/src/repositories/plotRepository";
 import { IPlotModel, IPlot } from "../../../common-service/src/models/plotModel";
 
@@ -14,6 +14,12 @@ export class PlotController extends Controller<IPlot> {
     @GET
     public async getAllPlots(): Promise<Array<IPlotModel>> {
         return await this.plotRepository.getAll();
+    }
+
+    @Path("byJob/:id")
+    @GET
+    public async getPlotsByJobId(@PathParam("id") id: string): Promise<IPlotModel> {
+        return await this.plotRepository.getPlotsByJobId(id);
     }
 
     @Path("/multiple")

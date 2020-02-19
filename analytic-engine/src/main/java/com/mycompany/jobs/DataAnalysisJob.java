@@ -4,6 +4,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mycompany.models.AggregationModel;
 import com.mycompany.models.ConfigModel;
 import com.mycompany.models.JobModel;
+import com.mycompany.models.PlotModel;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.*;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
@@ -50,22 +51,37 @@ public class DataAnalysisJob extends Job {
         logger.info("job {} by user {} is starting", jobId, userId);
 
         // ------------------ LOAD RESOURCES AND CLEAN DATA ------------------
-        // Load aggregation
-        List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
-        // Load job
         JobModel job = mongodbRepository.getJobById(jobId);
-        // Read data
-        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
+        List<PlotModel> plots = mongodbRepository.loadPlots(jobId);
+        List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
+        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
+        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1 lite.csv"));
+
+
+        // ------------------ PERFORM PLOTS & SAVE RESULTS ------------------
+        for (PlotModel plotModel : plots) {
+            Dataset<Row> plorReadyDataset = plotSelect(dataset, plotModel);
+            long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+
+            // Save to staging
+//            saveToStaging(plorReadyDataset, String.format("/%s/%s/staging/%d/%s",
+//                    userId, jobId, dateEpoch, plotModel._id));
+
+            // Save to elasticsearch
+            if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
+                saveToES(plorReadyDataset, plotModel._id, restHighLevelClient, dateEpoch);
+            }
+        }
 
         // ------------------ PERFORM GROUPBYS & SAVE RESULTS ------------------
         // Iterate through the defined aggregations and perform their gorupby
         for (AggregationModel agg : aggregations) {
             Dataset<Row> groupByDataset = groupBy(dataset, agg).cache();
             long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-            saveToStaging(groupByDataset, String.format("/%s/%s/staging/%d/%s",
-                    userId, jobId, dateEpoch, agg._id));
+//            saveToStaging(groupByDataset, String.format("/%s/%s/staging/%d/%s",
+//                    userId, jobId, dateEpoch, agg._id));
             if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
-                saveToES(groupByDataset, job, agg, restHighLevelClient, dateEpoch);
+                saveToES(groupByDataset, agg._id, restHighLevelClient, dateEpoch);
             }
         }
 
@@ -146,6 +162,18 @@ public class DataAnalysisJob extends Job {
                 .sort(desc(aggregationModel.sortColumnName));
     }
 
+    private Dataset<Row> plotSelect(Dataset<Row> dataset, PlotModel plotModel) {
+        Dataset<Row> selectedDataset;
+
+        if (plotModel.identifier.equals(plotModel.xAxis) || plotModel.identifier.equals(plotModel.yAxis)){
+            selectedDataset = dataset.select(plotModel.xAxis, plotModel.yAxis).cache();
+        } else {
+            selectedDataset = dataset.select(plotModel.identifier, plotModel.xAxis, plotModel.yAxis).cache();
+        }
+
+        return selectedDataset;
+    }
+
     /**
      *
      * @param dataset
@@ -162,16 +190,15 @@ public class DataAnalysisJob extends Job {
     /**
      *
      * @param dataset
-     * @param job
-     * @param agg
+     * @param entityId
      * @param hlClient
      * @param dateEpoch
      * @throws IOException
      */
-    private void saveToES(Dataset<Row> dataset, JobModel job, AggregationModel agg, RestHighLevelClient hlClient, long dateEpoch) throws IOException {
-        String alias = getElasticIndexNamePrefix(agg);
-        String indexName = getElasticIndexName(agg, dateEpoch);
-        List<String> indices = listIndices(getElasticIndexNamePrefix(agg));
+    private void saveToES(Dataset<Row> dataset, String entityId, RestHighLevelClient hlClient, long dateEpoch) throws IOException {
+        String alias = getElasticIndexNamePrefix(entityId);
+        String indexName = getElasticIndexName(entityId, dateEpoch);
+        List<String> indices = listIndices(getElasticIndexNamePrefix(entityId));
 
         if (indices.size() > 0) {
             // Delete alias
