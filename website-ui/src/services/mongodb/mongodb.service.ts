@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { IJob } from 'src/models/job.model';
 import { IAggregation } from 'src/models/aggregation.model';
+import { IPlot } from 'src/models/plot.model';
 
 @Injectable({
   providedIn: 'root'
@@ -99,6 +100,14 @@ export class MongodbService {
     console.log("Aggregations at mongo service");
     console.log(aggregations);
     return this.http.post<IUser>("http://localhost:5000/ms/aggregation/multiple", aggregations).pipe(
+      catchError(err => of(null))
+    );
+  }
+
+  createMultiplePlots(plots: IPlot[]): Observable<IPlot[]> {
+    console.log("Plots at mongo service");
+    console.log(plots);
+    return this.http.post<IUser>("http://localhost:5000/ms/plot/multiple", plots).pipe(
       catchError(err => of(null))
     );
   }

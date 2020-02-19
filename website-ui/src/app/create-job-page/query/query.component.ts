@@ -40,8 +40,10 @@ export class QueryComponent implements OnInit {
     console.log(this.queryService);
     this.mongodbService.updateJob(this.job).subscribe(retJob => {
       this.mongodbService.createMultipleAggregations(this.queryService.aggregations).subscribe(aggs => {
-        console.log("Aggregations added");
-        this.router.navigate(['/execute', this.jobId]);
+        this.mongodbService.createMultiplePlots(this.queryService.generalPlots).subscribe(plots => {
+          console.log("Job updated, aggregations added, plots added");
+          this.router.navigate(['/execute', this.jobId]);
+        });
       });
     });
   }
