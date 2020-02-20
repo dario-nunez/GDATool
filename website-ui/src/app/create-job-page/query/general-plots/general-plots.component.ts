@@ -14,6 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class GeneralPlotsComponent implements OnInit {
   public job: IJob;
 
+  typeList: Array<[string, string]> = [];
   COLUMNS: Array<string> = [];
   featureColumns: Array<string> = [];
   xAvailableColumns: Array<string> = [];
@@ -42,6 +43,7 @@ export class GeneralPlotsComponent implements OnInit {
 
     // Load feature columns
     this.schemaService.featureColumns.forEach(element => {
+      this.typeList.push(element);
       this.featureColumns.push(element[0]);
       this.COLUMNS.push(element[0]);
       this.xAvailableColumns.push(element[0]);
@@ -50,6 +52,7 @@ export class GeneralPlotsComponent implements OnInit {
 
     // Load metric columns
     this.schemaService.metricColumns.forEach(element => {
+      this.typeList.push(element);
       this.COLUMNS.push(element[0]);
       this.xAvailableColumns.push(element[0]);
       this.yAvailableColumns.push(element[0]);
@@ -58,6 +61,7 @@ export class GeneralPlotsComponent implements OnInit {
 
   selectXColumn(event, column) {
     this.yAvailableColumns = this.COLUMNS.filter(obj => obj !== column)
+
   }
 
   selectYColumn(event, column) {
@@ -68,8 +72,11 @@ export class GeneralPlotsComponent implements OnInit {
     const newPlot: IPlot = {
       jobId: this.job._id,
       identifier: this.chosenIdentifierColumn,
+      identifierType: this.getVegaColumnType(this.chosenIdentifierColumn),
       xAxis: this.chosenXColumn,
-      yAxis: this.chosenYColumn
+      xType: this.getVegaColumnType(this.chosenXColumn),
+      yAxis: this.chosenYColumn,
+      yType: this.getVegaColumnType(this.chosenYColumn),
     }
 
     this.yAvailableColumns = this.COLUMNS;
@@ -82,6 +89,16 @@ export class GeneralPlotsComponent implements OnInit {
 
     console.log("Query Service object")
     console.log(this.queryService)
+  }
+
+  private getVegaColumnType(columnName) {
+    let type = this.typeList.filter(obj => obj[0] == columnName)[0][1];
+
+    if (type == "integer" || type == "double") {
+      return "quantitative"
+    } else {
+      return "nominal"
+    }
   }
 
   deletePlot(event, plot) {

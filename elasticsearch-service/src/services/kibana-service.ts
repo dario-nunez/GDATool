@@ -25,4 +25,8 @@ export class KibanaService {
     public createDataTable(dataTableVisualization: any): Promise<any> {
         return axios(dataTableVisualization);
     }
+
+    public createPlot(plotVisualization: any): Promise<any> {
+        return axios(plotVisualization);
+    }
 }
