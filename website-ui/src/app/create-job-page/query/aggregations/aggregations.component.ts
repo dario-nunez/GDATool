@@ -80,29 +80,33 @@ export class AggregationsComponent implements OnInit {
 
   createAggregation() {
     // Simply reset the name field to blank if the name is already taken
-    
-    const newAgg: IAggregation = {
-      aggs: this.selectedAggregations,
-      featureColumns: this.selectedFeatureColumns,
-      jobId: this.jobId,
-      metricColumn: this.currentAggregationMetricColumn,
-      name: this.currentAggregationName,
-      sortColumnName: this.selectedFeatureColumns[0]
+
+    if (this.queryService.aggregations.find(obj => obj.name === this.currentAggregationName) != null) {
+      this.currentAggregationName = "";
+    } else {
+      const newAgg: IAggregation = {
+        aggs: this.selectedAggregations,
+        featureColumns: this.selectedFeatureColumns,
+        jobId: this.jobId,
+        metricColumn: this.currentAggregationMetricColumn,
+        name: this.currentAggregationName,
+        sortColumnName: this.selectedFeatureColumns[0]
+      }
+
+      console.log("Agg created");
+      this.queryService.aggregations.push(newAgg);
+      console.log(this.queryService.aggregations);
+
+      this.currentAggregationMetricColumn = "Choose one";
+      this.currentAggregationName = "";
+      this.possibleAggs = this.OPERATIONS;
+      this.possibleFeatureColumns = this.FEATURE_COLUMNS;
+      this.possibleMetricColumns = this.METRIC_COLUMNS;
+      this.selectedFeatureColumns = [];
+      this.selectedAggregations = [];
+
+      this.metricSelected = false;
     }
-
-    console.log("Agg created");
-    this.queryService.aggregations.push(newAgg);
-    console.log(this.queryService.aggregations);
-
-    this.currentAggregationMetricColumn = "Choose one";
-    this.currentAggregationName = "";
-    this.possibleAggs = this.OPERATIONS;
-    this.possibleFeatureColumns = this.FEATURE_COLUMNS;
-    this.possibleMetricColumns = this.METRIC_COLUMNS;
-    this.selectedFeatureColumns = [];
-    this.selectedAggregations = [];
-
-    this.metricSelected = false;
   }
 
   deleteAggregation(event, agg: any) {

@@ -27,7 +27,6 @@ export class GeneralPlotsComponent implements OnInit {
 
   ngOnInit() {
     this.queryService.generalPlots = [];
-    console.log("Job in general-plots: ");
 
     this.chosenXColumn = "";
     this.chosenYColumn = "";

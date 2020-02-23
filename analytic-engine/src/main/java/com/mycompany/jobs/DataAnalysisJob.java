@@ -1,11 +1,7 @@
 package com.mycompany.jobs;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mycompany.models.AggregationModel;
-import com.mycompany.models.ConfigModel;
-import com.mycompany.models.JobModel;
-import com.mycompany.models.PlotModel;
-import org.apache.spark.api.java.JavaRDD;
+import com.mycompany.models.*;
 import org.apache.spark.sql.*;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
@@ -24,6 +20,7 @@ import org.apache.spark.ml.clustering.KMeansModel;
 import org.apache.spark.ml.linalg.Vector;
 import org.apache.spark.ml.evaluation.ClusteringEvaluator;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -57,32 +54,36 @@ public class DataAnalysisJob extends Job {
         //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
         Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1 lite.csv"));
 
+        dataset.show();
+        dataset.printSchema();
+        Dataset<Row> filteredDataset = filter(dataset, null);
+        filteredDataset.show();
 
-        // ------------------ PERFORM PLOTS & SAVE RESULTS ------------------
-        for (PlotModel plotModel : plots) {
-            Dataset<Row> plorReadyDataset = plotSelect(dataset, plotModel);
-            long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-
-            // Save to staging
-            saveToStaging(plorReadyDataset, String.format("/%s/%s/staging/%d/%s",
-                    userId, jobId, dateEpoch, plotModel._id));
-            // Save to elasticsearch
-            if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
-                saveToES(plorReadyDataset, plotModel._id, restHighLevelClient, dateEpoch);
-            }
-        }
-
-        // ------------------ PERFORM GROUPBYS & SAVE RESULTS ------------------
-        // Iterate through the defined aggregations and perform their gorupby
-        for (AggregationModel agg : aggregations) {
-            Dataset<Row> groupByDataset = groupBy(dataset, agg).cache();
-            long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-            saveToStaging(groupByDataset, String.format("/%s/%s/staging/%d/%s",
-                    userId, jobId, dateEpoch, agg._id));
-            if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
-                saveToES(groupByDataset, agg._id, restHighLevelClient, dateEpoch);
-            }
-        }
+//        // ------------------ PERFORM PLOTS & SAVE RESULTS ------------------
+//        for (PlotModel plotModel : plots) {
+//            Dataset<Row> plorReadyDataset = plotSelect(dataset, plotModel);
+//            long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+//
+//            // Save to staging
+//            saveToStaging(plorReadyDataset, String.format("/%s/%s/staging/%d/%s",
+//                    userId, jobId, dateEpoch, plotModel._id));
+//            // Save to elasticsearch
+//            if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
+//                saveToES(plorReadyDataset, plotModel._id, restHighLevelClient, dateEpoch);
+//            }
+//        }
+//
+//        // ------------------ PERFORM GROUPBYS & SAVE RESULTS ------------------
+//        // Iterate through the defined aggregations and perform their gorupby
+//        for (AggregationModel agg : aggregations) {
+//            Dataset<Row> groupByDataset = groupBy(dataset, agg).cache();
+//            long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+//            saveToStaging(groupByDataset, String.format("/%s/%s/staging/%d/%s",
+//                    userId, jobId, dateEpoch, agg._id));
+//            if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
+//                saveToES(groupByDataset, agg._id, restHighLevelClient, dateEpoch);
+//            }
+//        }
 
 //        // ------------------ PERFORM CLUSTERING & SAVE RESULTS ------------------
 //        // Must convert the selected columns into a LibSVMDataSource object before ML can be done
@@ -100,17 +101,17 @@ public class DataAnalysisJob extends Job {
 //            System.out.println(data);
 //        });
 
-        // ------------------ CLEANUP ENVIRONMENT ------------------
-        if (job.generateESIndices) {
-            elasticsearchRepository.generateBasicDashboard(job);
-            try {
-                restHighLevelClient.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        markJobAsComplete(job);
-        restHighLevelClient.close();
+//        // ------------------ CLEANUP ENVIRONMENT ------------------
+//        if (job.generateESIndices) {
+//            elasticsearchRepository.generateBasicDashboard(job);
+//            try {
+//                restHighLevelClient.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        markJobAsComplete(job);
+//        restHighLevelClient.close();
     }
 
     /**
@@ -159,6 +160,16 @@ public class DataAnalysisJob extends Job {
                 .groupBy(categoriesColumns)
                 .agg(columns.get(0), aggregationColumns)
                 .sort(desc(aggregationModel.sortColumnName));
+    }
+
+    private Dataset<Row> filter(Dataset<Row> dataset, List<FilterModel> filterModel) {
+        Dataset<Row> filteredDataset;
+        dataset.createOrReplaceTempView("PROPERTIES");
+        String sqlQuery = "SELECT * FROM PROPERTIES WHERE city = 'NOTTINGHAM'";
+
+        filteredDataset = sparkSession.sql(sqlQuery);
+
+        return filteredDataset;
     }
 
     private Dataset<Row> plotSelect(Dataset<Row> dataset, PlotModel plotModel) {

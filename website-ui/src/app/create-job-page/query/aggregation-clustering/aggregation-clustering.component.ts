@@ -33,9 +33,7 @@ export class AggregationClusteringComponent implements OnInit {
   constructor(private route: ActivatedRoute, private queryService: QueryService, private router: Router) { }
 
   ngOnInit() {
-    this.queryService.aggregationClusters = [];
-    console.log("Job in aggregation clustering: ");
-    
+    this.queryService.aggregationClusters = [];    
     this.selectedAggregation = "";
 
     this.chosenXColumn = "";

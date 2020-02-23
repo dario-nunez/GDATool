@@ -47,10 +47,14 @@ export class QueryComponent implements OnInit {
           this.queryService.aggregations.find(obj => obj.name === agg.name)._id = agg._id
         });
         this.mongodbService.createMultiplePlots(this.queryService.generalPlots).subscribe(plots => {
-          // Update aggregations with IDs and add aggregation IDs to clusters
+          // Update aggregation IDs in clusters
           this.queryService.aggregationClusters.map(obj => obj.aggId = this.getAggId(obj.aggName));
           this.mongodbService.createMultipleClusters(this.queryService.aggregationClusters).subscribe(clusters => {
-            this.router.navigate(['/execute', this.jobId]);
+            // Update aggregation IDs in filters
+            this.queryService.aggregationFilters.map(obj => obj.aggId = this.getAggId(obj.aggName));
+            this.mongodbService.createMultipleFilters(this.queryService.aggregationFilters).subscribe(filters => {
+              this.router.navigate(['/execute', this.jobId]);
+            });
           });
         });
       });

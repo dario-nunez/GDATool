@@ -18,6 +18,8 @@ export class SchemaComponent implements OnInit {
   COLUMNS: Array<[string, string]> = [];
   SELECTED_METRICS: Array<[string, string]> = [];
   SELECTED_FEATURES: Array<[string, string]> = [];
+
+  // This variable holds the whole schema file
   schema: ISchema;
 
   constructor(private mongodbService: MongodbService, private schemaService: SchemaService, private route: ActivatedRoute, private router: Router) { }
@@ -98,6 +100,7 @@ export class SchemaComponent implements OnInit {
     this.mongodbService.updateJob(this.job).subscribe(retJob => {
       this.schemaService.setFeatureColumns(this.SELECTED_FEATURES);
       this.schemaService.setMetricColumns(this.SELECTED_METRICS);
+      this.schemaService.schema = this.schema;
       this.router.navigate(['/query', this.jobId]);
     });
   }

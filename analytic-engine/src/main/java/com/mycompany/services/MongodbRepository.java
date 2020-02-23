@@ -52,6 +52,15 @@ public class MongodbRepository implements Log {
         return objectMapper.readValue(jsonData, new TypeReference<List<ClusterModel>>(){});
     }
 
+    public List<PlotModel> loadFilters(String aggId) throws UnirestException, IOException {
+        HttpResponse<String> response = httpService.get(String.format("%sfilter/byAgg/%s", configModel.mongodbServiceUrl(), aggId),
+                new HashMap<String, String>(){{
+                    put("cache-control", "no-cache");
+                }});
+        String jsonData = response.getBody();
+        return objectMapper.readValue(jsonData, new TypeReference<List<FilterModel>>(){});
+    }
+
     public JobModel getJobById(String jobId) throws IOException, UnirestException {
         HttpResponse<String> response = httpService.get(String.format("%sjob/%s", configModel.mongodbServiceUrl(), jobId),
                 new HashMap<String, String>(){{

@@ -7,6 +7,7 @@ import { IJob } from 'src/models/job.model';
 import { IAggregation } from 'src/models/aggregation.model';
 import { IPlot } from 'src/models/plot.model';
 import { ICluster } from 'src/models/cluster.model';
+import { IFilter } from 'src/models/filter.model';
 
 @Injectable({
   providedIn: 'root'
@@ -112,6 +113,14 @@ export class MongodbService {
     console.log("Clusters at mongo service");
     console.log(clusters);
     return this.http.post<IUser>("http://localhost:5000/ms/cluster/multiple", clusters).pipe(
+      catchError(err => of(null))
+    );
+  }
+
+  createMultipleFilters(filters: IFilter[]): Observable<IFilter[]> {
+    console.log("Filters at mongo service");
+    console.log(filters);
+    return this.http.post<IFilter>("http://localhost:5000/ms/filter/multiple", filters).pipe(
       catchError(err => of(null))
     );
   }
