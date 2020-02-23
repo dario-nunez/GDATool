@@ -16,7 +16,6 @@ import { IMetric } from "../elasticsearchModels/metricModel";
 import { IDataTable } from "../elasticsearchModels/dataTableModel";
 import { IPlot } from "../elasticsearchModels/plotModel";
 import { ICluster } from "../elasticsearchModels/clusterModel";
-// import { ICluster } from "../elasticsearchModels/clusterModel";
 
 /**
  * This class encapsulates the process of building the various types of dashboards.
@@ -144,10 +143,10 @@ export class DashboardBuilderController {
             aggSection.push(visualizationDataTable);
 
             //Clusters - n clusters stacked at the bottom of the aggregation section
-            aggClusters[aggregation._id].forEach((cluster: ICluster) => {
-                this.createCluster(visualizationIdPrefix + "_cluster", aggregation._id, cluster.identifier, cluster.identifierType, cluster.xAxis, cluster.xType, cluster.yAxis, cluster.yType);
+            aggClusters[aggregation._id].forEach((cluster: any) => {
+                this.createCluster(aggregation._id + "_" + cluster._id + "_cluster", aggregation._id, cluster.identifier, cluster.identifierType, cluster.xAxis, cluster.xType, cluster.yAxis, cluster.yType);
                 const visualizationCluster: IVisualization = {
-                    id: visualizationIdPrefix + "_cluster",
+                    id: aggregation._id + "_" + cluster._id + "_cluster",
                     type: "cluster"
                 }
 
@@ -285,7 +284,7 @@ export class DashboardBuilderController {
     private async createCluster(id: string, index: string, identifier: string, identifierType: string, xAxis: string, xType: string, yAxis: string, yType: string) {
         const clusterSeed: ICluster = {
             id: id,
-            type: "vega",
+            type: "cluster",
             index: index,
             explorerTitle: id,
             identifier: identifier,
