@@ -3,6 +3,7 @@ import { IVisBarCHart } from "../elasticsearchModels/visBarChartModel";
 import { IDataTable } from "../elasticsearchModels/dataTableModel";
 import { IMetric } from "../elasticsearchModels/metricModel";
 import { IPlot } from "../elasticsearchModels/plotModel";
+import { ICluster } from "../elasticsearchModels/clusterModel";
 
 export class VisualizationBuilder {
     protected elasticSearchUrl: string;
@@ -189,6 +190,38 @@ export class VisualizationBuilder {
                 visualization: {
                     title: plotModel.id,
                     visState: '{\"title\":\"'+ plotModel.id +'\",\"type\":\"'+ plotModel.type +'\",\"params\":{\"spec\":\"{\\n $schema: https: //vega.github.io/schema/vega-lite/v2.json\\n mark: {\\n type: point\\n filled: true\\n }\\n \\n data: {\\n url: {\\n index: \\\"'+ plotModel.index +'\\\"\\n \\n body: {\\n size: 10000\\n _source: ['+ sourceArray +']\\n }\\n }\\n \\n format: {property: \\\"hits.hits\\\"\\n }\\n }\\n \\n encoding: {\\n x: {\\n field: _source.'+ plotModel.xAxis +'\\n type: '+ plotModel.xType +'\\n axis: {title: \\\"'+ plotModel.xAxis +'\\\"\\n }\\n }\\n \\n y: {\\n field: _source.'+ plotModel.yAxis +'\\n type: '+ plotModel.yType +'\\n axis: {title: \\\"'+ plotModel.yAxis +'\\\"\\n }\\n }\\n \\n tooltip: {\\n field: _source.'+ plotModel.identifier +'\\n type: '+ plotModel.identifierType +'\\n }\\n }\\n}\"},\"aggs\":[]}',
+                    uiStateJSON: "{}",
+                    description: "",
+                    version: 1,
+                    kibanaSavedObjectMeta: {
+                        "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"
+                    }
+                },
+                type: "visualization",
+                references: [] as any[],
+                migrationVersion: {
+                    "visualization": "7.3.0"
+                },
+                updated_at: "2020-02-19T23:01:38.803Z"
+            }
+        }
+    }
+
+    public getVegaCluster(clusterModel: ICluster) {
+        let sourceArray = "";
+        if (clusterModel.identifier == clusterModel.xAxis || clusterModel.identifier == clusterModel.yAxis) {
+            sourceArray = '\\n \\\"'+ clusterModel.xAxis +'\\\",\\n \\\"'+ clusterModel.yAxis +'\\\"\\n '
+        } else {
+            sourceArray = '\\n \\\"'+ clusterModel.xAxis +'\\\",\\n \\\"'+ clusterModel.yAxis +'\\\",\\n \\\"'+ clusterModel.identifier +'\\\"\\n '
+        }
+        
+        return {
+            method: "PUT",
+            url: this.elasticSearchUrl + this.indexName + "_doc/visualization:" + clusterModel.id,
+            data: {
+                visualization: {
+                    title: clusterModel.id,
+                    visState: '{\"title\":\"'+ clusterModel.id +'\",\"type\":\"vega\",\"params\":{\"spec\":\"{\\n $schema: https: //vega.github.io/schema/vega-lite/v2.json\\n mark: {\\n type: point\\n filled: true\\n }\\n \\n data: {\\n url: {\\n index: \\\"'+ clusterModel.index +'\\\"\\n \\n body: {\\n size: 10000\\n _source: ['+ sourceArray +']\\n }\\n }\\n \\n format: {property: \\\"hits.hits\\\"\\n }\\n }\\n \\n encoding: {\\n x: {\\n field: _source.'+ clusterModel.xAxis +'\\n type: '+ clusterModel.xType +'\\n axis: {title: \\\"'+ clusterModel.xAxis +'\\\"\\n }\\n }\\n \\n y: {\\n field: _source.'+ clusterModel.yAxis +'\\n type: '+ clusterModel.yType +'\\n axis: {title: \\\"'+ clusterModel.yAxis +'\\\"\\n }\\n }\\n \\n tooltip: {\\n field: _source.'+ clusterModel.identifier +'\\n type: '+ clusterModel.identifierType +'\\n }\\n }\\n}\"},\"aggs\":[]}',
                     uiStateJSON: "{}",
                     description: "",
                     version: 1,

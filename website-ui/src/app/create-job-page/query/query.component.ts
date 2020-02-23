@@ -4,6 +4,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { IJob } from 'src/models/job.model';
 import { SchemaService } from 'src/services/schema/schema.service';
 import { QueryService } from 'src/services/query/query.service';
+import { IAggregation } from 'src/models/aggregation.model';
+import { ICluster } from 'src/models/cluster.model';
 
 @Component({
   selector: 'app-query',
@@ -40,13 +42,25 @@ export class QueryComponent implements OnInit {
     console.log(this.queryService);
     this.mongodbService.updateJob(this.job).subscribe(retJob => {
       this.mongodbService.createMultipleAggregations(this.queryService.aggregations).subscribe(aggs => {
+        // Add aggregation IDs before moving on to the clusters
+        aggs.forEach(agg => {
+          this.queryService.aggregations.find(obj => obj.name === agg.name)._id = agg._id
+        });
         this.mongodbService.createMultiplePlots(this.queryService.generalPlots).subscribe(plots => {
-          console.log("Job updated, aggregations added, plots added");
-          this.router.navigate(['/execute', this.jobId]);
+          // Update aggregations with IDs and add aggregation IDs to clusters
+          this.queryService.aggregationClusters.map(obj => obj.aggId = this.getAggId(obj.aggName));
+          this.mongodbService.createMultipleClusters(this.queryService.aggregationClusters).subscribe(clusters => {
+            this.router.navigate(['/execute', this.jobId]);
+          });
         });
       });
     });
   }
+
+  getAggId(aggName: string) {
+    let aggId = this.queryService.aggregations.filter(obj => obj.name == aggName)[0]._id
+    return aggId;
+  } 
 
   deleteJob() {
     if (confirm("This job will be lost forever. Are you sure you want to delete it?")) {

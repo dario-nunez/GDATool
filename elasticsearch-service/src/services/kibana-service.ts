@@ -29,4 +29,8 @@ export class KibanaService {
     public createPlot(plotVisualization: any): Promise<any> {
         return axios(plotVisualization);
     }
+
+    public createCluster(clusterVisualization: any): Promise<any> {
+        return axios(clusterVisualization);
+    }
 }

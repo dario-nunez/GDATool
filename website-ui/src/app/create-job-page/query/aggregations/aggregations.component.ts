@@ -79,6 +79,8 @@ export class AggregationsComponent implements OnInit {
   }
 
   createAggregation() {
+    // Simply reset the name field to blank if the name is already taken
+    
     const newAgg: IAggregation = {
       aggs: this.selectedAggregations,
       featureColumns: this.selectedFeatureColumns,

@@ -15,6 +15,8 @@ import { DashboardBuilder } from "../elasticsearchEntities/DashboardBuilder";
 import { IMetric } from "../elasticsearchModels/metricModel";
 import { IDataTable } from "../elasticsearchModels/dataTableModel";
 import { IPlot } from "../elasticsearchModels/plotModel";
+import { ICluster } from "../elasticsearchModels/clusterModel";
+// import { ICluster } from "../elasticsearchModels/clusterModel";
 
 /**
  * This class encapsulates the process of building the various types of dashboards.
@@ -79,9 +81,24 @@ export class DashboardBuilderController {
         });
 
         visualizationsForDashboard.push(plotSection);
+        
+        // Get all clusters from the aggregations
+        let aggregationsData = aggregations.data;
+        let aggClusters: {[aggId: string] : ICluster[]} = {}
+        for (let i=0; i < aggregationsData.length; i++) {
+            let aggID = aggregationsData[i]._id
+            logger.info("Agg ID: " + aggID)
+            const clusters = await this.mongodbService.getClustersByAgg(aggID);
+            const clustersData = clusters.data
+            aggClusters[aggID] = clustersData;
+            logger.info("Agg's clusters: ");
+            logger.info(clustersData);
+        }
+        logger.info(aggClusters)
 
         // For each aggregation, generate it dashboard section
         aggregations.data.forEach((aggregation: IAggregation) => {
+            logger.info("----SECOND LOOP STARTED----")
             // Holds the aggregation/dashboard section for each aggregation
             let aggSection = [];
 
@@ -125,6 +142,17 @@ export class DashboardBuilderController {
                 type: "table"
             };
             aggSection.push(visualizationDataTable);
+
+            //Clusters - n clusters stacked at the bottom of the aggregation section
+            aggClusters[aggregation._id].forEach((cluster: ICluster) => {
+                this.createCluster(visualizationIdPrefix + "_cluster", aggregation._id, cluster.identifier, cluster.identifierType, cluster.xAxis, cluster.xType, cluster.yAxis, cluster.yType);
+                const visualizationCluster: IVisualization = {
+                    id: visualizationIdPrefix + "_cluster",
+                    type: "cluster"
+                }
+
+                aggSection.push(visualizationCluster);
+            });
 
             //Adding the visualization section of this aggregation to the list of all visualizations
             visualizationsForDashboard.push(aggSection);
@@ -246,6 +274,34 @@ export class DashboardBuilderController {
 
         try {
             const response = await this.kibanaService.createPlot(this.kibanaService.createPlot(this.visualizationBuilder.getVegaPlot(plotSeed)));
+            logger.info(response.data)
+            return response.data;
+        } catch (error) {
+            return error;
+        }
+    }
+
+    // Create cluster
+    private async createCluster(id: string, index: string, identifier: string, identifierType: string, xAxis: string, xType: string, yAxis: string, yType: string) {
+        const clusterSeed: ICluster = {
+            id: id,
+            type: "vega",
+            index: index,
+            explorerTitle: id,
+            identifier: identifier,
+            identifierType: identifierType,
+            xAxis: xAxis.toLowerCase(),
+            xType: xType,
+            yAxis: yAxis.toLowerCase(),
+            yType: yType,
+            cluster: 0
+        }
+
+        logger.info("Cluster seed")
+        logger.info(clusterSeed);
+
+        try {
+            const response = await this.kibanaService.createCluster(this.kibanaService.createCluster(this.visualizationBuilder.getVegaCluster(clusterSeed)));
             logger.info(response.data)
             return response.data;
         } catch (error) {

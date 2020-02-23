@@ -1,5 +1,4 @@
 import { IDashboard } from "../elasticsearchModels/dashboardModel";
-import logger from "../../../common-service/src/logger/loggerFactory";
 
 export class DashboardBuilder {
     protected elasticSearchUrl: string;
@@ -70,8 +69,8 @@ export class DashboardBuilder {
         let panelCounter = 0;
         let visualizationMetadata = "[";
 
-        logger.info("Dashboard model:");
-        logger.info(dashboardModel.visualizations);
+        // logger.info("Dashboard model:");
+        // logger.info(dashboardModel.visualizations);
 
         // For each section in the dashboard, add each visualization one by one
         for (const visArray of dashboardModel.visualizations) {
@@ -82,6 +81,7 @@ export class DashboardBuilder {
             let plots = new Array();
             let markdowns = new Array();
             let tables = new Array();
+            let clusters = new Array();
 
             for (const vis of visArray) {
                 if (vis.type === "metric") {
@@ -94,6 +94,8 @@ export class DashboardBuilder {
                     markdowns.push(vis);
                 } else if (vis.type === "table") {
                     tables.push(vis);
+                } else if (vis.type === "cluster") {
+                    clusters.push(vis);
                 } else {
                     //title and table here...
                 }
@@ -177,8 +179,17 @@ export class DashboardBuilder {
                 }
             }
 
-            // Data tables: added at the bottom
+            // Data tables: added second from the bottom
             for (let i: number = 1; i <= tables.length; i++) {
+                visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.MAX_WIDTH, currentX, currentY, panelIndex, panelCounter);
+                currentX = 0;
+                panelIndex = panelIndex + 1;
+                panelCounter = panelCounter + 1;
+                currentY = currentY + this.BAR_CHART_HEIGHT
+            }
+
+            // Clusters: added at the bottom
+            for (let i: number = 1; i <= clusters.length; i++) {
                 visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.MAX_WIDTH, currentX, currentY, panelIndex, panelCounter);
                 currentX = 0;
                 panelIndex = panelIndex + 1;
