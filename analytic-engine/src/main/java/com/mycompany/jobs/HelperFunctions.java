@@ -1,5 +1,6 @@
 package com.mycompany.jobs;
 
+import org.apache.spark.sql.Column;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import scala.collection.JavaConverters;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.apache.spark.sql.functions.col;
+import static org.apache.spark.sql.functions.soundex;
 
 public class HelperFunctions {
     public static String replaceCharacter = "_";
