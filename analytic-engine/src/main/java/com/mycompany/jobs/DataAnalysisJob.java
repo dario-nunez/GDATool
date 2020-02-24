@@ -72,117 +72,67 @@ public class DataAnalysisJob extends Job {
         Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1 lite.csv"));
         dataset.show();
 
-//        // ------------------ PERFORM PLOTS & SAVE RESULTS ------------------
-//        for (PlotModel plotModel : plots) {
-//            Dataset<Row> plorReadyDataset = plotSelect(dataset, plotModel);
-//            long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-//
-//            // Save to staging
-//            saveToStaging(plorReadyDataset, String.format("/%s/%s/staging/%d/%s",
-//                    userId, jobId, dateEpoch, plotModel._id));
-//            // Save to elasticsearch
-//            if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
-//                saveToES(plorReadyDataset, plotModel._id, restHighLevelClient, dateEpoch);
-//            }
-//        }
+        // ------------------ PERFORM PLOTS & SAVE RESULTS ------------------
+        for (PlotModel plotModel : plots) {
+            Dataset<Row> plorReadyDataset = plotSelect(dataset, plotModel);
+            long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
 
-//        // ------------------ PERFORM GROUPBYS & SAVE RESULTS ------------------
-//        // Iterate through the defined aggregations and perform their gorupby
-        for (AggregationModel agg : aggregations) {
-            if (agg._id.equals("5e530adf27d827399fe4601c")) {
-                Dataset<Row> groupByDatasetOG = groupBy(dataset, agg).cache();
-                groupByDatasetOG.show();
-
-                // Performs groupby
-                Dataset<Row> groupByDataset = groupByDatasetOG.select("sum", "min").cache();
-                groupByDataset.show();
-
-                // Prepares data for clustering
-                JavaRDD<Row> javaRDDDataset = groupByDataset.toJavaRDD().cache();
-                JavaRDD<Vector> parsedData = javaRDDDataset.map(s -> {
-                    String stringRow = s.toString().substring(1, s.toString().length()-1);
-                    String[] arrayRow = stringRow.split(",");
-                    double[] values = new double[arrayRow.length];
-                    for (int i = 0; i < arrayRow.length; i++) {
-                        values[i] = Double.parseDouble(arrayRow[i]);
-                    }
-                    return Vectors.dense(values);
-                });
-                parsedData.cache();
-
-                int numClusters = 2;
-                int numIterations = 20;
-
-                // Performs the clustering
-                KMeansModel kMeansModel = KMeans.train(parsedData.rdd(), numClusters, numIterations);
-                List<Vector> clusters = new ArrayList<>();
-
-                clusters.addAll(Arrays.asList(kMeansModel.clusterCenters()));
-                System.out.println(clusters);
-                //Cluster centers
-                //[1886638.0,101500.0]
-                //[502500.0,327500.0]
-
-                // Cast things
-                groupByDatasetOG = groupByDatasetOG.withColumn("sum", col("sum").cast(DataTypes.DoubleType)).cache();
-                groupByDatasetOG = groupByDatasetOG.withColumn("min", col("min").cast(DataTypes.DoubleType)).cache();
-                groupByDatasetOG.show();
-                groupByDatasetOG.printSchema();
-
-                sparkSession.sqlContext().udf().register("assignCluster", (Double a, Double b) -> {
-                    double[] features = {a, b};
-                    return Double.valueOf(kMeansModel.predict(Vectors.dense(features)));
-                }, DataTypes.DoubleType);
-                groupByDatasetOG.registerTempTable("temp");
-                Dataset<Row> summedDataset = sparkSession.sqlContext().sql("SELECT *, assignCluster(sum, min) AS `cluster` FROM temp");
-                summedDataset.show();
-
-                // USER DEFINED FUNCTIONS THAT ARE NOT WORKING
-                // Dataset<Row> clusteredDataset = groupByDatasetOG.withColumn("clusterNumber", callUDF("selectCluster", col("sum"), col("min")).cast(DataTypes.DoubleType)).cache();
-                // clusteredDataset.printSchema();
-                // Dataset<Row> finalDataset = clusteredDataset.cache();
-                // finalDataset.show();
+            // Save to staging
+            saveToStaging(plorReadyDataset, String.format("/%s/%s/staging/%d/%s",
+                    userId, jobId, dateEpoch, plotModel._id));
+            // Save to elasticsearch
+            if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
+                saveToES(plorReadyDataset, plotModel._id, restHighLevelClient, dateEpoch);
             }
-
-//            List<FilterModel> filters = mongodbRepository.loadFilters(agg._id);
-//            Dataset<Row> filteredDataset = filter(dataset, filters).cache();
-//            filteredDataset.show();
-//            Dataset<Row> groupByDataset = groupBy(filteredDataset, agg).cache();
-//            groupByDataset.show();
-//            long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-//            saveToStaging(groupByDataset, String.format("/%s/%s/staging/%d/%s",
-//                    userId, jobId, dateEpoch, agg._id));
-//            if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
-//                saveToES(groupByDataset, agg._id, restHighLevelClient, dateEpoch);
-//            }
         }
 
-//        // ------------------ PERFORM CLUSTERING & SAVE RESULTS ------------------
-//        // Must convert the selected columns into a LibSVMDataSource object before ML can be done
-//        // Use the bookmarked resource to convert a record of 2 numeric columns to a 2 vectors of 2 numeric columns and the label one with just 1.
-//        // For each the dataset and build this other dataset or apply a .format to it somehow.
-//        // The run the OG clustering algorithm on it.
-//        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "zikaVirusReportedCases-lite.csv"));
-//        dataset = HelperFunctions.getValidDataset(dataset).cache();
-//        dataset.show();
-//        JavaRDD<Row> javaRDDDataset = dataset.toJavaRDD().cache();
-//
-//
-//        javaRDDDataset.foreach(data -> {
-//            System.out.println(data);
-//        });
+        // ------------------ PERFORM GROUPBYS & SAVE RESULTS ------------------
+        // Iterate through the defined aggregations and perform their gorupby
+        for (AggregationModel agg : aggregations) {
+            // Perform filtering
+            List<FilterModel> filters = mongodbRepository.loadFilters(agg._id);
+            Dataset<Row> filteredDataset = filter(dataset, filters).cache();
+            filteredDataset.show();
 
-//        // ------------------ CLEANUP ENVIRONMENT ------------------
-//        if (job.generateESIndices) {
-//            elasticsearchRepository.generateBasicDashboard(job);
-//            try {
-//                restHighLevelClient.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        markJobAsComplete(job);
-//        restHighLevelClient.close();
+            // Perform groupbys and create indexes
+            Dataset<Row> groupByDataset = groupBy(filteredDataset, agg).cache();
+            groupByDataset.show();
+
+            long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+            saveToStaging(groupByDataset, String.format("/%s/%s/staging/%d/%s",
+                    userId, jobId, dateEpoch, agg._id));
+            if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
+                saveToES(groupByDataset, agg._id, restHighLevelClient, dateEpoch);
+            }
+
+            // Perform clustering and create indexes
+            List<ClusterModel> clusters = mongodbRepository.loadClusters(agg._id);
+            for (ClusterModel cluster : clusters) {
+                Dataset<Row> groupByDatasetOG = groupBy(dataset, agg).cache();
+                Dataset<Row> clusteredDataset = cluster(groupByDatasetOG, cluster);
+                clusteredDataset.show();
+                clusteredDataset.printSchema();
+
+                dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+                saveToStaging(clusteredDataset, String.format("/%s/%s/staging/%d/%s",
+                        userId, jobId, dateEpoch, cluster._id));
+                if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
+                    saveToES(clusteredDataset, cluster._id, restHighLevelClient, dateEpoch);
+                }
+            }
+        }
+
+        // ------------------ CLEANUP ENVIRONMENT ------------------
+        if (job.generateESIndices) {
+            elasticsearchRepository.generateBasicDashboard(job);
+            try {
+                restHighLevelClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        markJobAsComplete(job);
+        restHighLevelClient.close();
     }
 
     /**
@@ -233,10 +183,14 @@ public class DataAnalysisJob extends Job {
                 .sort(desc(aggregationModel.sortColumnName));
     }
 
-    private void cluster(Dataset<Row> dataset, AggregationModel agg) {
-        // Performs groupby
-        Dataset<Row> datasetForClustering = dataset.select("sum", "min").cache();
-        datasetForClustering.show();
+    private Dataset<Row> cluster(Dataset<Row> dataset, ClusterModel clusterModel) {
+        // Select columns necessary for clustering
+        List<String> featureColumns = new ArrayList<>();
+        featureColumns.add(clusterModel.xAxis.toLowerCase());
+        featureColumns.add(clusterModel.yAxis.toLowerCase());
+        List<Column> clusterColumns = featureColumns.stream().map(functions::col).collect(Collectors.toList());
+        Seq<Column> seqClusterColumns = scala.collection.JavaConversions.asScalaBuffer(clusterColumns.subList(0, clusterColumns.size()));
+        Dataset<Row> datasetForClustering = dataset.select(seqClusterColumns).cache();
 
         // Prepares data for clustering
         JavaRDD<Row> javaRDDDataset = datasetForClustering.toJavaRDD().cache();
@@ -251,38 +205,23 @@ public class DataAnalysisJob extends Job {
         });
         parsedData.cache();
 
+        // Performs the clustering using k-means
         int numClusters = 2;
         int numIterations = 20;
-
-        // Performs the clustering
         KMeansModel kMeansModel = KMeans.train(parsedData.rdd(), numClusters, numIterations);
-        List<Vector> clusters = new ArrayList<>();
 
-        clusters.addAll(Arrays.asList(kMeansModel.clusterCenters()));
-        System.out.println(clusters);
-        //Cluster centers
-        //[1886638.0,101500.0]
-        //[502500.0,327500.0]
+        // Cast necessary columns for clustering to doubles
+        for (String column:featureColumns) {
+            dataset = dataset.withColumn(column, col(column).cast(DataTypes.DoubleType)).cache();
+        }
 
-        // Cast things
-        datasetForClustering = datasetForClustering.withColumn("sum", col("sum").cast(DataTypes.DoubleType)).cache();
-        datasetForClustering = datasetForClustering.withColumn("min", col("min").cast(DataTypes.DoubleType)).cache();
-        datasetForClustering.show();
-        datasetForClustering.printSchema();
-
+        // Use the K-means model to predict the cluster of each record
         sparkSession.sqlContext().udf().register("assignCluster", (Double a, Double b) -> {
             double[] features = {a, b};
-            return Double.valueOf(kMeansModel.predict(Vectors.dense(features)));
+            return (double) kMeansModel.predict(Vectors.dense(features));
         }, DataTypes.DoubleType);
-        datasetForClustering.registerTempTable("temp");
-        Dataset<Row> summedDataset = sparkSession.sqlContext().sql("SELECT *, assignCluster(sum, min) AS `cluster` FROM temp");
-        summedDataset.show();
-
-        // USER DEFINED FUNCTIONS THAT ARE NOT WORKING
-        // Dataset<Row> clusteredDataset = groupByDatasetOG.withColumn("clusterNumber", callUDF("selectCluster", col("sum"), col("min")).cast(DataTypes.DoubleType)).cache();
-        // clusteredDataset.printSchema();
-        // Dataset<Row> finalDataset = clusteredDataset.cache();
-        // finalDataset.show();
+        dataset.registerTempTable("temp");
+        return sparkSession.sqlContext().sql("SELECT *, assignCluster(" + featureColumns.get(0) + ", " + featureColumns.get(1) + ") AS `cluster` FROM temp").cache();
     }
 
     private Dataset<Row> filter(Dataset<Row> dataset, List<FilterModel> filters) {

@@ -146,7 +146,7 @@ export class DashboardBuilderController {
 
             //Clusters - n clusters stacked at the bottom of the aggregation section
             aggClusters[aggregation._id].forEach((cluster: any) => {
-                this.createCluster(aggregation._id + "_" + cluster._id + "_cluster", aggregation._id, cluster.identifier, cluster.identifierType, cluster.xAxis, cluster.xType, cluster.yAxis, cluster.yType);
+                this.createCluster(aggregation._id + "_" + cluster._id + "_cluster", cluster._id, cluster.identifier, cluster.identifierType, cluster.xAxis, cluster.xType, cluster.yAxis, cluster.yType);
                 const visualizationCluster: IVisualization = {
                     id: aggregation._id + "_" + cluster._id + "_cluster",
                     type: "cluster"

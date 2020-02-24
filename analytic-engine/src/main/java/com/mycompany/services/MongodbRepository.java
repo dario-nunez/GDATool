@@ -42,7 +42,7 @@ public class MongodbRepository implements Log {
         return objectMapper.readValue(jsonData, new TypeReference<List<PlotModel>>(){});
     }
 
-    public List<PlotModel> loadClusters(String aggId) throws UnirestException, IOException {
+    public List<ClusterModel> loadClusters(String aggId) throws UnirestException, IOException {
         HttpResponse<String> response = httpService.get(String.format("%scluster/byAgg/%s", configModel.mongodbServiceUrl(), aggId),
                 new HashMap<String, String>(){{
                     put("cache-control", "no-cache");
