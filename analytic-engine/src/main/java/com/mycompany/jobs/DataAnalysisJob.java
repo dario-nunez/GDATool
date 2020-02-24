@@ -69,7 +69,9 @@ public class DataAnalysisJob extends Job {
         List<PlotModel> plots = mongodbRepository.loadPlots(jobId);
         List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
         //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
-        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1 lite.csv"));
+        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1 lite.csv"));
+        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "uk-properties-mid.csv"));
+
         dataset.show();
 
         // ------------------ PERFORM PLOTS & SAVE RESULTS ------------------

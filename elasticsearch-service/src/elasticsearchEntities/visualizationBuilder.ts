@@ -210,9 +210,9 @@ export class VisualizationBuilder {
     public getVegaCluster(clusterModel: ICluster) {
         let sourceArray = "";
         if (clusterModel.identifier == clusterModel.xAxis || clusterModel.identifier == clusterModel.yAxis) {
-            sourceArray = '\\n \\\"'+ clusterModel.xAxis +'\\\",\\n \\\"'+ clusterModel.yAxis +'\\\"\\n '
+            sourceArray = '\\n \\\"'+ clusterModel.xAxis +'\\\",\\n \\\"'+ clusterModel.yAxis +'\\\",\\n \\\"cluster\\\"\\n ';
         } else {
-            sourceArray = '\\n \\\"'+ clusterModel.xAxis +'\\\",\\n \\\"'+ clusterModel.yAxis +'\\\",\\n \\\"'+ clusterModel.identifier +'\\\"\\n '
+            sourceArray = '\\n \\\"'+ clusterModel.xAxis +'\\\",\\n \\\"'+ clusterModel.yAxis +'\\\",\\n \\\"cluster\\\"\\n \\\"'+ clusterModel.identifier +'\\\"\\n ';
         }
         
         return {
@@ -221,7 +221,7 @@ export class VisualizationBuilder {
             data: {
                 visualization: {
                     title: clusterModel.id,
-                    visState: '{\"title\":\"'+ clusterModel.id +'\",\"type\":\"vega\",\"params\":{\"spec\":\"{\\n $schema: https: //vega.github.io/schema/vega-lite/v2.json\\n mark: {\\n type: point\\n filled: true\\n }\\n \\n data: {\\n url: {\\n index: \\\"'+ clusterModel.index +'\\\"\\n \\n body: {\\n size: 10000\\n _source: ['+ sourceArray +']\\n }\\n }\\n \\n format: {property: \\\"hits.hits\\\"\\n }\\n }\\n \\n encoding: {\\n x: {\\n field: _source.'+ clusterModel.xAxis +'\\n type: '+ clusterModel.xType +'\\n axis: {title: \\\"'+ clusterModel.xAxis +'\\\"\\n }\\n }\\n \\n y: {\\n field: _source.'+ clusterModel.yAxis +'\\n type: '+ clusterModel.yType +'\\n axis: {title: \\\"'+ clusterModel.yAxis +'\\\"\\n }\\n }\\n \\n tooltip: {\\n field: _source.'+ clusterModel.identifier +'\\n type: '+ clusterModel.identifierType +'\\n }\\n }\\n}\"},\"aggs\":[]}',
+                    visState: '{\"title\":\"'+ clusterModel.id +'\",\"type\":\"vega\",\"params\":{\"spec\":\"{\\n $schema: https: //vega.github.io/schema/vega-lite/v2.json\\n mark: {\\n type: point\\n }\\n \\n data: {\\n url: {\\n index: \\\"'+ clusterModel.index +'\\\"\\n \\n body: {\\n size: 10000\\n _source: ['+ sourceArray +']\\n }\\n }\\n \\n format: {property: \\\"hits.hits\\\"\\n }\\n }\\n \\n encoding: {\\n x: {\\n field: _source.'+ clusterModel.xAxis +'\\n type: '+ clusterModel.xType +'\\n axis: {title: \\\"'+ clusterModel.xAxis +'\\\"\\n }\\n }\\n \\n y: {\\n field: _source.'+ clusterModel.yAxis +'\\n type: '+ clusterModel.yType +'\\n axis: {title: \\\"'+ clusterModel.yAxis +'\\\"\\n }\\n }\\n \\n tooltip: {\\n field: _source.'+ clusterModel.identifier +'\\n type: '+ clusterModel.identifierType +'\\n } \\n \\\"color\\\": {\\n \\\"field\\\": \\\"_source.cluster\\\",\\n \\\"title\\\": \\\"clusters\\\",\\n \\\"type\\\": \\\"nominal\\\"\\n }\\n \\\"shape\\\": {\\n \\\"field\\\": \\\"_source.cluster\\\",\\n \\\"type\\\": \\\"nominal\\\"\\n}\\n }\\n}\"},\"aggs\":[]}',
                     uiStateJSON: "{}",
                     description: "",
                     version: 1,
