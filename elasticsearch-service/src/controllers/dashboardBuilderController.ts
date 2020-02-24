@@ -59,13 +59,15 @@ export class DashboardBuilderController {
 
         let plotSection: IVisualization[] = [];
         //Add a title to the general plots section
-        this.createVisMarkup(job.data._id + "_general_plots", "general_plots_title");
-        const visualizationMarkup: IVisualization = {
-            id: job.data._id + "_general_plots",
-            type: "markdown"
-        };
-        
-        plotSection.push(visualizationMarkup);
+        if (plots.data.length > 0) {
+            this.createVisMarkup(job.data._id + "_general_plots", "general_plots_title");
+            const visualizationMarkup: IVisualization = {
+                id: job.data._id + "_general_plots",
+                type: "markdown"
+            };
+            
+            plotSection.push(visualizationMarkup);
+        }
 
         // For each plot, add it to the tpo of the dashboard
         plots.data.forEach((plot: any) => {

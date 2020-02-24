@@ -1,6 +1,5 @@
 package com.mycompany.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,7 +51,7 @@ public class MongodbRepository implements Log {
         return objectMapper.readValue(jsonData, new TypeReference<List<ClusterModel>>(){});
     }
 
-    public List<PlotModel> loadFilters(String aggId) throws UnirestException, IOException {
+    public List<FilterModel> loadFilters(String aggId) throws UnirestException, IOException {
         HttpResponse<String> response = httpService.get(String.format("%sfilter/byAgg/%s", configModel.mongodbServiceUrl(), aggId),
                 new HashMap<String, String>(){{
                     put("cache-control", "no-cache");

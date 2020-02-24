@@ -2,6 +2,7 @@ package com.mycompany.jobs;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mycompany.models.*;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.sql.*;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
@@ -51,39 +52,38 @@ public class DataAnalysisJob extends Job {
         JobModel job = mongodbRepository.getJobById(jobId);
         List<PlotModel> plots = mongodbRepository.loadPlots(jobId);
         List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
-        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
-        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1 lite.csv"));
+        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
+        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1 lite.csv"));
 
-        dataset.show();
-        dataset.printSchema();
-        Dataset<Row> filteredDataset = filter(dataset, null);
-        filteredDataset.show();
+        // ------------------ PERFORM PLOTS & SAVE RESULTS ------------------
+        for (PlotModel plotModel : plots) {
+            Dataset<Row> plorReadyDataset = plotSelect(dataset, plotModel);
+            long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
 
-//        // ------------------ PERFORM PLOTS & SAVE RESULTS ------------------
-//        for (PlotModel plotModel : plots) {
-//            Dataset<Row> plorReadyDataset = plotSelect(dataset, plotModel);
-//            long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-//
-//            // Save to staging
-//            saveToStaging(plorReadyDataset, String.format("/%s/%s/staging/%d/%s",
-//                    userId, jobId, dateEpoch, plotModel._id));
-//            // Save to elasticsearch
-//            if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
-//                saveToES(plorReadyDataset, plotModel._id, restHighLevelClient, dateEpoch);
-//            }
-//        }
-//
-//        // ------------------ PERFORM GROUPBYS & SAVE RESULTS ------------------
-//        // Iterate through the defined aggregations and perform their gorupby
-//        for (AggregationModel agg : aggregations) {
-//            Dataset<Row> groupByDataset = groupBy(dataset, agg).cache();
-//            long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
-//            saveToStaging(groupByDataset, String.format("/%s/%s/staging/%d/%s",
-//                    userId, jobId, dateEpoch, agg._id));
-//            if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
-//                saveToES(groupByDataset, agg._id, restHighLevelClient, dateEpoch);
-//            }
-//        }
+            // Save to staging
+            saveToStaging(plorReadyDataset, String.format("/%s/%s/staging/%d/%s",
+                    userId, jobId, dateEpoch, plotModel._id));
+            // Save to elasticsearch
+            if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
+                saveToES(plorReadyDataset, plotModel._id, restHighLevelClient, dateEpoch);
+            }
+        }
+
+        // ------------------ PERFORM GROUPBYS & SAVE RESULTS ------------------
+        // Iterate through the defined aggregations and perform their gorupby
+        for (AggregationModel agg : aggregations) {
+            List<FilterModel> filters = mongodbRepository.loadFilters(agg._id);
+            Dataset<Row> filteredDataset = filter(dataset, filters).cache();
+            filteredDataset.show();
+            Dataset<Row> groupByDataset = groupBy(filteredDataset, agg).cache();
+            groupByDataset.show();
+            long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+            saveToStaging(groupByDataset, String.format("/%s/%s/staging/%d/%s",
+                    userId, jobId, dateEpoch, agg._id));
+            if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
+                saveToES(groupByDataset, agg._id, restHighLevelClient, dateEpoch);
+            }
+        }
 
 //        // ------------------ PERFORM CLUSTERING & SAVE RESULTS ------------------
 //        // Must convert the selected columns into a LibSVMDataSource object before ML can be done
@@ -101,17 +101,17 @@ public class DataAnalysisJob extends Job {
 //            System.out.println(data);
 //        });
 
-//        // ------------------ CLEANUP ENVIRONMENT ------------------
-//        if (job.generateESIndices) {
-//            elasticsearchRepository.generateBasicDashboard(job);
-//            try {
-//                restHighLevelClient.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        markJobAsComplete(job);
-//        restHighLevelClient.close();
+        // ------------------ CLEANUP ENVIRONMENT ------------------
+        if (job.generateESIndices) {
+            elasticsearchRepository.generateBasicDashboard(job);
+            try {
+                restHighLevelClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        markJobAsComplete(job);
+        restHighLevelClient.close();
     }
 
     /**
@@ -162,12 +162,15 @@ public class DataAnalysisJob extends Job {
                 .sort(desc(aggregationModel.sortColumnName));
     }
 
-    private Dataset<Row> filter(Dataset<Row> dataset, List<FilterModel> filterModel) {
-        Dataset<Row> filteredDataset;
-        dataset.createOrReplaceTempView("PROPERTIES");
-        String sqlQuery = "SELECT * FROM PROPERTIES WHERE city = 'NOTTINGHAM'";
+    private Dataset<Row> filter(Dataset<Row> dataset, List<FilterModel> filters) {
+        Dataset<Row> filteredDataset = dataset;
 
-        filteredDataset = sparkSession.sql(sqlQuery);
+        for (FilterModel filterModel : filters) {
+            filteredDataset.createOrReplaceTempView("source");
+            String sqlQuery = "SELECT * FROM source WHERE " + filterModel.query;
+            System.out.println("SQL query: " + sqlQuery);
+            filteredDataset = sparkSession.sql(sqlQuery);
+        }
 
         return filteredDataset;
     }
