@@ -76,6 +76,6 @@ public class HelperFunctionsTests {
     @Test
     public void other() {
         String validName = HelperFunctions.getValidColumnName("Country / territory0");
-        assertEquals(validName, "Country_/_territory0");
+        assertEquals(validName, "Country___territory0");
     }
 }

@@ -42,7 +42,7 @@ public class DependencyFactory {
      * @return The built ConfigModel object.
      * @throws IOException
      */
-    private ConfigModel buildConfigModel() throws IOException {
+    public ConfigModel buildConfigModel() throws IOException {
         PropertiesManager propertiesManager = new PropertiesManager();
         Properties properties = propertiesManager.loadEnvironment(env);
 
