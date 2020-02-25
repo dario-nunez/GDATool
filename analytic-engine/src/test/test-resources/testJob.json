@@ -1,0 +1,13 @@
+{
+  "_id":"5e52fed627d827399fe46014",
+  "description":"demo job description",
+  "name":"demo job name",
+  "generateESIndices":true,
+  "jobStatus":"4",
+  "userId":"5e443c40dc118fa3af6ddda9",
+  "rawInputDirectory":"5e443c40dc118fa3af6ddda9/5e52fed627d827399fe46014/raw/uk-properties-mid.csv",
+  "stagingFileName":"5e443c40dc118fa3af6ddda9/5e52fed627d827399fe46014/staging",
+  "createdAt":"1582497494571",
+  "updatedAt":"1582497494571",
+  "__v":"0"
+}

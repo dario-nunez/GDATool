@@ -57,7 +57,7 @@
 //        tearDown();
 //
 //        createTestRecord("testUsers.json", "user", userId);
-//        createTestRecord("testJobs.json", "job", jobId);
+//        createTestRecord("testJob.json", "job", jobId);
 //        createTestRecord("testAggregations.json", "aggregation", aggId);
 //
 //        setUpFileStructure();
@@ -66,7 +66,7 @@
 //    @After
 //    public void tearDown() throws IOException {
 //        deleteTestRecord("testUsers.json", "user", userId);
-//        deleteTestRecord("testJobs.json", "job", jobId);
+//        deleteTestRecord("testJob.json", "job", jobId);
 //        deleteTestRecord("testAggregations.json", "aggregation", aggId);
 //
 //        deleteKibanaEntity("visualization", String.format("%s_%s_markdown", jobId, aggId));
