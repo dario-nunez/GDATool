@@ -2,21 +2,10 @@ package com.mycompany.jobs;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mycompany.models.*;
-import org.apache.commons.math3.util.Precision;
 import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.function.FlatMapFunction;
-import org.apache.spark.api.java.function.ForeachFunction;
-import org.apache.spark.api.java.function.ForeachPartitionFunction;
-import org.apache.spark.api.java.function.MapFunction;
-//import org.apache.spark.ml.linalg.Vectors;
 import org.apache.spark.mllib.clustering.KMeansModel;
-import org.apache.spark.rdd.RDD;
 import org.apache.spark.sql.*;
-import org.apache.spark.sql.expressions.UserDefinedFunction;
-import org.apache.spark.sql.expressions.Window;
 import org.apache.spark.sql.types.DataTypes;;
-import org.apache.spark.sql.types.Metadata;
-import org.apache.spark.sql.types.StructField;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
@@ -29,23 +18,15 @@ import scala.collection.Seq;
 import com.mycompany.services.ElasticsearchRepository;
 import com.mycompany.services.MongodbRepository;
 
-//import org.apache.spark.ml.linalg.Vector;
-import org.apache.spark.ml.evaluation.ClusteringEvaluator;
 import org.apache.spark.mllib.clustering.KMeans;
-import org.apache.spark.mllib.clustering.KMeansModel;
 import org.apache.spark.mllib.linalg.Vector;
 import org.apache.spark.mllib.linalg.Vectors;
-import org.apache.spark.sql.types.StructType;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
-import java.sql.Struct;
-import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -72,8 +53,8 @@ public class DataAnalysisJob extends Job {
         List<PlotModel> plots = mongodbRepository.loadPlots(jobId);
         List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
         //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
-        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1.csv"));
-        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "uk-properties-mid.csv"));
+        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1.csv"));
+        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "uk-properties-mid.csv"));
 
         // ------------------ PERFORM PLOTS & SAVE RESULTS ------------------
         for (PlotModel plotModel : plots) {
@@ -233,7 +214,7 @@ public class DataAnalysisJob extends Job {
         int numIterations = 20;
         KMeansModel kMeansModelProbe;
 
-        for (int i = 2; i < 10; i++) {
+        for (int i = 2; i < 6; i++) {
             kMeansModelProbe = KMeans.train(parsedData.rdd(), i, numIterations);
             double score = kMeansModelProbe.computeCost(parsedData.rdd());
             if (score > bestKScore) {
