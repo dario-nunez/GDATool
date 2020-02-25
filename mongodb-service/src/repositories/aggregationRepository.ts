@@ -24,10 +24,13 @@ export class AggregationRepository extends Repository<IAggregation> {
     }
 
     public async createMultipleAggregations(aggregations: any[]): Promise<Array<IAggregation>> {
+        let returnAggregations = [];
+
         for (let agg of aggregations) {
-            this.create(agg); 
+            let newAgg = await this.create(agg);
+            returnAggregations.push(newAgg);
         }
 
-        return aggregations;
+        return returnAggregations;
     }
 }

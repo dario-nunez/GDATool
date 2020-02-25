@@ -1,11 +1,11 @@
 package com.mycompany.jobs;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mycompany.models.AggregationModel;
-import com.mycompany.models.ConfigModel;
-import com.mycompany.models.JobModel;
+import com.mycompany.models.*;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.mllib.clustering.KMeansModel;
 import org.apache.spark.sql.*;
+import org.apache.spark.sql.types.DataTypes;;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
@@ -18,10 +18,9 @@ import scala.collection.Seq;
 import com.mycompany.services.ElasticsearchRepository;
 import com.mycompany.services.MongodbRepository;
 
-import org.apache.spark.ml.clustering.KMeans;
-import org.apache.spark.ml.clustering.KMeansModel;
-import org.apache.spark.ml.linalg.Vector;
-import org.apache.spark.ml.evaluation.ClusteringEvaluator;
+import org.apache.spark.mllib.clustering.KMeans;
+import org.apache.spark.mllib.linalg.Vector;
+import org.apache.spark.mllib.linalg.Vectors;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -50,40 +49,59 @@ public class DataAnalysisJob extends Job {
         logger.info("job {} by user {} is starting", jobId, userId);
 
         // ------------------ LOAD RESOURCES AND CLEAN DATA ------------------
-        // Load aggregation
-        List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
-        // Load job
         JobModel job = mongodbRepository.getJobById(jobId);
-        // Read data
-        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
+        List<PlotModel> plots = mongodbRepository.loadPlots(jobId);
+        List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
+        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
+        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1.csv"));
+        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "uk-properties-mid.csv"));
+
+        // ------------------ PERFORM PLOTS & SAVE RESULTS ------------------
+        for (PlotModel plotModel : plots) {
+            Dataset<Row> plorReadyDataset = plotSelect(dataset, plotModel);
+            long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+
+            // Save to staging
+            saveToStaging(plorReadyDataset, String.format("/%s/%s/staging/%d/%s",
+                    userId, jobId, dateEpoch, plotModel._id));
+            // Save to elasticsearch
+            if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
+                saveToES(plorReadyDataset, plotModel._id, restHighLevelClient, dateEpoch);
+            }
+        }
 
         // ------------------ PERFORM GROUPBYS & SAVE RESULTS ------------------
         // Iterate through the defined aggregations and perform their gorupby
         for (AggregationModel agg : aggregations) {
-            Dataset<Row> groupByDataset = groupBy(dataset, agg).cache();
+            // Perform filtering
+            List<FilterModel> filters = mongodbRepository.loadFilters(agg._id);
+            Dataset<Row> filteredDataset = filter(dataset, filters).cache();
+
+            // Perform groupbys and create indexes
+            Dataset<Row> groupByDataset = groupBy(filteredDataset, agg).cache();
+
             long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
             saveToStaging(groupByDataset, String.format("/%s/%s/staging/%d/%s",
                     userId, jobId, dateEpoch, agg._id));
             if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
-                saveToES(groupByDataset, job, agg, restHighLevelClient, dateEpoch);
+                saveToES(groupByDataset, agg._id, restHighLevelClient, dateEpoch);
+            }
+
+            // Perform clustering and create indexes
+            List<ClusterModel> clusters = mongodbRepository.loadClusters(agg._id);
+            for (ClusterModel cluster : clusters) {
+                Dataset<Row> clusteredDataset = cluster(groupByDataset, cluster);
+                clusteredDataset.show();
+                clusteredDataset.printSchema();
+
+                dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
+                saveToStaging(clusteredDataset, String.format("/%s/%s/staging/%d/%s",
+                        userId, jobId, dateEpoch, cluster._id));
+                if (configModel.elasticsearchUrl() != null && job.generateESIndices) {
+                    saveToES(clusteredDataset, cluster._id, restHighLevelClient, dateEpoch);
+                }
             }
         }
-
-//        // ------------------ PERFORM CLUSTERING & SAVE RESULTS ------------------
-//        // Must convert the selected columns into a LibSVMDataSource object before ML can be done
-//        // Use the bookmarked resource to convert a record of 2 numeric columns to a 2 vectors of 2 numeric columns and the label one with just 1.
-//        // For each the dataset and build this other dataset or apply a .format to it somehow.
-//        // The run the OG clustering algorithm on it.
-//        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "zikaVirusReportedCases-lite.csv"));
-//        dataset = HelperFunctions.getValidDataset(dataset).cache();
-//
-//        dataset.show();
-//
-//        JavaRDD<Row> javaRDDDataset = dataset.toJavaRDD().cache();
-//
-//        javaRDDDataset.foreach(data -> {
-//            System.out.println(data);
-//        });
 
         // ------------------ CLEANUP ENVIRONMENT ------------------
         if (job.generateESIndices) {
@@ -107,6 +125,9 @@ public class DataAnalysisJob extends Job {
     private Dataset<Row> groupBy(Dataset<Row> dataset, AggregationModel aggregationModel) {
         // Feature columns
         List<Column> catColumns = aggregationModel.featureColumns.stream().map(functions::col).collect(Collectors.toList());
+
+        // Aggregation columns
+        List<String> aggs = aggregationModel.aggs.stream().map(agg -> agg.toString().toLowerCase()).collect(Collectors.toList());
 
         // Creates a Column with the name of the metric column in the AggregationModel
         Column metricColumn = col(aggregationModel.metricColumn);
@@ -140,10 +161,108 @@ public class DataAnalysisJob extends Job {
 
         // A new dataset is created and returned, containing only the feature column and a column for each operation over
         // the metric column/s
-        return dataset.select(selectColumns)
+        Dataset<Row> returnDataset = dataset.select(selectColumns)
                 .groupBy(categoriesColumns)
                 .agg(columns.get(0), aggregationColumns)
-                .sort(desc(aggregationModel.sortColumnName));
+                .sort(desc(aggregationModel.sortColumnName))
+                .cache();
+
+        for (String aggName : aggs) {
+            returnDataset = returnDataset.withColumn(aggName, col(aggName).cast(DataTypes.DoubleType)).cache();
+        }
+
+        return returnDataset;
+    }
+
+    private Dataset<Row> cluster(Dataset<Row> dataset, ClusterModel clusterModel) {
+        // Select columns necessary for clustering
+        List<String> featureColumns = new ArrayList<>();
+        featureColumns.add(clusterModel.xAxis.toLowerCase());
+        featureColumns.add(clusterModel.yAxis.toLowerCase());
+
+        // Eliminate outliers by taking only 1 SD from the mean
+        for (String column : featureColumns) {
+            Double mean = (Double) dataset.agg(mean(col(column))).cache().first().get(0);
+            Double std = (Double) dataset.agg(stddev(col(column))).cache().first().get(0);
+            double upperBound = mean + std;
+            double lowerBound = mean - std;
+
+            dataset.registerTempTable("table");
+            dataset = sparkSession.sqlContext().sql("SELECT * FROM table WHERE "+ column +" < "+ upperBound +" AND "+ column +" > " + lowerBound).cache();
+        }
+
+        // Prepares data for clustering
+        List<Column> clusterColumns = featureColumns.stream().map(functions::col).collect(Collectors.toList());
+        Seq<Column> seqClusterColumns = scala.collection.JavaConversions.asScalaBuffer(clusterColumns.subList(0, clusterColumns.size()));
+        Dataset<Row> datasetForClustering = dataset.select(seqClusterColumns).cache();
+
+        JavaRDD<Row> javaRDDDataset = datasetForClustering.toJavaRDD().cache();
+        JavaRDD<Vector> parsedData = javaRDDDataset.map(s -> {
+            String stringRow = s.toString().substring(1, s.toString().length()-1);
+            String[] arrayRow = stringRow.split(",");
+            double[] values = new double[arrayRow.length];
+            for (int i = 0; i < arrayRow.length; i++) {
+                values[i] = Double.parseDouble(arrayRow[i]);
+            }
+            return Vectors.dense(values);
+        });
+        parsedData.cache();
+
+        // Probes K-means to find optimal K value
+        int bestK = 0;
+        double bestKScore = 0;
+        int numIterations = 20;
+        KMeansModel kMeansModelProbe;
+
+        for (int i = 2; i < 6; i++) {
+            kMeansModelProbe = KMeans.train(parsedData.rdd(), i, numIterations);
+            double score = kMeansModelProbe.computeCost(parsedData.rdd());
+            if (score > bestKScore) {
+                bestK = i;
+                bestKScore = score;
+            }
+        }
+
+        // Uses optimal K value to perform K-means
+        KMeansModel kMeansModel = KMeans.train(parsedData.rdd(), bestK, numIterations);
+
+        // Cast necessary columns for clustering to doubles
+        for (String column:featureColumns) {
+            dataset = dataset.withColumn(column, col(column).cast(DataTypes.DoubleType)).cache();
+        }
+
+        // Use the K-means model to predict the cluster of each record
+        sparkSession.sqlContext().udf().register("assignCluster", (Double a, Double b) -> {
+            double[] features = {a, b};
+            return (double) kMeansModel.predict(Vectors.dense(features));
+        }, DataTypes.DoubleType);
+        dataset.registerTempTable("temp");
+        return sparkSession.sqlContext().sql("SELECT *, assignCluster(" + featureColumns.get(0) + ", " + featureColumns.get(1) + ") AS `cluster` FROM temp").cache();
+    }
+
+    private Dataset<Row> filter(Dataset<Row> dataset, List<FilterModel> filters) {
+        Dataset<Row> filteredDataset = dataset;
+
+        for (FilterModel filterModel : filters) {
+            filteredDataset.createOrReplaceTempView("source");
+            String sqlQuery = "SELECT * FROM source WHERE " + filterModel.query;
+            System.out.println("SQL query: " + sqlQuery);
+            filteredDataset = sparkSession.sql(sqlQuery);
+        }
+
+        return filteredDataset;
+    }
+
+    private Dataset<Row> plotSelect(Dataset<Row> dataset, PlotModel plotModel) {
+        Dataset<Row> selectedDataset;
+
+        if (plotModel.identifier.equals(plotModel.xAxis) || plotModel.identifier.equals(plotModel.yAxis)){
+            selectedDataset = dataset.select(plotModel.xAxis, plotModel.yAxis).cache();
+        } else {
+            selectedDataset = dataset.select(plotModel.identifier, plotModel.xAxis, plotModel.yAxis).cache();
+        }
+
+        return selectedDataset;
     }
 
     /**
@@ -162,16 +281,15 @@ public class DataAnalysisJob extends Job {
     /**
      *
      * @param dataset
-     * @param job
-     * @param agg
+     * @param entityId
      * @param hlClient
      * @param dateEpoch
      * @throws IOException
      */
-    private void saveToES(Dataset<Row> dataset, JobModel job, AggregationModel agg, RestHighLevelClient hlClient, long dateEpoch) throws IOException {
-        String alias = getElasticIndexNamePrefix(agg);
-        String indexName = getElasticIndexName(agg, dateEpoch);
-        List<String> indices = listIndices(getElasticIndexNamePrefix(agg));
+    private void saveToES(Dataset<Row> dataset, String entityId, RestHighLevelClient hlClient, long dateEpoch) throws IOException {
+        String alias = getElasticIndexNamePrefix(entityId);
+        String indexName = getElasticIndexName(entityId, dateEpoch);
+        List<String> indices = listIndices(getElasticIndexNamePrefix(entityId));
 
         if (indices.size() > 0) {
             // Delete alias

@@ -1,15 +1,12 @@
 package com.mycompany.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mycompany.configuration.Log;
-import com.mycompany.models.AggregationModel;
-import com.mycompany.models.ConfigModel;
-import com.mycompany.models.JobModel;
+import com.mycompany.models.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -34,6 +31,33 @@ public class MongodbRepository implements Log {
                 }});
         String jsonData = response.getBody();
         return objectMapper.readValue(jsonData, new TypeReference<List<AggregationModel>>(){});
+    }
+
+    public List<PlotModel> loadPlots(String jobId) throws UnirestException, IOException {
+        HttpResponse<String> response = httpService.get(String.format("%splot/byJob/%s", configModel.mongodbServiceUrl(), jobId),
+                new HashMap<String, String>(){{
+                    put("cache-control", "no-cache");
+                }});
+        String jsonData = response.getBody();
+        return objectMapper.readValue(jsonData, new TypeReference<List<PlotModel>>(){});
+    }
+
+    public List<ClusterModel> loadClusters(String aggId) throws UnirestException, IOException {
+        HttpResponse<String> response = httpService.get(String.format("%scluster/byAgg/%s", configModel.mongodbServiceUrl(), aggId),
+                new HashMap<String, String>(){{
+                    put("cache-control", "no-cache");
+                }});
+        String jsonData = response.getBody();
+        return objectMapper.readValue(jsonData, new TypeReference<List<ClusterModel>>(){});
+    }
+
+    public List<FilterModel> loadFilters(String aggId) throws UnirestException, IOException {
+        HttpResponse<String> response = httpService.get(String.format("%sfilter/byAgg/%s", configModel.mongodbServiceUrl(), aggId),
+                new HashMap<String, String>(){{
+                    put("cache-control", "no-cache");
+                }});
+        String jsonData = response.getBody();
+        return objectMapper.readValue(jsonData, new TypeReference<List<FilterModel>>(){});
     }
 
     public JobModel getJobById(String jobId) throws IOException, UnirestException {

@@ -56,21 +56,21 @@ public abstract class Job {
 
     /**
      * Creates and returns the name of the elasticsearch index based on the given prefix.
-     * @param aggregationModel
+     * @param entityId
      * @param dateEpoch
      * @return Elasticsaerch index name
      */
-    String getElasticIndexName(AggregationModel aggregationModel, long dateEpoch) {
-        return String.format("%s_%d", getElasticIndexNamePrefix(aggregationModel), dateEpoch);
+    String getElasticIndexName(String entityId, long dateEpoch) {
+        return String.format("%s_%d", getElasticIndexNamePrefix(entityId), dateEpoch);
     }
 
     /**
      * Creates the index prefix given an aggregation
-     * @param aggregationModel
+     * @param entityId
      * @return String index prefix
      */
-    String getElasticIndexNamePrefix(AggregationModel aggregationModel) {
-        return String.format("%s", aggregationModel._id);
+    String getElasticIndexNamePrefix(String entityId) {
+        return String.format("%s", entityId);
     }
 
     /**

@@ -69,26 +69,77 @@ export class DashboardBuilder {
         let panelCounter = 0;
         let visualizationMetadata = "[";
 
-        // For each visualization in the dashboard
+        // logger.info("Dashboard model:");
+        // logger.info(dashboardModel.visualizations);
+
+        // For each section in the dashboard, add each visualization one by one
         for (const visArray of dashboardModel.visualizations) {
+            console.info("NEW VIS SECTION")
+            console.info(visArray)
             let barCharts = new Array();
             let metrics = new Array();
+            let plots = new Array();
+            let markdowns = new Array();
+            let tables = new Array();
+            let clusters = new Array();
 
             for (const vis of visArray) {
                 if (vis.type === "metric") {
                     metrics.push(vis);
                 } else if (vis.type === "bar") {
                     barCharts.push(vis);
+                } else if (vis.type === "vega") {
+                    plots.push(vis);
+                } else if (vis.type === "markdown") {
+                    markdowns.push(vis);
+                } else if (vis.type === "table") {
+                    tables.push(vis);
+                } else if (vis.type === "cluster") {
+                    clusters.push(vis);
                 } else {
                     //title and table here...
                 }
             }
 
             //Title: Added at the top
-            visualizationMetadata = visualizationMetadata + this.generateGridData(this.TITLE_HEIGHT, this.MAX_WIDTH, currentX, currentY, panelIndex, panelCounter);
-            currentY = currentY + this.TITLE_HEIGHT;
-            panelIndex = panelIndex + 1;
-            panelCounter = panelCounter + 1;
+            for (let i: number = 1; i <= markdowns.length; i++) {
+                visualizationMetadata = visualizationMetadata + this.generateGridData(this.TITLE_HEIGHT, this.MAX_WIDTH, currentX, currentY, panelIndex, panelCounter);
+                currentY = currentY + this.TITLE_HEIGHT;
+                panelIndex = panelIndex + 1;
+                panelCounter = panelCounter + 1;
+            }
+
+            //Plots:
+            // for (let i: number = 0; i < plots.length; i++) {
+            //     visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.MAX_WIDTH, currentX, currentY, panelIndex, panelCounter);
+            //     currentX = 0;
+            //     panelIndex = panelIndex + 1;
+            //     panelCounter = panelCounter + 1;
+            //     currentY = currentY + this.BAR_CHART_HEIGHT;
+            // }
+
+            //Better plots:
+            for (let i: number = 0; i < plots.length; i++) {
+                if (i % 2 == 0) {
+                    if (i == plots.length - 1) {    //if it is the only one
+                        visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.MAX_WIDTH, currentX, currentY, panelIndex, panelCounter);
+                        currentX = 0;
+                        currentY = currentY + this.BAR_CHART_HEIGHT;
+                    } else {    //if there is a second plot
+                        visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.HALF_WIDTH, currentX, currentY, panelIndex, panelCounter);
+                        currentX = currentX + this.HALF_WIDTH;
+                    }
+
+                    panelIndex = panelIndex + 1;
+                    panelCounter = panelCounter + 1;
+                } else {
+                    visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.HALF_WIDTH, currentX, currentY, panelIndex, panelCounter);
+                    currentX = 0;
+                    panelIndex = panelIndex + 1;
+                    panelCounter = panelCounter + 1;
+                    currentY = currentY + this.BAR_CHART_HEIGHT;
+                }
+            }
 
             let partialRows = metrics.length / 4;
             let extraMetrics = metrics.length % 4;
@@ -137,7 +188,7 @@ export class DashboardBuilder {
                         currentY = currentY + this.BAR_CHART_HEIGHT;
                     } else {    //if there is a second bar chart
                         visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.HALF_WIDTH, currentX, currentY, panelIndex, panelCounter);
-                        currentX = currentX + this.HALF_WIDTH;    
+                        currentX = currentX + this.HALF_WIDTH;
                     }
 
                     panelIndex = panelIndex + 1;
@@ -151,12 +202,46 @@ export class DashboardBuilder {
                 }
             }
 
-            // Data tables: added at the bottom
-            visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.MAX_WIDTH, currentX, currentY, panelIndex, panelCounter);
-            currentX = 0;
-            panelIndex = panelIndex + 1;
-            panelCounter = panelCounter + 1;
-            currentY = currentY + this.BAR_CHART_HEIGHT
+            // Data tables: added second from the bottom
+            for (let i: number = 1; i <= tables.length; i++) {
+                visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.MAX_WIDTH, currentX, currentY, panelIndex, panelCounter);
+                currentX = 0;
+                panelIndex = panelIndex + 1;
+                panelCounter = panelCounter + 1;
+                currentY = currentY + this.BAR_CHART_HEIGHT
+            }
+
+            // Clusters: added at the bottom
+            // for (let i: number = 1; i <= clusters.length; i++) {
+            //     visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.MAX_WIDTH, currentX, currentY, panelIndex, panelCounter);
+            //     currentX = 0;
+            //     panelIndex = panelIndex + 1;
+            //     panelCounter = panelCounter + 1;
+            //     currentY = currentY + this.BAR_CHART_HEIGHT
+            // }
+
+            // Better clusters:
+            for (let i: number = 0; i < clusters.length; i++) {
+                if (i % 2 == 0) {
+                    if (i == clusters.length - 1) {    //if it is the only one
+                        visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.MAX_WIDTH, currentX, currentY, panelIndex, panelCounter);
+                        currentX = 0;
+                        currentY = currentY + this.BAR_CHART_HEIGHT;
+                    } else {    //if there is a second plot
+                        visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.HALF_WIDTH, currentX, currentY, panelIndex, panelCounter);
+                        currentX = currentX + this.HALF_WIDTH;
+                    }
+
+                    panelIndex = panelIndex + 1;
+                    panelCounter = panelCounter + 1;
+                } else {
+                    visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.HALF_WIDTH, currentX, currentY, panelIndex, panelCounter);
+                    currentX = 0;
+                    panelIndex = panelIndex + 1;
+                    panelCounter = panelCounter + 1;
+                    currentY = currentY + this.BAR_CHART_HEIGHT;
+                }
+            }
         }
 
         visualizationMetadata = visualizationMetadata.substring(0, visualizationMetadata.length - 1) + "]";

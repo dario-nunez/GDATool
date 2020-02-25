@@ -5,6 +5,9 @@ import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { IJob } from 'src/models/job.model';
 import { IAggregation } from 'src/models/aggregation.model';
+import { IPlot } from 'src/models/plot.model';
+import { ICluster } from 'src/models/cluster.model';
+import { IFilter } from 'src/models/filter.model';
 
 @Injectable({
   providedIn: 'root'
@@ -87,18 +90,37 @@ export class MongodbService {
   }
 
   createJob(job: IJob): Observable<IJob> {
-    console.log("Job sent in the POST request: ");
-    console.log(job);
-
     return this.http.post<IJob>("http://localhost:5000/ms/job", job).pipe(
       catchError(err => of(null))
     );
   }
 
   createMultipleAggregations(aggregations: IAggregation[]): Observable<IAggregation[]> {
-    console.log("Aggregations at mongo service");
-    console.log(aggregations);
-    return this.http.post<IUser>("http://localhost:5000/ms/aggregation/multiple", aggregations).pipe(
+    return this.http.post<IAggregation[]>("http://localhost:5000/ms/aggregation/multiple", aggregations).pipe(
+      catchError(err => of(null))
+    );
+  }
+
+  createMultiplePlots(plots: IPlot[]): Observable<IPlot[]> {
+    console.log("Plots at mongo service");
+    console.log(plots);
+    return this.http.post<IUser>("http://localhost:5000/ms/plot/multiple", plots).pipe(
+      catchError(err => of(null))
+    );
+  }
+
+  createMultipleClusters(clusters: ICluster[]): Observable<ICluster[]> {
+    console.log("Clusters at mongo service");
+    console.log(clusters);
+    return this.http.post<IUser>("http://localhost:5000/ms/cluster/multiple", clusters).pipe(
+      catchError(err => of(null))
+    );
+  }
+
+  createMultipleFilters(filters: IFilter[]): Observable<IFilter[]> {
+    console.log("Filters at mongo service");
+    console.log(filters);
+    return this.http.post<IFilter>("http://localhost:5000/ms/filter/multiple", filters).pipe(
       catchError(err => of(null))
     );
   }

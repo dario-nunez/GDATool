@@ -3,7 +3,6 @@ import { Inject } from "typescript-ioc";
 import { GET, Path, PathParam } from "typescript-rest";
 import { IAggregation } from "../../../common-service/src/models/aggregationModel";
 import { IDashboard } from "../elasticsearchModels/dashboardModel";
-import { IDashboardSeed } from "../elasticsearchModels/dashboardSeedModel";
 import { IIndexPattern } from "../elasticsearchModels/indexPatternModel";
 import { IVisBarCHart } from "../elasticsearchModels/visBarChartModel";
 import { IVisMarkup } from "../elasticsearchModels/visMarkupModel";
@@ -15,6 +14,8 @@ import { VisualizationBuilder } from "../elasticsearchEntities/visualizationBuil
 import { DashboardBuilder } from "../elasticsearchEntities/DashboardBuilder";
 import { IMetric } from "../elasticsearchModels/metricModel";
 import { IDataTable } from "../elasticsearchModels/dataTableModel";
+import { IPlot } from "../elasticsearchModels/plotModel";
+import { ICluster } from "../elasticsearchModels/clusterModel";
 
 /**
  * This class encapsulates the process of building the various types of dashboards.
@@ -50,21 +51,55 @@ export class DashboardBuilderController {
     @Path("basic/:id")
     @GET
     public async createBasicDashboard(@PathParam("id") jobId: string) {
+        let plots = await this.mongodbService.getPlotsByJob(jobId);
         const aggregations = await this.mongodbService.getAggsByJob(jobId);
         const job = await this.mongodbService.getJobById(jobId);
 
-        const dashboardSeed: IDashboardSeed = {
-            job: job.data,
-            aggregations: aggregations.data
-        };
-
-        logger.info("Dashboard seed");
-        logger.info(dashboardSeed);
-
         const visualizationsForDashboard = new Array();
 
+        let plotSection: IVisualization[] = [];
+        //Add a title to the general plots section
+        if (plots.data.length > 0) {
+            this.createVisMarkup(job.data._id + "_general_plots", "general_plots_title");
+            const visualizationMarkup: IVisualization = {
+                id: job.data._id + "_general_plots",
+                type: "markdown"
+            };
+            
+            plotSection.push(visualizationMarkup);
+        }
+
+        // For each plot, add it to the tpo of the dashboard
+        plots.data.forEach((plot: any) => {
+            this.createPlot(plot._id + "_plot", plot._id, plot.identifier, plot.identifierType, plot.xAxis, plot.xType, plot.yAxis, plot.yType);
+
+            const visualizationPlot: IVisualization = {
+                id: plot._id + "_plot",
+                type: "vega"
+            }
+
+            plotSection.push(visualizationPlot)
+        });
+
+        visualizationsForDashboard.push(plotSection);
+        
+        // Get all clusters from the aggregations
+        let aggregationsData = aggregations.data;
+        let aggClusters: {[aggId: string] : ICluster[]} = {}
+        for (let i=0; i < aggregationsData.length; i++) {
+            let aggID = aggregationsData[i]._id
+            logger.info("Agg ID: " + aggID)
+            const clusters = await this.mongodbService.getClustersByAgg(aggID);
+            const clustersData = clusters.data
+            aggClusters[aggID] = clustersData;
+            logger.info("Agg's clusters: ");
+            logger.info(clustersData);
+        }
+        logger.info(aggClusters)
+
         // For each aggregation, generate it dashboard section
-        dashboardSeed.aggregations.forEach((aggregation: IAggregation) => {
+        aggregations.data.forEach((aggregation: IAggregation) => {
+            logger.info("----SECOND LOOP STARTED----")
             // Holds the aggregation/dashboard section for each aggregation
             let aggSection = [];
 
@@ -109,13 +144,24 @@ export class DashboardBuilderController {
             };
             aggSection.push(visualizationDataTable);
 
+            //Clusters - n clusters stacked at the bottom of the aggregation section
+            aggClusters[aggregation._id].forEach((cluster: any) => {
+                this.createCluster(aggregation._id + "_" + cluster._id + "_cluster", cluster._id, cluster.identifier, cluster.identifierType, cluster.xAxis, cluster.xType, cluster.yAxis, cluster.yType);
+                const visualizationCluster: IVisualization = {
+                    id: aggregation._id + "_" + cluster._id + "_cluster",
+                    type: "cluster"
+                }
+
+                aggSection.push(visualizationCluster);
+            });
+
             //Adding the visualization section of this aggregation to the list of all visualizations
             visualizationsForDashboard.push(aggSection);
         });
 
-        this.createDashboard(dashboardSeed.job._id, visualizationsForDashboard);
+        this.createDashboard(job.data._id, visualizationsForDashboard);
 
-        return dashboardSeed;
+        // return dashboardSeed;
     }
 
     // Create an index pattern
@@ -209,6 +255,61 @@ export class DashboardBuilderController {
         }
     }
 
+    // Create plot
+    private async createPlot(id: string, index: string, identifier: string, identifierType: string, xAxis: string, xType: string, yAxis: string, yType: string) {
+        const plotSeed: IPlot = {
+            id: id,
+            type: "vega",
+            index: index,
+            explorerTitle: id,
+            identifier: identifier,
+            identifierType: identifierType,
+            xAxis: xAxis,
+            xType: xType,
+            yAxis: yAxis,
+            yType: yType
+        }
+
+        logger.info("Plot seed")
+        logger.info(plotSeed);
+
+        try {
+            const response = await this.kibanaService.createPlot(this.kibanaService.createPlot(this.visualizationBuilder.getVegaPlot(plotSeed)));
+            logger.info(response.data)
+            return response.data;
+        } catch (error) {
+            return error;
+        }
+    }
+
+    // Create cluster
+    private async createCluster(id: string, index: string, identifier: string, identifierType: string, xAxis: string, xType: string, yAxis: string, yType: string) {
+        const clusterSeed: ICluster = {
+            id: id,
+            type: "cluster",
+            index: index,
+            explorerTitle: id,
+            identifier: identifier,
+            identifierType: identifierType,
+            xAxis: xAxis.toLowerCase(),
+            xType: xType,
+            yAxis: yAxis.toLowerCase(),
+            yType: yType,
+            cluster: 0
+        }
+
+        logger.info("Cluster seed")
+        logger.info(clusterSeed);
+
+        try {
+            const response = await this.kibanaService.createCluster(this.kibanaService.createCluster(this.visualizationBuilder.getVegaCluster(clusterSeed)));
+            logger.info(response.data)
+            return response.data;
+        } catch (error) {
+            return error;
+        }
+    }
+
     // Create dashboard
     private async createDashboard(jobId: string, visualizations: Array<Array<IVisualization>>) {
         const dashboardSeed: IDashboard = {
@@ -217,6 +318,9 @@ export class DashboardBuilderController {
             visualizations,
             description: "This is a dashboard description"
         };
+
+        logger.info("Dashboard seed")
+        logger.info(dashboardSeed)
 
         try {
             const response = await this.kibanaService.createSimpleDashbaord(this.dashboardBuilder.getDashboard(dashboardSeed));

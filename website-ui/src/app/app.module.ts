@@ -29,6 +29,10 @@ import { StatusLineComponent } from './jobs-page/job/status-line/status-line.com
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { JwtHelperService, JwtModule } from "@auth0/angular-jwt";
 import { FileSelectDirective } from 'ng2-file-upload';
+import { GeneralPlotsComponent } from './create-job-page/query/general-plots/general-plots.component';
+import { AggregationsComponent } from './create-job-page/query/aggregations/aggregations.component';
+import { AggregationFilteringComponent } from './create-job-page/query/aggregation-filtering/aggregation-filtering.component';
+import { AggregationClusteringComponent } from './create-job-page/query/aggregation-clustering/aggregation-clustering.component';
 
 export function tokenGetter(): string {
   return localStorage.getItem("auth_token");
@@ -53,7 +57,11 @@ export function tokenGetter(): string {
     QueryComponent,
     ExecuteComponent,
     StatusLineComponent,
-    FileSelectDirective
+    FileSelectDirective,
+    GeneralPlotsComponent,
+    AggregationsComponent,
+    AggregationFilteringComponent,
+    AggregationClusteringComponent
   ],
   imports: [
     BrowserModule,

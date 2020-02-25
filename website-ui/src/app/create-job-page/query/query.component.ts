@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { IJob } from 'src/models/job.model';
-import { IAggregation } from 'src/models/aggregation.model';
 import { SchemaService } from 'src/services/schema/schema.service';
+import { QueryService } from 'src/services/query/query.service';
+import { IAggregation } from 'src/models/aggregation.model';
+import { ICluster } from 'src/models/cluster.model';
 
 @Component({
   selector: 'app-query',
@@ -16,41 +18,12 @@ export class QueryComponent implements OnInit {
   metricSelected: boolean = false;
   jobId: string;
   job: IJob;
+  paramJob: IJob[] = [];
 
-  FEATURE_COLUMNS: Array<string> = [];
-  OPERATIONS: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
-  METRIC_COLUMNS: Array<string> = [];
-
-  aggregations: IAggregation[];
-  currentAggregationName: string;
-  currentAggregationMetricColumn: string;
-
-  possibleFeatureColumns: Array<string> = [];
-  possibleAggs: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
-  possibleMetricColumns: Array<string> = [];
-
-  selectedFeatureColumns: Array<string> = [];
-  selectedAggregations: Array<string> = [];
-
-  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, private router: Router) { }
+  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, private queryService: QueryService, private router: Router) { }
 
   ngOnInit() {
-    // Load feature columns
-    this.schemaService.featureColumns.forEach(element => {
-      this.FEATURE_COLUMNS.push(element[0]);
-      this.possibleFeatureColumns.push(element[0]);
-    });
-
-    // Load metric columns
-    this.schemaService.metricColumns.forEach(element => {
-      this.METRIC_COLUMNS.push(element[0]);
-      this.possibleMetricColumns.push(element[0]);
-    });
-
-    this.currentAggregationName = "";
-    this.currentAggregationMetricColumn = "";
-
-    this.aggregations = [];
+    // Should probably reset the query service every time this page is reached or inside the components
 
     // Load job information and generate default aggregations
     this.route.params.subscribe(params => {
@@ -59,101 +32,39 @@ export class QueryComponent implements OnInit {
         this.job = job;
         job.jobStatus = 4;
         this.ioDisabled = false;
-        this.addDefaultAggregations();
+        this.paramJob.push(job);
       });
     });
-  }
-
-  addDefaultAggregations() {
-    for (let mc of this.METRIC_COLUMNS) {
-      for (let fc of this.FEATURE_COLUMNS.filter(obj => obj !== mc)) {
-        let agg: IAggregation = {
-          aggs: this.OPERATIONS,
-          featureColumns: [fc],
-          jobId: this.job._id,
-          metricColumn: mc,
-          name: "Aggregation of " + mc + " by " + fc,
-          sortColumnName: fc
-        }
-
-        this.aggregations.push(agg);
-      }
-    }
-  }
-
-  createAggregation() {
-    const newAgg: IAggregation = {
-      aggs: this.selectedAggregations,
-      featureColumns: this.selectedFeatureColumns,
-      jobId: this.jobId,
-      metricColumn: this.currentAggregationMetricColumn,
-      name: this.currentAggregationName,
-      sortColumnName: this.selectedFeatureColumns[0]
-    }
-
-    console.log("Agg created");
-    this.aggregations.push(newAgg);
-    console.log(this.aggregations);
-
-    this.currentAggregationMetricColumn = "Choose one";
-    this.currentAggregationName = "";
-    this.possibleAggs = this.OPERATIONS;
-    this.possibleFeatureColumns = this.FEATURE_COLUMNS;
-    this.possibleMetricColumns = this.METRIC_COLUMNS;
-    this.selectedFeatureColumns = [];
-    this.selectedAggregations = [];
-
-    this.metricSelected = false;
-  }
-
-  deleteAggregation(event, agg: any) {
-    this.aggregations = this.aggregations.filter(obj => obj !== agg);
-  }
-
-  addElement(event, element: string, type: string) {
-    if (type == "aggregation") {
-      if (!this.selectedAggregations.includes(element)) {
-        this.selectedAggregations.push(element);
-      }
-      this.possibleAggs = this.possibleAggs.filter(obj => obj !== element);
-    } else {
-      if (!this.selectedFeatureColumns.includes(element)) {
-        this.selectedFeatureColumns.push(element);
-      }
-
-      this.possibleFeatureColumns = this.possibleFeatureColumns.filter(obj => obj !== element);
-    }
-  }
-
-  removeElement(event, element: string, type: string) {
-    if (type == "aggregation") {
-      this.selectedAggregations = this.selectedAggregations.filter(obj => obj !== element);
-      if (!this.possibleAggs.includes(element)) {
-        this.possibleAggs.push(element);
-      }
-    } else {
-      this.selectedFeatureColumns = this.selectedFeatureColumns.filter(obj => obj !== element);
-      if (!this.possibleFeatureColumns.includes(element)) {
-        this.possibleFeatureColumns.push(element);
-      }
-    }
-  }
-
-  selectMetricColumn(event, element) {
-    console.log("metric column: " + element);
-    this.selectedFeatureColumns = []
-    this.possibleFeatureColumns = this.FEATURE_COLUMNS.filter(obj => obj !== element);
-    this.metricSelected = true;
   }
 
   next() {
+    console.log("Query service before submitting:");
+    console.log(this.queryService);
     this.mongodbService.updateJob(this.job).subscribe(retJob => {
-      this.mongodbService.createMultipleAggregations(this.aggregations).subscribe(aggs => {
-        console.log("Aggregations added");
-        this.router.navigate(['/execute', this.jobId]);
+      this.mongodbService.createMultipleAggregations(this.queryService.aggregations).subscribe(aggs => {
+        // Add aggregation IDs before moving on to the clusters
+        aggs.forEach(agg => {
+          this.queryService.aggregations.find(obj => obj.name === agg.name)._id = agg._id
+        });
+        this.mongodbService.createMultiplePlots(this.queryService.generalPlots).subscribe(plots => {
+          // Update aggregation IDs in clusters
+          this.queryService.aggregationClusters.map(obj => obj.aggId = this.getAggId(obj.aggName));
+          this.mongodbService.createMultipleClusters(this.queryService.aggregationClusters).subscribe(clusters => {
+            // Update aggregation IDs in filters
+            this.queryService.aggregationFilters.map(obj => obj.aggId = this.getAggId(obj.aggName));
+            this.mongodbService.createMultipleFilters(this.queryService.aggregationFilters).subscribe(filters => {
+              this.router.navigate(['/execute', this.jobId]);
+            });
+          });
+        });
       });
     });
   }
+
+  getAggId(aggName: string) {
+    let aggId = this.queryService.aggregations.filter(obj => obj.name == aggName)[0]._id
+    return aggId;
+  } 
 
   deleteJob() {
     if (confirm("This job will be lost forever. Are you sure you want to delete it?")) {

@@ -1,0 +1,20 @@
+{
+    "_source": {
+        "visualization": {
+            "title": "vegavis",
+            "visState": "{\"title\":\"vegavis\",\"type\":\"vega\",\"params\":{\"spec\":\"{\\n $schema: https: //vega.github.io/schema/vega-lite/v2.json\\n mark: {\\n type: point\\n filled: true\\n }\\n \\n data: {\\n url: {\\n index: \\\"5e4d77ba09848011d3ac9004\\\"\\n \\n body: {\\n size: 10000\\n _source: [\\n \\\"city\\\",\\n \\\"price\\\"\\n ]\\n }\\n }\\n \\n format: {property: \\\"hits.hits\\\"\\n }\\n }\\n \\n encoding: {\\n x: {\\n field: _source.city\\n type: nominal\\n axis: {title: \\\"City\\\"\\n }\\n }\\n \\n y: {\\n field: _source.price\\n type: quantitative\\n axis: {title: \\\"Price\\\"\\n }\\n }\\n \\n tooltip: {\\n field: _source.city\\n type: nominal\\n }\\n }\\n}\"},\"aggs\":[]}",
+            "uiStateJSON": "{}",
+            "description": "",
+            "version": 1,
+            "kibanaSavedObjectMeta": {
+                "searchSourceJSON": "{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"
+            }
+        },
+        "type": "visualization",
+        "references": [],
+        "migrationVersion": {
+            "visualization": "7.3.0"
+        },
+        "updated_at": "2020-02-19T23:01:38.803Z"
+    }
+}
