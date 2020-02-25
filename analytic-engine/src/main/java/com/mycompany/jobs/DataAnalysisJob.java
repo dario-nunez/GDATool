@@ -2,6 +2,7 @@ package com.mycompany.jobs;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mycompany.models.*;
+import org.apache.commons.math3.util.Precision;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.api.java.function.ForeachFunction;
@@ -39,10 +40,12 @@ import org.apache.spark.sql.types.StructType;
 import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.sql.Struct;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,10 +72,8 @@ public class DataAnalysisJob extends Job {
         List<PlotModel> plots = mongodbRepository.loadPlots(jobId);
         List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
         //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
-        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1 lite.csv"));
+        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1.csv"));
         Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "uk-properties-mid.csv"));
-
-        dataset.show();
 
         // ------------------ PERFORM PLOTS & SAVE RESULTS ------------------
         for (PlotModel plotModel : plots) {
@@ -94,11 +95,9 @@ public class DataAnalysisJob extends Job {
             // Perform filtering
             List<FilterModel> filters = mongodbRepository.loadFilters(agg._id);
             Dataset<Row> filteredDataset = filter(dataset, filters).cache();
-            filteredDataset.show();
 
             // Perform groupbys and create indexes
             Dataset<Row> groupByDataset = groupBy(filteredDataset, agg).cache();
-            groupByDataset.show();
 
             long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
             saveToStaging(groupByDataset, String.format("/%s/%s/staging/%d/%s",
@@ -110,8 +109,7 @@ public class DataAnalysisJob extends Job {
             // Perform clustering and create indexes
             List<ClusterModel> clusters = mongodbRepository.loadClusters(agg._id);
             for (ClusterModel cluster : clusters) {
-                Dataset<Row> groupByDatasetOG = groupBy(dataset, agg).cache();
-                Dataset<Row> clusteredDataset = cluster(groupByDatasetOG, cluster);
+                Dataset<Row> clusteredDataset = cluster(groupByDataset, cluster);
                 clusteredDataset.show();
                 clusteredDataset.printSchema();
 
@@ -147,6 +145,9 @@ public class DataAnalysisJob extends Job {
         // Feature columns
         List<Column> catColumns = aggregationModel.featureColumns.stream().map(functions::col).collect(Collectors.toList());
 
+        // Aggregation columns
+        List<String> aggs = aggregationModel.aggs.stream().map(agg -> agg.toString().toLowerCase()).collect(Collectors.toList());
+
         // Creates a Column with the name of the metric column in the AggregationModel
         Column metricColumn = col(aggregationModel.metricColumn);
 
@@ -179,10 +180,17 @@ public class DataAnalysisJob extends Job {
 
         // A new dataset is created and returned, containing only the feature column and a column for each operation over
         // the metric column/s
-        return dataset.select(selectColumns)
+        Dataset<Row> returnDataset = dataset.select(selectColumns)
                 .groupBy(categoriesColumns)
                 .agg(columns.get(0), aggregationColumns)
-                .sort(desc(aggregationModel.sortColumnName));
+                .sort(desc(aggregationModel.sortColumnName))
+                .cache();
+
+        for (String aggName : aggs) {
+            returnDataset = returnDataset.withColumn(aggName, col(aggName).cast(DataTypes.DoubleType)).cache();
+        }
+
+        return returnDataset;
     }
 
     private Dataset<Row> cluster(Dataset<Row> dataset, ClusterModel clusterModel) {
@@ -190,11 +198,23 @@ public class DataAnalysisJob extends Job {
         List<String> featureColumns = new ArrayList<>();
         featureColumns.add(clusterModel.xAxis.toLowerCase());
         featureColumns.add(clusterModel.yAxis.toLowerCase());
+
+        // Eliminate outliers by taking only 1 SD from the mean
+        for (String column : featureColumns) {
+            Double mean = (Double) dataset.agg(mean(col(column))).cache().first().get(0);
+            Double std = (Double) dataset.agg(stddev(col(column))).cache().first().get(0);
+            double upperBound = mean + std;
+            double lowerBound = mean - std;
+
+            dataset.registerTempTable("table");
+            dataset = sparkSession.sqlContext().sql("SELECT * FROM table WHERE "+ column +" < "+ upperBound +" AND "+ column +" > " + lowerBound).cache();
+        }
+
+        // Prepares data for clustering
         List<Column> clusterColumns = featureColumns.stream().map(functions::col).collect(Collectors.toList());
         Seq<Column> seqClusterColumns = scala.collection.JavaConversions.asScalaBuffer(clusterColumns.subList(0, clusterColumns.size()));
         Dataset<Row> datasetForClustering = dataset.select(seqClusterColumns).cache();
 
-        // Prepares data for clustering
         JavaRDD<Row> javaRDDDataset = datasetForClustering.toJavaRDD().cache();
         JavaRDD<Vector> parsedData = javaRDDDataset.map(s -> {
             String stringRow = s.toString().substring(1, s.toString().length()-1);
@@ -207,10 +227,23 @@ public class DataAnalysisJob extends Job {
         });
         parsedData.cache();
 
-        // Performs the clustering using k-means
-        int numClusters = 2;
+        // Probes K-means to find optimal K value
+        int bestK = 0;
+        double bestKScore = 0;
         int numIterations = 20;
-        KMeansModel kMeansModel = KMeans.train(parsedData.rdd(), numClusters, numIterations);
+        KMeansModel kMeansModelProbe;
+
+        for (int i = 2; i < 10; i++) {
+            kMeansModelProbe = KMeans.train(parsedData.rdd(), i, numIterations);
+            double score = kMeansModelProbe.computeCost(parsedData.rdd());
+            if (score > bestKScore) {
+                bestK = i;
+                bestKScore = score;
+            }
+        }
+
+        // Uses optimal K value to perform K-means
+        KMeansModel kMeansModel = KMeans.train(parsedData.rdd(), bestK, numIterations);
 
         // Cast necessary columns for clustering to doubles
         for (String column:featureColumns) {

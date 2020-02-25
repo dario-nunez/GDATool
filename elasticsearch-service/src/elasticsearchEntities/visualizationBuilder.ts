@@ -161,7 +161,7 @@ export class VisualizationBuilder {
         let aggsArray = "";
 
         dataTableModel.featureColumns.forEach(featureColumn => {
-            aggsArray = aggsArray + ',{\"id\":\"' + currentId + '\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"' + featureColumn + '.keyword\",\"orderBy\":\"_key\",\"order\":\"desc\",\"size\":20,\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\"}}'
+            aggsArray = aggsArray + ',{\"id\":\"' + currentId + '\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"' + featureColumn + '.keyword\",\"orderBy\":\"_key\",\"order\":\"desc\",\"size\":10000,\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\"}}'
 
             currentId = currentId + 1;
         });
