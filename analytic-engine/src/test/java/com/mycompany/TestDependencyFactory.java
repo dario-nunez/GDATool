@@ -24,7 +24,7 @@ public class TestDependencyFactory extends DependencyFactory {
                 .awsAccessKeyIdEnvVariable("awsAccessKeyIdEnvVariable")
                 .awsSecretAccessKeyEnvVariable("awsSecretAccessKeyEnvVariable")
                 .appName("testGDATool")
-                .bucketRoot("src/test/test-resources/root")
+                .bucketRoot("src/test/test-resources")
                 .stagingFolder("stagingFolder")
                 .elasticsearchServiceUrl("http://localhost:5020/es/")
                 .elasticsearchPort("9200")

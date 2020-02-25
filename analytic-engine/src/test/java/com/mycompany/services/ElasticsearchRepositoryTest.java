@@ -24,7 +24,7 @@ import java.util.Objects;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 
-public class BiRepositoryTest {
+public class ElasticsearchRepositoryTest {
     @Mock
     HttpService httpServiceMock;
 
