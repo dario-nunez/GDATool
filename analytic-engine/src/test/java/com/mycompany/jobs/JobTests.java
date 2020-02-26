@@ -36,8 +36,6 @@ public class JobTests {
     MongodbRepository mongodbRepositoryMock;
     @Mock
     ElasticsearchRepository elasticsearchRepositoryMock;
-    @Mock
-    UserDefinedFunctionsFactory userDefinedFunctionsFactoryMock;
 
     private Job job;
     private AggregationModel aggregationModel;
@@ -49,7 +47,7 @@ public class JobTests {
         MockitoAnnotations.initMocks(this);
         DependencyFactory dependencyFactory = new TestDependencyFactory();
         ConfigModel configModel = dependencyFactory.getConfigModel();
-        job = new TestJob(sparkSessionMock, configModel, mongodbRepositoryMock, elasticsearchRepositoryMock, userDefinedFunctionsFactoryMock);
+        job = new TestJob(sparkSessionMock, configModel, mongodbRepositoryMock, elasticsearchRepositoryMock);
         File aggregationsFile = new File(Objects.requireNonNull(classLoader.getResource("testAggregations.json")).getFile());
         String aggregationsFileContent = FileUtils.readFileToString(aggregationsFile, StandardCharsets.UTF_8);
         List<AggregationModel> aggregationModels = objectMapper.readValue(aggregationsFileContent, new TypeReference<List<AggregationModel>>(){});
@@ -93,9 +91,8 @@ public class JobTests {
     }
 
     static class TestJob extends Job {
-        TestJob(SparkSession sparkSession, ConfigModel configModel, MongodbRepository mongodbRepository, ElasticsearchRepository elasticsearchRepository,
-                UserDefinedFunctionsFactory userDefinedFunctionsFactory) {
-            super(sparkSession, configModel, mongodbRepository, elasticsearchRepository, userDefinedFunctionsFactory);
+        TestJob(SparkSession sparkSession, ConfigModel configModel, MongodbRepository mongodbRepository, ElasticsearchRepository elasticsearchRepository) {
+            super(sparkSession, configModel, mongodbRepository, elasticsearchRepository);
         }
 
         @Override

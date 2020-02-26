@@ -28,15 +28,13 @@ public class HelperFunctionsTests {
     MongodbRepository mongodbRepositoryMock;
     @Mock
     ElasticsearchRepository elasticsearchRepositoryMock;
-    @Mock
-    UserDefinedFunctionsFactory userDefinedFunctionsFactoryMock;
 
      public HelperFunctionsTests() throws IOException {
          MockitoAnnotations.initMocks(this);
          DependencyFactory dependencyFactory = new TestDependencyFactory();
          configModel = dependencyFactory.getConfigModel();
          SparkSession sparkSession = dependencyFactory.getSparkSession();
-         job = new TestJob(sparkSession, configModel, mongodbRepositoryMock, elasticsearchRepositoryMock, userDefinedFunctionsFactoryMock);
+         job = new TestJob(sparkSession, configModel, mongodbRepositoryMock, elasticsearchRepositoryMock);
 
          inputDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "helperFunctionsDS.csv"));
      }
@@ -166,9 +164,8 @@ public class HelperFunctionsTests {
     }
 
     static class TestJob extends Job {
-        TestJob(SparkSession sparkSession, ConfigModel configModel, MongodbRepository mongodbRepository, ElasticsearchRepository elasticsearchRepository,
-                UserDefinedFunctionsFactory userDefinedFunctionsFactory) {
-            super(sparkSession, configModel, mongodbRepository, elasticsearchRepository, userDefinedFunctionsFactory);
+        TestJob(SparkSession sparkSession, ConfigModel configModel, MongodbRepository mongodbRepository, ElasticsearchRepository elasticsearchRepository) {
+            super(sparkSession, configModel, mongodbRepository, elasticsearchRepository);
             logger = LoggerFactory.getLogger(SchemaInferenceJob.class);
         }
 

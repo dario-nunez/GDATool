@@ -11,9 +11,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,7 +28,6 @@ import static org.junit.Assert.assertEquals;
 
 public class DataAnalysisJobTests {
     private final String c = HelperFunctions.replaceCharacter;
-    private Job job;
     private Dataset<Row> inputDataset;
     private DataAnalysisJob dataAnalysisJob;
     private ConfigModel configModel;
@@ -38,7 +39,7 @@ public class DataAnalysisJobTests {
     @Mock
     ElasticsearchRepository elasticsearchRepositoryMock;
     @Mock
-    UserDefinedFunctionsFactory userDefinedFunctionsFactoryMock;
+    RestHighLevelClient restHighLevelClientMock;
 
     public DataAnalysisJobTests() throws IOException {
         this.objectMapper = new ObjectMapper();
@@ -47,13 +48,9 @@ public class DataAnalysisJobTests {
         DependencyFactory dependencyFactory = new TestDependencyFactory();
         configModel = dependencyFactory.getConfigModel();
         SparkSession sparkSession = dependencyFactory.getSparkSession();
-        job = new HelperFunctionsTests.TestJob(sparkSession, configModel, mongodbRepositoryMock, elasticsearchRepositoryMock, userDefinedFunctionsFactoryMock);
-        inputDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "dataAnalysisJobDS.csv"));
-
-        dataAnalysisJob = new DataAnalysisJob(dependencyFactory.getSparkSession(),
-                dependencyFactory.getConfigModel(), dependencyFactory.getMongodbRepository(),
-                dependencyFactory.getElasticsearchRepository(), dependencyFactory.getUserDefinedFunctionsFactory(),
-                dependencyFactory.getRestHighLevelClient());
+        dataAnalysisJob = new DataAnalysisJob(sparkSession, configModel, mongodbRepositoryMock,
+                elasticsearchRepositoryMock, restHighLevelClientMock);
+        inputDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "dataAnalysisJobDS.csv"));
     }
 
     /**
@@ -67,7 +64,7 @@ public class DataAnalysisJobTests {
         PlotModel plotModel = plots.get(0);
 
         Dataset<Row> actualDataset = dataAnalysisJob.plotSelect(inputDataset, plotModel).cache();
-        Dataset<Row> expectedDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "dataAnalysisJobDSSelectedPlot.csv"));
+        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "dataAnalysisJobDSSelectedPlot.csv"));
 
         assertEquals(expectedDataset.collectAsList(), actualDataset.collectAsList());
     }
@@ -79,7 +76,7 @@ public class DataAnalysisJobTests {
         List<FilterModel> filters = objectMapper.readValue(filterFileContents, new TypeReference<List<FilterModel>>(){});
 
         Dataset<Row> actualDataset = dataAnalysisJob.filter(inputDataset, filters).cache();
-        Dataset<Row> expectedDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "dataAnalysisJobDSFiltered.csv"));
+        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "dataAnalysisJobDSFiltered.csv"));
         assertEquals(expectedDataset.collectAsList(), actualDataset.collectAsList());
     }
 
@@ -91,14 +88,14 @@ public class DataAnalysisJobTests {
         AggregationModel aggregationModel = aggregations.get(0);
 
         Dataset<Row> actualDataset = dataAnalysisJob.groupBy(inputDataset, aggregationModel).cache();
-        Dataset<Row> expectedDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "dataAnalysisJobDSAppliedGroupBy.csv"));
+        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "dataAnalysisJobDSAppliedGroupBy.csv"));
 
         assertEquals(expectedDataset.collectAsList(), actualDataset.collectAsList());
     }
 
     @Test
     public void removeOutliers() throws IOException {
-        Dataset<Row> groupedByDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "dataAnalysisJobDSExtendedGroupBy.csv"));
+        Dataset<Row> groupedByDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "dataAnalysisJobDSExtendedGroupBy.csv"));
         File clusterFile = new File(Objects.requireNonNull(classLoader.getResource("testClusters.json")).getFile());
         String clusterFileContents = FileUtils.readFileToString(clusterFile, StandardCharsets.UTF_8);
         List<ClusterModel> clusters = objectMapper.readValue(clusterFileContents, new TypeReference<List<ClusterModel>>(){});
@@ -112,7 +109,7 @@ public class DataAnalysisJobTests {
         };
 
         Dataset<Row> actualDataset = dataAnalysisJob.removeOutliers(groupedByDataset, featureColumns).cache();
-        Dataset<Row> expectedDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "dataAnalysisJobDSRemovedOutliers.csv"));
+        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "dataAnalysisJobDSRemovedOutliers.csv"));
 
         assertEquals(expectedDataset.collectAsList(), actualDataset.collectAsList());
     }
@@ -123,14 +120,14 @@ public class DataAnalysisJobTests {
      */
     @Test
     public void cluster() throws IOException {
-        Dataset<Row> groupedByDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "dataAnalysisJobDSAppliedGroupBy.csv"));
+        Dataset<Row> groupedByDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "dataAnalysisJobDSAppliedGroupBy.csv"));
         File clusterFile = new File(Objects.requireNonNull(classLoader.getResource("testClusters.json")).getFile());
         String clusterFileContents = FileUtils.readFileToString(clusterFile, StandardCharsets.UTF_8);
         List<ClusterModel> clusters = objectMapper.readValue(clusterFileContents, new TypeReference<List<ClusterModel>>(){});
         ClusterModel clusterModel = clusters.get(0);
 
         Dataset<Row> actualDataset = dataAnalysisJob.cluster(groupedByDataset, clusterModel).cache();
-        Dataset<Row> expectedDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "dataAnalysisJobDSClustered.csv"));
+        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "dataAnalysisJobDSClustered.csv"));
 
         assertEquals(expectedDataset.collectAsList(), actualDataset.collectAsList());
     }

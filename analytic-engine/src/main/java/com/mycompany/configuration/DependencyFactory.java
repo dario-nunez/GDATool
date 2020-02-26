@@ -1,6 +1,5 @@
 package com.mycompany.configuration;
 
-import com.mycompany.jobs.UserDefinedFunctionsFactory;
 import com.mycompany.models.ConfigModel;
 import com.mycompany.models.ImmutableConfigModel;
 import org.apache.http.HttpHost;
@@ -136,14 +135,6 @@ public class DependencyFactory {
                 configModel.elasticsearchUrl(),
                 Integer.parseInt(configModel.elasticsearchPort()),
                 "http")));
-    }
-
-    /**
-     * Creates and returns a UserDefinedFunctionsFactory object.
-     * @return a UserDefinedFunctionsFactory object.
-     */
-    public UserDefinedFunctionsFactory getUserDefinedFunctionsFactory() {
-        return new UserDefinedFunctionsFactory();
     }
 }
 

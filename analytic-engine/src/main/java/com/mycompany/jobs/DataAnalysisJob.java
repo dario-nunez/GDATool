@@ -37,9 +37,8 @@ public class DataAnalysisJob extends Job {
 
     public DataAnalysisJob(SparkSession sparkSession, ConfigModel configModel,
                            MongodbRepository mongodbRepository, ElasticsearchRepository elasticsearchRepository,
-                           UserDefinedFunctionsFactory userDefinedFunctionsFactory,
                            RestHighLevelClient restHighLevelClient) {
-        super(sparkSession, configModel, mongodbRepository, elasticsearchRepository, userDefinedFunctionsFactory);
+        super(sparkSession, configModel, mongodbRepository, elasticsearchRepository);
         this.restHighLevelClient = restHighLevelClient;
         logger = LoggerFactory.getLogger(SchemaInferenceJob.class);
     }

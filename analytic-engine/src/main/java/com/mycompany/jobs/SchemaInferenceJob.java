@@ -29,9 +29,8 @@ import static org.apache.spark.sql.functions.*;
 
 public class SchemaInferenceJob extends Job {
     public SchemaInferenceJob(SparkSession sparkSession, ConfigModel configModel,
-                              MongodbRepository mongodbRepository, ElasticsearchRepository elasticsearchRepository,
-                              UserDefinedFunctionsFactory userDefinedFunctionsFactory) {
-        super(sparkSession, configModel, mongodbRepository, elasticsearchRepository, userDefinedFunctionsFactory);
+                              MongodbRepository mongodbRepository, ElasticsearchRepository elasticsearchRepository) {
+        super(sparkSession, configModel, mongodbRepository, elasticsearchRepository);
         logger = LoggerFactory.getLogger(SchemaInferenceJob.class);
     }
 
