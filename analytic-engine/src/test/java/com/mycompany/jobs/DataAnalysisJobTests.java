@@ -15,7 +15,6 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,7 +26,6 @@ import java.util.Objects;
 import static org.junit.Assert.assertEquals;
 
 public class DataAnalysisJobTests {
-    private final String c = HelperFunctions.replaceCharacter;
     private Dataset<Row> inputDataset;
     private DataAnalysisJob dataAnalysisJob;
     private ConfigModel configModel;

@@ -6,6 +6,7 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mycompany.models.ColumnModel;
@@ -36,14 +37,21 @@ public class SchemaInferenceJob extends Job {
 
     @Override
     public void run(String userId, String jobId) throws IOException, UnirestException {
-        JobModel job = mongodbRepository.getJobById(jobId);
+        JobModel jobModel = mongodbRepository.getJobById(jobId);
 
         // AWS version
-        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
+        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), jobModel.rawInputDirectory));
 
         // No AWS version
-        // Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "zikaVirusReportedCases.csv"));
+        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "zikaVirusReportedCases.csv"));
 
+        String jsonSchema = getJsonSchema(dataset, jobModel);
+
+        // Save the SchemaModel to the user's s3 bucket
+        saveSchemaToS3(jobModel, jsonSchema);
+    }
+
+    public String getJsonSchema(Dataset<Row> dataset, JobModel jobModel) throws JsonProcessingException {
         dataset = HelperFunctions.getValidDataset(dataset).cache();
 
         List<ColumnModel> columns = new ArrayList<>();
@@ -73,14 +81,9 @@ public class SchemaInferenceJob extends Job {
         }
 
         // Use the list of all ColumnModels to create a SchemaModel object
-        SchemaModel schema = new SchemaModel(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory), columns);
+        SchemaModel schema = new SchemaModel(String.format("%s/%s", configModel.bucketRoot(), jobModel.rawInputDirectory), columns);
         ObjectMapper mapper = new ObjectMapper();
-        String jsonSchema = mapper.writeValueAsString(schema);
-
-        System.out.println(jsonSchema);
-
-        // Save the SchemaModel to the user's s3 bucket
-        saveSchemaToS3(job, jsonSchema);
+        return mapper.writeValueAsString(schema);
     }
 
     /**

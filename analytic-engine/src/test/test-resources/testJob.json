@@ -5,8 +5,8 @@
   "generateESIndices":true,
   "jobStatus":"4",
   "userId":"5e443c40dc118fa3af6ddda9",
-  "rawInputDirectory":"5e443c40dc118fa3af6ddda9/5e52fed627d827399fe46014/raw/uk-properties-mid.csv",
-  "stagingFileName":"5e443c40dc118fa3af6ddda9/5e52fed627d827399fe46014/staging",
+  "rawInputDirectory":"dataAnalysisJobDS.csv",
+  "stagingFileName":"staging",
   "createdAt":"1582497494571",
   "updatedAt":"1582497494571",
   "__v":"0"
