@@ -1,8 +1,8 @@
-import { Controller } from "../../../common-service/src/controllers/controller";
 import { Inject } from "typescript-ioc";
-import { GET, Path, POST, PathParam } from "typescript-rest";
+import { GET, Path, PathParam, POST } from "typescript-rest";
+import { Controller } from "../../../common-service/src/controllers/controller";
+import { IPlot, IPlotModel } from "../../../common-service/src/models/plotModel";
 import { PlotRepository } from "../../../common-service/src/repositories/plotRepository";
-import { IPlotModel, IPlot } from "../../../common-service/src/models/plotModel";
 
 @Path("/ms/plot")
 export class PlotController extends Controller<IPlot> {
@@ -24,7 +24,7 @@ export class PlotController extends Controller<IPlot> {
 
     @Path("/multiple")
     @POST
-    public async createMultiplePlots(plots: IPlotModel[]): Promise<IPlotModel[]> {
+    public async createMultiplePlots(plots: Array<IPlotModel>): Promise<Array<IPlotModel>> {
         return await this.plotRepository.createMultiplePlots(plots);
     }
 

@@ -1,8 +1,8 @@
-import Job from "../../../common-service/src/models/jobModel";
-import User from "../../../common-service/src/models/userModel";
 import * as mongoose from "mongoose";
 import { DELETE, Path, POST } from "typescript-rest";
 import Aggregation from "../../../common-service/src/models/aggregationModel";
+import Job from "../../../common-service/src/models/jobModel";
+import User from "../../../common-service/src/models/userModel";
 
 @Path("/ms/database")
 export class DatabaseController {

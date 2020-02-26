@@ -1,9 +1,9 @@
-import { IUser, IUserModel } from "../../../common-service/src/models/userModel";
-import { UserRepository } from "../../../common-service/src/repositories/userRepository";
+import { Inject } from "typescript-ioc";
+import { Context, DELETE, Errors, GET, Path, PathParam, POST, PreProcessor, PUT, ServiceContext } from "typescript-rest";
 import { Controller } from "../../../common-service/src/controllers/controller";
 import logger from "../../../common-service/src/logger/loggerFactory";
-import { Inject } from "typescript-ioc";
-import { Context, DELETE, Errors, GET, Path, PathParam, POST, PUT, ServiceContext, PreProcessor } from "typescript-rest";
+import { IUser, IUserModel } from "../../../common-service/src/models/userModel";
+import { UserRepository } from "../../../common-service/src/repositories/userRepository";
 import { uniqueEmailValidator } from "../validators/validators";
 
 @Path("/ms/user")

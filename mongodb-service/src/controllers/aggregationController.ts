@@ -1,6 +1,6 @@
-import { Controller } from "../../../common-service/src/controllers/controller";
 import { Inject } from "typescript-ioc";
 import { DELETE, GET, Path, PathParam, POST, PUT } from "typescript-rest";
+import { Controller } from "../../../common-service/src/controllers/controller";
 import { IAggregation, IAggregationModel } from "../../../common-service/src/models/aggregationModel";
 import { AggregationRepository } from "../repositories/aggregationRepository";
 
@@ -30,7 +30,7 @@ export class AggregationController extends Controller<IAggregation> {
 
     @Path("/multiple")
     @POST
-    public async createMultipleAggregation(aggregations: IAggregationModel[]): Promise<IAggregationModel[]> {
+    public async createMultipleAggregation(aggregations: Array<IAggregationModel>): Promise<Array<IAggregationModel>> {
         return await this.aggregationRepository.createMultipleAggregations(aggregations);
     }
 

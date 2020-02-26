@@ -1,8 +1,8 @@
-import { Controller } from "../../../common-service/src/controllers/controller";
 import { Inject } from "typescript-ioc";
-import { GET, Path, POST, PathParam } from "typescript-rest";
+import { GET, Path, PathParam, POST } from "typescript-rest";
+import { Controller } from "../../../common-service/src/controllers/controller";
+import { ICluster, IClusterModel } from "../../../common-service/src/models/clusterModel";
 import { ClusterRepository } from "../../../common-service/src/repositories/clusterRerpository";
-import { IClusterModel, ICluster } from "../../../common-service/src/models/clusterModel";
 
 @Path("/ms/cluster")
 export class ClusterController extends Controller<ICluster> {
@@ -24,7 +24,7 @@ export class ClusterController extends Controller<ICluster> {
 
     @Path("/multiple")
     @POST
-    public async createMultipleClusters(clusters: IClusterModel[]): Promise<IClusterModel[]> {
+    public async createMultipleClusters(clusters: Array<IClusterModel>): Promise<Array<IClusterModel>> {
         return await this.clusterRepository.createMultipleClusters(clusters);
     }
 

@@ -1,10 +1,10 @@
-import { IJob, IJobModel } from "../../../common-service/src/models/jobModel";
-import {Controller} from "../../../common-service/src/controllers/controller";
 import { Inject } from "typescript-ioc";
 import { DELETE, GET, Path, PathParam, POST, PUT } from "typescript-rest";
+import {Controller} from "../../../common-service/src/controllers/controller";
+import { IJob, IJobModel } from "../../../common-service/src/models/jobModel";
+import { UploadUrlModel } from "../../../common-service/src/models/uploadUrlModel";
 import { JobRepository } from "../../../common-service/src/repositories/jobRepository";
 import { S3BucketServiceProxy } from "../s3/s3BucketServiceProxy";
-import { UploadUrlModel } from "../../../common-service/src/models/uploadUrlModel";
 
 @Path("/ms/job")
 export class JobController extends Controller<IJob> {

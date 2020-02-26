@@ -1,6 +1,6 @@
 import { IJob } from "../../../common-service/src/models/jobModel";
-import { Repository } from "../../../common-service/src/repositories/repository";
 import Job from "../../../common-service/src/models/jobModel";
+import { Repository } from "../../../common-service/src/repositories/repository";
 
 export class JobRepository extends Repository<IJob> {
     constructor() {

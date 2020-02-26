@@ -1,8 +1,8 @@
-import { Controller } from "../../../common-service/src/controllers/controller";
 import { Inject } from "typescript-ioc";
-import { GET, Path, POST, PathParam } from "typescript-rest";
+import { GET, Path, PathParam, POST } from "typescript-rest";
+import { Controller } from "../../../common-service/src/controllers/controller";
+import { IFilter, IFilterModel } from "../../../common-service/src/models/filterModel";
 import { FilterRepository } from "../../../common-service/src/repositories/filterRepository";
-import { IFilterModel, IFilter } from "../../../common-service/src/models/filterModel";
 
 @Path("/ms/filter")
 export class FilterController extends Controller<IFilter> {
@@ -24,7 +24,7 @@ export class FilterController extends Controller<IFilter> {
 
     @Path("/multiple")
     @POST
-    public async createMultipleFilters(filters: IFilterModel[]): Promise<IFilterModel[]> {
+    public async createMultipleFilters(filters: Array<IFilterModel>): Promise<Array<IFilterModel>> {
         return await this.filterRepository.createMultipleFilters(filters);
     }
 
