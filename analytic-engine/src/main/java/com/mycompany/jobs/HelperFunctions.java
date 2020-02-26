@@ -2,6 +2,9 @@ package com.mycompany.jobs;
 
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.types.DataType;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
 import scala.collection.JavaConverters;
 import scala.collection.Seq;
 
@@ -48,5 +51,30 @@ public class HelperFunctions {
         }
 
         return dataset;
+    }
+
+    public static Dataset<Row> simplifyTypes(Dataset<Row> dataset) {
+        List<DataType> sparkNumericTypes = new ArrayList<DataType>() {
+            {
+                add(DataTypes.ByteType);
+                add(DataTypes.ShortType);
+                add(DataTypes.IntegerType);
+                add(DataTypes.LongType);
+                add(DataTypes.FloatType);
+                add(DataTypes.DoubleType);
+            }
+        };
+
+        StructField[] schema = dataset.schema().fields();
+
+        for (StructField field : schema) {
+            if (sparkNumericTypes.contains(field.dataType())) {
+                dataset = dataset.withColumn(field.name(), col(field.name()).cast(DataTypes.DoubleType));
+            } else {
+                dataset = dataset.withColumn(field.name(), col(field.name()).cast(DataTypes.StringType));
+            }
+        }
+
+        return dataset.cache();
     }
 }

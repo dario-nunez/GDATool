@@ -4,6 +4,7 @@ import com.mycompany.configuration.DependencyFactory;
 import com.mycompany.models.ConfigModel;
 import com.mycompany.services.ElasticsearchRepository;
 import com.mycompany.services.MongodbRepository;
+import org.apache.commons.io.FileUtils;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -12,9 +13,12 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.apache.spark.sql.functions.col;
 import static org.junit.Assert.assertEquals;
@@ -23,13 +27,16 @@ public class HelperFunctionsTests {
     private final String c = HelperFunctions.replaceCharacter;
     private Job job;
     private Dataset<Row> inputDataset;
-    ConfigModel configModel;
+    private ConfigModel configModel;
+    private ClassLoader classLoader;
+
     @Mock
     MongodbRepository mongodbRepositoryMock;
     @Mock
     ElasticsearchRepository elasticsearchRepositoryMock;
 
      public HelperFunctionsTests() throws IOException {
+         classLoader = getClass().getClassLoader();
          MockitoAnnotations.initMocks(this);
          DependencyFactory dependencyFactory = new TestDependencyFactory();
          configModel = dependencyFactory.getConfigModel();
@@ -161,6 +168,17 @@ public class HelperFunctionsTests {
         expectedDataset = expectedDataset.withColumn("Year of Date", col("Year of Date").cast("String"));
 
         assertEquals(expectedDataset.schema(), actualDataset.schema());
+    }
+
+    @Test
+    public void simplifyTypes() throws IOException {
+        Dataset<Row> actualDataset = HelperFunctions.simplifyTypes(inputDataset).cache();
+        String actualSchema = actualDataset.schema().toString();
+
+        File schemaFile = new File(Objects.requireNonNull(classLoader.getResource("helperFunctionsDSSimplifiedTypesSchema.txt")).getFile());
+        String expectedSchema = FileUtils.readFileToString(schemaFile, StandardCharsets.UTF_8);
+
+        assertEquals(expectedSchema, actualSchema);
     }
 
     static class TestJob extends Job {

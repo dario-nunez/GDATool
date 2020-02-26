@@ -24,16 +24,19 @@ export class QueryComponent implements OnInit {
 
   ngOnInit() {
     // Should probably reset the query service every time this page is reached or inside the components
-
     // Load job information and generate default aggregations
     this.route.params.subscribe(params => {
       this.jobId = params["job._id"];
-      this.mongodbService.getJobById(this.jobId).subscribe(job => {
-        this.job = job;
-        job.jobStatus = 4;
-        this.ioDisabled = false;
-        this.paramJob.push(job);
-      });
+      if (this.schemaService.schema == undefined) {
+        this.router.navigate(['/schema', this.jobId]);
+      } else {
+        this.mongodbService.getJobById(this.jobId).subscribe(job => {
+          this.job = job;
+          job.jobStatus = 4;
+          this.ioDisabled = false;
+          this.paramJob.push(job);
+        });
+      }
     });
   }
 
@@ -64,7 +67,7 @@ export class QueryComponent implements OnInit {
   getAggId(aggName: string) {
     let aggId = this.queryService.aggregations.filter(obj => obj.name == aggName)[0]._id
     return aggId;
-  } 
+  }
 
   deleteJob() {
     if (confirm("This job will be lost forever. Are you sure you want to delete it?")) {

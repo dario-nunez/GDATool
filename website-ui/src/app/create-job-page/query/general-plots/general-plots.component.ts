@@ -44,18 +44,21 @@ export class GeneralPlotsComponent implements OnInit {
     this.schemaService.featureColumns.forEach(element => {
       this.typeList.push(element);
       this.featureColumns.push(element[0]);
-      this.COLUMNS.push(element[0]);
-      this.xAvailableColumns.push(element[0]);
-      this.yAvailableColumns.push(element[0]);
+      if (!this.COLUMNS.includes(element[0])) {
+        this.COLUMNS.push(element[0]);
+      }
     });
 
     // Load metric columns
     this.schemaService.metricColumns.forEach(element => {
       this.typeList.push(element);
-      this.COLUMNS.push(element[0]);
-      this.xAvailableColumns.push(element[0]);
-      this.yAvailableColumns.push(element[0]);
+      if (!this.COLUMNS.includes(element[0])) {
+        this.COLUMNS.push(element[0]);
+      }
     });
+
+    this.xAvailableColumns = this.xAvailableColumns.concat(this.COLUMNS)
+    this.yAvailableColumns = this.yAvailableColumns.concat(this.COLUMNS);
   }
 
   selectXColumn(event, column) {

@@ -51,9 +51,11 @@ public class DataAnalysisJob extends Job {
         JobModel job = mongodbRepository.getJobById(jobId);
         List<PlotModel> plots = mongodbRepository.loadPlots(jobId);
         List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
-        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
-        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1.csv"));
-        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "uk-properties-mid.csv"));
+        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
+        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1.csv"));
+//        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "zikaVirusReportedCases-lite.csv"));
+        dataset = HelperFunctions.getValidDataset(dataset);
+        dataset = HelperFunctions.simplifyTypes(dataset);
 
         // ------------------ PERFORM PLOTS & SAVE RESULTS ------------------
         for (PlotModel plotModel : plots) {
@@ -72,6 +74,7 @@ public class DataAnalysisJob extends Job {
         // ------------------ PERFORM GROUPBYS & SAVE RESULTS ------------------
         // Iterate through the defined aggregations and perform their gorupby
         for (AggregationModel agg : aggregations) {
+            System.out.println("Aggregation: " + agg.name);
             // Perform filtering
             List<FilterModel> filters = mongodbRepository.loadFilters(agg._id);
             Dataset<Row> filteredDataset = filter(dataset, filters).cache();
@@ -89,6 +92,7 @@ public class DataAnalysisJob extends Job {
             // Perform clustering and create indexes
             List<ClusterModel> clusters = mongodbRepository.loadClusters(agg._id);
             for (ClusterModel cluster : clusters) {
+                System.out.println("Cluster: " + cluster.xAxis + " " + cluster.yAxis);
                 Dataset<Row> clusteredDataset = cluster(groupByDataset, cluster);
 
                 dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
@@ -176,11 +180,14 @@ public class DataAnalysisJob extends Job {
         for (String column : featureColumns) {
             Double mean = (Double) dataset.agg(mean(col(column))).cache().first().get(0);
             Double std = (Double) dataset.agg(stddev(col(column))).cache().first().get(0);
+            if (std.isNaN()) {
+                std = 0.0;
+            }
             double upperBound = mean + std;
             double lowerBound = mean - std;
 
             dataset.registerTempTable("table");
-            dataset = sparkSession.sqlContext().sql("SELECT * FROM table WHERE "+ column +" < "+ upperBound +" AND "+ column +" > " + lowerBound).cache();
+            dataset = sparkSession.sqlContext().sql("SELECT * FROM table WHERE "+ column +" <= "+ upperBound +" AND "+ column +" >= " + lowerBound).cache();
         }
 
         return dataset;

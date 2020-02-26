@@ -42,6 +42,11 @@ public class SchemaInferenceJob extends Job {
         // AWS version
         Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), jobModel.rawInputDirectory));
 
+        // Fix the names of the columns in the dataset to eliminate forbidden characters
+        dataset = HelperFunctions.getValidDataset(dataset).cache();
+        // Cast all numeric columns to doubles
+        dataset = HelperFunctions.simplifyTypes(dataset);
+
         // No AWS version
         //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "zikaVirusReportedCases.csv"));
 
@@ -52,8 +57,6 @@ public class SchemaInferenceJob extends Job {
     }
 
     public String getJsonSchema(Dataset<Row> dataset, JobModel jobModel) throws JsonProcessingException {
-        dataset = HelperFunctions.getValidDataset(dataset).cache();
-
         List<ColumnModel> columns = new ArrayList<>();
 
         // For every column create a ColumnModel
@@ -62,9 +65,9 @@ public class SchemaInferenceJob extends Job {
             String columnType = field.dataType().typeName();
             List<String> range = new ArrayList<>();
 
-            if (columnType.equals("string")) {  // saving categorical range
+            if (columnType.equals("string")) {  // saving categorical range (String)
                 range = dataset.select(columnName).distinct().collectAsList().stream().map(n -> (String) n.get(0)).map(n -> n==null? "null" : n).collect(Collectors.toList());
-            } else {    // saving numeric range
+            } else {    // saving numeric range (Double)
                 Row minMax = dataset.agg(min(columnName), max(columnName)).head();
                 System.out.println(minMax.get(0));
                 System.out.println(minMax.get(1));
