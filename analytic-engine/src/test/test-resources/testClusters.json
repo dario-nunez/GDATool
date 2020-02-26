@@ -1,0 +1,35 @@
+[
+  {
+    "_id":"5e543cd526e4ff5245342d53",
+    "identifier":"city",
+    "identifierType":"nominal",
+    "xAxis":"MAX",
+    "xType":"quantitative",
+    "yAxis":"MIN",
+    "yType":"quantitative",
+    "cluster":0,
+    "aggId":"5e543cd426e4ff5245342d4f"
+  },
+  {
+    "_id":"5e543cd526e4ff5245342d54",
+    "identifier":"city",
+    "identifierType":"nominal",
+    "xAxis":"COUNT",
+    "xType":"quantitative",
+    "yAxis":"SUM",
+    "yType":"quantitative",
+    "cluster":0,
+    "aggId":"5e543cd426e4ff5245342d4f"
+  },
+  {
+    "_id":"5e543cd526e4ff5245342d55",
+    "identifier":"county",
+    "identifierType":"nominal",
+    "xAxis":"AVG",
+    "xType":"quantitative",
+    "yAxis":"COUNT",
+    "yType":"quantitative",
+    "cluster":0,
+    "aggId":"5e543cd426e4ff5245342d50"
+  }
+]

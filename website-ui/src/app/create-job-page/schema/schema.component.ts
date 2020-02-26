@@ -59,10 +59,10 @@ export class SchemaComponent implements OnInit {
   }
 
   moveColumn(event, element: [string, string], originArray: Array<[string, string]>, destinationArray: Array<[string, string]>) {
-    console.log("from " + originArray + " to " + destinationArray)
+    //console.log("from " + originArray + " to " + destinationArray)
 
-    if (originArray == this.COLUMNS) {                   // From columns
-      if (element[1] == "integer") {  // Integer
+    if (originArray == this.COLUMNS) {                   // From COLUMNS column
+      if (element[1] == "double") {  // Numeric
         if (destinationArray == this.SELECTED_FEATURES) {
           if (this.SELECTED_METRICS.includes(element)) {
             this.COLUMNS = this.COLUMNS.filter(obj => obj[0] !== element[0]);
@@ -72,21 +72,21 @@ export class SchemaComponent implements OnInit {
             this.COLUMNS = this.COLUMNS.filter(obj => obj[0] !== element[0]);
           }
         }
-      } else {  // Non integer
+      } else {  // Non numeric
         this.COLUMNS = this.COLUMNS.filter(obj => obj[0] !== element[0]);
       }
-    } else if (originArray == this.SELECTED_FEATURES) { // From features
+    } else if (originArray == this.SELECTED_FEATURES) { // From FEATURES column
       this.SELECTED_FEATURES = this.SELECTED_FEATURES.filter(obj => obj[0] !== element[0]);
-    } else {                                            // From metrics
+    } else {                                            // From METRICS column
       this.SELECTED_METRICS = this.SELECTED_METRICS.filter(obj => obj[0] !== element[0]);
     }
 
     if (destinationArray == this.COLUMNS) {
-      if (element[1] == "integer") {  // Integer
+      if (element[1] == "double") {  // Numeric
         if (!destinationArray.includes(element)) {
           this.COLUMNS.push(element)
         }
-      } else {  // Non integer
+      } else {  // Non numeric
         this.COLUMNS.push(element)
       }
     } else if (destinationArray == this.SELECTED_FEATURES && !this.SELECTED_FEATURES.includes(element)) {

@@ -1,9 +1,0 @@
-{
-  "_id": "114411441144114411441144",
-  "aggs": ["AVG", "SUM"],
-  "featureColumns": ["city"],
-  "metricColumn": "price",
-  "name": "city_by_price",
-  "sortColumnName": "city",
-  "jobId": "113311331133113311331133"
-}

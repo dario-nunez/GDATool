@@ -1,0 +1,3 @@
+Id,price,transferDate,postcode,propertyType,oldOrNew,duration,paon,saon,street,locality,city,district,county,ppdCategoryType,recordStatus
+"{7E86B6FB-B773-458C-E053-6B04A8C0C84C}","255000","2018-12-05 00:00","NG2 2JR","D","N","F","1","","ARKWRIGHT STREET","","NOTTINGHAM","CITY OF NOTTINGHAM","CITY OF NOTTINGHAM","B","A"
+"{7E86B6FB-B775-458C-E053-6B04A8C0C84C}","131000","2018-11-22 00:00","NG9 1QP","S","N","F","11","","ALFORD CLOSE","BEESTON","NOTTINGHAM","BROXTOWE","NOTTINGHAMSHIRE","B","A"

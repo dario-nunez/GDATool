@@ -25,16 +25,13 @@ public abstract class Job {
     protected ConfigModel configModel;
     protected MongodbRepository mongodbRepository;
     protected ElasticsearchRepository elasticsearchRepository;
-    protected UserDefinedFunctionsFactory userDefinedFunctionsFactory;
 
     public Job(SparkSession sparkSession, ConfigModel configModel, MongodbRepository mongodbRepository,
-               ElasticsearchRepository elasticsearchRepository,
-               UserDefinedFunctionsFactory userDefinedFunctionsFactory) {
+               ElasticsearchRepository elasticsearchRepository) {
         this.sparkSession = sparkSession;
         this.configModel = configModel;
         this.mongodbRepository = mongodbRepository;
         this.elasticsearchRepository = elasticsearchRepository;
-        this.userDefinedFunctionsFactory = userDefinedFunctionsFactory;
     }
 
     public abstract void run(String jobId, String userId) throws IOException, UnirestException;

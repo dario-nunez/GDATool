@@ -1,8 +1,13 @@
 {
-  "_id": "113311331133113311331133",
-  "description": "Gloria's job",
-  "rawInputDirectory": "",
-  "stagingFileName": "",
-  "userId": "112211221122112211221122",
-  "generateESIndices": true
+  "_id":"5e52fed627d827399fe46014",
+  "description":"demo job description",
+  "name":"demo job name",
+  "generateESIndices":true,
+  "jobStatus":"4",
+  "userId":"5e443c40dc118fa3af6ddda9",
+  "rawInputDirectory":"dataAnalysisJobDS.csv",
+  "stagingFileName":"staging",
+  "createdAt":"1582497494571",
+  "updatedAt":"1582497494571",
+  "__v":"0"
 }

@@ -25,7 +25,7 @@ public class DataAnalysisMain {
         // Create and run the SchemaInferenceJob
         DataAnalysisJob dataAnalysisJob = new DataAnalysisJob(dependencyFactory.getSparkSession(),
                 dependencyFactory.getConfigModel(), dependencyFactory.getMongodbRepository(),
-                dependencyFactory.getElasticsearchRepository(), dependencyFactory.getUserDefinedFunctionsFactory(),
+                dependencyFactory.getElasticsearchRepository(),
                 dependencyFactory.getRestHighLevelClient());
 
         dataAnalysisJob.run(userId, jobId);

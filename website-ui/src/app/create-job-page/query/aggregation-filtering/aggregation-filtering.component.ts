@@ -17,7 +17,7 @@ export class AggregationFilteringComponent implements OnInit {
   METRIC_COLUMNS = [];
   aggregationSelected: boolean = false;
   stringColumnChosen: boolean = false;
-  
+
   availableColumns: Array<[string, string]> = [];
   availableOperators: Array<string> = [];
   availableStringValues: Array<string> = [];
@@ -40,9 +40,16 @@ export class AggregationFilteringComponent implements OnInit {
     this.FEATURE_COLUMNS = this.schemaService.featureColumns;
     this.METRIC_COLUMNS = this.schemaService.metricColumns;
 
-    this.availableColumns = this.FEATURE_COLUMNS.concat(this.METRIC_COLUMNS);
+    this.availableColumns = this.FEATURE_COLUMNS;
 
-    console.log(this.schemaService.getSchema().schema);
+    console.log(this.METRIC_COLUMNS);
+    console.log(this.availableColumns);
+
+    this.METRIC_COLUMNS.forEach(element => {
+      if (this.availableColumns.find(obj => obj[0] == element[0]) == undefined) {
+        this.availableColumns.push(element);
+      }
+    });
   }
 
   selectAggregation($event, agg) {
@@ -55,7 +62,7 @@ export class AggregationFilteringComponent implements OnInit {
     let columnType = this.availableColumns.filter(obj => obj[0] == column)[0][1];
 
     this.availableStringValues = []
-    let schemaColumn:IColumn = this.schemaService.getSchema().schema.filter(obj => obj.name == column)[0];
+    let schemaColumn: IColumn = this.schemaService.getSchema().schema.filter(obj => obj.name == column)[0];
 
     if (columnType == "string") {
       this.stringColumnChosen = true;
@@ -82,7 +89,7 @@ export class AggregationFilteringComponent implements OnInit {
     let columnType = this.availableColumns.filter(obj => obj[0] == this.chosenIdentifierColumn)[0][1];
 
     if (columnType == "string") {
-      switch (this.chosenOperator){
+      switch (this.chosenOperator) {
         case ("include"):
           sqlString = this.chosenIdentifierColumn + " = '" + this.chosenStringValue + "'";
           break;

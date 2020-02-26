@@ -6,6 +6,7 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mycompany.models.ColumnModel;
@@ -29,24 +30,33 @@ import static org.apache.spark.sql.functions.*;
 
 public class SchemaInferenceJob extends Job {
     public SchemaInferenceJob(SparkSession sparkSession, ConfigModel configModel,
-                              MongodbRepository mongodbRepository, ElasticsearchRepository elasticsearchRepository,
-                              UserDefinedFunctionsFactory userDefinedFunctionsFactory) {
-        super(sparkSession, configModel, mongodbRepository, elasticsearchRepository, userDefinedFunctionsFactory);
+                              MongodbRepository mongodbRepository, ElasticsearchRepository elasticsearchRepository) {
+        super(sparkSession, configModel, mongodbRepository, elasticsearchRepository);
         logger = LoggerFactory.getLogger(SchemaInferenceJob.class);
     }
 
     @Override
     public void run(String userId, String jobId) throws IOException, UnirestException {
-        JobModel job = mongodbRepository.getJobById(jobId);
+        JobModel jobModel = mongodbRepository.getJobById(jobId);
 
         // AWS version
-        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
+        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), jobModel.rawInputDirectory));
+
+        // Fix the names of the columns in the dataset to eliminate forbidden characters
+        dataset = HelperFunctions.getValidDataset(dataset).cache();
+        // Cast all numeric columns to doubles
+        dataset = HelperFunctions.simplifyTypes(dataset);
 
         // No AWS version
-        // Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "zikaVirusReportedCases.csv"));
+        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "zikaVirusReportedCases.csv"));
 
-        dataset = HelperFunctions.getValidDataset(dataset).cache();
+        String jsonSchema = getJsonSchema(dataset, jobModel);
 
+        // Save the SchemaModel to the user's s3 bucket
+        saveSchemaToS3(jobModel, jsonSchema);
+    }
+
+    public String getJsonSchema(Dataset<Row> dataset, JobModel jobModel) throws JsonProcessingException {
         List<ColumnModel> columns = new ArrayList<>();
 
         // For every column create a ColumnModel
@@ -55,9 +65,9 @@ public class SchemaInferenceJob extends Job {
             String columnType = field.dataType().typeName();
             List<String> range = new ArrayList<>();
 
-            if (columnType.equals("string")) {  // saving categorical range
+            if (columnType.equals("string")) {  // saving categorical range (String)
                 range = dataset.select(columnName).distinct().collectAsList().stream().map(n -> (String) n.get(0)).map(n -> n==null? "null" : n).collect(Collectors.toList());
-            } else {    // saving numeric range
+            } else {    // saving numeric range (Double)
                 Row minMax = dataset.agg(min(columnName), max(columnName)).head();
                 System.out.println(minMax.get(0));
                 System.out.println(minMax.get(1));
@@ -74,14 +84,9 @@ public class SchemaInferenceJob extends Job {
         }
 
         // Use the list of all ColumnModels to create a SchemaModel object
-        SchemaModel schema = new SchemaModel(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory), columns);
+        SchemaModel schema = new SchemaModel(String.format("%s/%s", configModel.bucketRoot(), jobModel.rawInputDirectory), columns);
         ObjectMapper mapper = new ObjectMapper();
-        String jsonSchema = mapper.writeValueAsString(schema);
-
-        System.out.println(jsonSchema);
-
-        // Save the SchemaModel to the user's s3 bucket
-        saveSchemaToS3(job, jsonSchema);
+        return mapper.writeValueAsString(schema);
     }
 
     /**

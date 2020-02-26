@@ -37,9 +37,8 @@ public class DataAnalysisJob extends Job {
 
     public DataAnalysisJob(SparkSession sparkSession, ConfigModel configModel,
                            MongodbRepository mongodbRepository, ElasticsearchRepository elasticsearchRepository,
-                           UserDefinedFunctionsFactory userDefinedFunctionsFactory,
                            RestHighLevelClient restHighLevelClient) {
-        super(sparkSession, configModel, mongodbRepository, elasticsearchRepository, userDefinedFunctionsFactory);
+        super(sparkSession, configModel, mongodbRepository, elasticsearchRepository);
         this.restHighLevelClient = restHighLevelClient;
         logger = LoggerFactory.getLogger(SchemaInferenceJob.class);
     }
@@ -52,9 +51,11 @@ public class DataAnalysisJob extends Job {
         JobModel job = mongodbRepository.getJobById(jobId);
         List<PlotModel> plots = mongodbRepository.loadPlots(jobId);
         List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
-        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
-        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1.csv"));
-        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "uk-properties-mid.csv"));
+        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
+        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "pp-2018-part1.csv"));
+//        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "zikaVirusReportedCases-lite.csv"));
+        dataset = HelperFunctions.getValidDataset(dataset);
+        dataset = HelperFunctions.simplifyTypes(dataset);
 
         // ------------------ PERFORM PLOTS & SAVE RESULTS ------------------
         for (PlotModel plotModel : plots) {
@@ -73,6 +74,7 @@ public class DataAnalysisJob extends Job {
         // ------------------ PERFORM GROUPBYS & SAVE RESULTS ------------------
         // Iterate through the defined aggregations and perform their gorupby
         for (AggregationModel agg : aggregations) {
+            System.out.println("Aggregation: " + agg.name);
             // Perform filtering
             List<FilterModel> filters = mongodbRepository.loadFilters(agg._id);
             Dataset<Row> filteredDataset = filter(dataset, filters).cache();
@@ -90,9 +92,8 @@ public class DataAnalysisJob extends Job {
             // Perform clustering and create indexes
             List<ClusterModel> clusters = mongodbRepository.loadClusters(agg._id);
             for (ClusterModel cluster : clusters) {
+                System.out.println("Cluster: " + cluster.xAxis + " " + cluster.yAxis);
                 Dataset<Row> clusteredDataset = cluster(groupByDataset, cluster);
-                clusteredDataset.show();
-                clusteredDataset.printSchema();
 
                 dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
                 saveToStaging(clusteredDataset, String.format("/%s/%s/staging/%d/%s",
@@ -122,7 +123,7 @@ public class DataAnalysisJob extends Job {
      * @param aggregationModel
      * @return
      */
-    private Dataset<Row> groupBy(Dataset<Row> dataset, AggregationModel aggregationModel) {
+    public Dataset<Row> groupBy(Dataset<Row> dataset, AggregationModel aggregationModel) {
         // Feature columns
         List<Column> catColumns = aggregationModel.featureColumns.stream().map(functions::col).collect(Collectors.toList());
 
@@ -174,22 +175,32 @@ public class DataAnalysisJob extends Job {
         return returnDataset;
     }
 
-    private Dataset<Row> cluster(Dataset<Row> dataset, ClusterModel clusterModel) {
+    public Dataset<Row> removeOutliers(Dataset<Row> dataset, List<String> featureColumns) {
+        // Eliminate outliers by taking only 1 SD from the mean
+        for (String column : featureColumns) {
+            Double mean = (Double) dataset.agg(mean(col(column))).cache().first().get(0);
+            Double std = (Double) dataset.agg(stddev(col(column))).cache().first().get(0);
+            if (std.isNaN()) {
+                std = 0.0;
+            }
+            double upperBound = mean + std;
+            double lowerBound = mean - std;
+
+            dataset.registerTempTable("table");
+            dataset = sparkSession.sqlContext().sql("SELECT * FROM table WHERE "+ column +" <= "+ upperBound +" AND "+ column +" >= " + lowerBound).cache();
+        }
+
+        return dataset;
+    }
+
+    public Dataset<Row> cluster(Dataset<Row> dataset, ClusterModel clusterModel) {
         // Select columns necessary for clustering
         List<String> featureColumns = new ArrayList<>();
         featureColumns.add(clusterModel.xAxis.toLowerCase());
         featureColumns.add(clusterModel.yAxis.toLowerCase());
 
-        // Eliminate outliers by taking only 1 SD from the mean
-        for (String column : featureColumns) {
-            Double mean = (Double) dataset.agg(mean(col(column))).cache().first().get(0);
-            Double std = (Double) dataset.agg(stddev(col(column))).cache().first().get(0);
-            double upperBound = mean + std;
-            double lowerBound = mean - std;
-
-            dataset.registerTempTable("table");
-            dataset = sparkSession.sqlContext().sql("SELECT * FROM table WHERE "+ column +" < "+ upperBound +" AND "+ column +" > " + lowerBound).cache();
-        }
+        // Remove outliers by taking 1 SD
+        dataset = removeOutliers(dataset, featureColumns).cache();
 
         // Prepares data for clustering
         List<Column> clusterColumns = featureColumns.stream().map(functions::col).collect(Collectors.toList());
@@ -209,7 +220,7 @@ public class DataAnalysisJob extends Job {
         parsedData.cache();
 
         // Probes K-means to find optimal K value
-        int bestK = 0;
+        int bestK = 1;
         double bestKScore = 0;
         int numIterations = 20;
         KMeansModel kMeansModelProbe;
@@ -240,7 +251,7 @@ public class DataAnalysisJob extends Job {
         return sparkSession.sqlContext().sql("SELECT *, assignCluster(" + featureColumns.get(0) + ", " + featureColumns.get(1) + ") AS `cluster` FROM temp").cache();
     }
 
-    private Dataset<Row> filter(Dataset<Row> dataset, List<FilterModel> filters) {
+    public Dataset<Row> filter(Dataset<Row> dataset, List<FilterModel> filters) {
         Dataset<Row> filteredDataset = dataset;
 
         for (FilterModel filterModel : filters) {
@@ -253,7 +264,7 @@ public class DataAnalysisJob extends Job {
         return filteredDataset;
     }
 
-    private Dataset<Row> plotSelect(Dataset<Row> dataset, PlotModel plotModel) {
+    public Dataset<Row> plotSelect(Dataset<Row> dataset, PlotModel plotModel) {
         Dataset<Row> selectedDataset;
 
         if (plotModel.identifier.equals(plotModel.xAxis) || plotModel.identifier.equals(plotModel.yAxis)){
