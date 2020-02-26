@@ -91,8 +91,6 @@ public class DataAnalysisJob extends Job {
             List<ClusterModel> clusters = mongodbRepository.loadClusters(agg._id);
             for (ClusterModel cluster : clusters) {
                 Dataset<Row> clusteredDataset = cluster(groupByDataset, cluster);
-                clusteredDataset.show();
-                clusteredDataset.printSchema();
 
                 dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
                 saveToStaging(clusteredDataset, String.format("/%s/%s/staging/%d/%s",
@@ -122,7 +120,7 @@ public class DataAnalysisJob extends Job {
      * @param aggregationModel
      * @return
      */
-    private Dataset<Row> groupBy(Dataset<Row> dataset, AggregationModel aggregationModel) {
+    public Dataset<Row> groupBy(Dataset<Row> dataset, AggregationModel aggregationModel) {
         // Feature columns
         List<Column> catColumns = aggregationModel.featureColumns.stream().map(functions::col).collect(Collectors.toList());
 
@@ -174,12 +172,7 @@ public class DataAnalysisJob extends Job {
         return returnDataset;
     }
 
-    private Dataset<Row> cluster(Dataset<Row> dataset, ClusterModel clusterModel) {
-        // Select columns necessary for clustering
-        List<String> featureColumns = new ArrayList<>();
-        featureColumns.add(clusterModel.xAxis.toLowerCase());
-        featureColumns.add(clusterModel.yAxis.toLowerCase());
-
+    public Dataset<Row> removeOutliers(Dataset<Row> dataset, List<String> featureColumns) {
         // Eliminate outliers by taking only 1 SD from the mean
         for (String column : featureColumns) {
             Double mean = (Double) dataset.agg(mean(col(column))).cache().first().get(0);
@@ -190,6 +183,18 @@ public class DataAnalysisJob extends Job {
             dataset.registerTempTable("table");
             dataset = sparkSession.sqlContext().sql("SELECT * FROM table WHERE "+ column +" < "+ upperBound +" AND "+ column +" > " + lowerBound).cache();
         }
+
+        return dataset;
+    }
+
+    public Dataset<Row> cluster(Dataset<Row> dataset, ClusterModel clusterModel) {
+        // Select columns necessary for clustering
+        List<String> featureColumns = new ArrayList<>();
+        featureColumns.add(clusterModel.xAxis.toLowerCase());
+        featureColumns.add(clusterModel.yAxis.toLowerCase());
+
+        // Remove outliers by taking 1 SD
+        dataset = removeOutliers(dataset, featureColumns).cache();
 
         // Prepares data for clustering
         List<Column> clusterColumns = featureColumns.stream().map(functions::col).collect(Collectors.toList());
@@ -209,7 +214,7 @@ public class DataAnalysisJob extends Job {
         parsedData.cache();
 
         // Probes K-means to find optimal K value
-        int bestK = 0;
+        int bestK = 1;
         double bestKScore = 0;
         int numIterations = 20;
         KMeansModel kMeansModelProbe;
@@ -240,7 +245,7 @@ public class DataAnalysisJob extends Job {
         return sparkSession.sqlContext().sql("SELECT *, assignCluster(" + featureColumns.get(0) + ", " + featureColumns.get(1) + ") AS `cluster` FROM temp").cache();
     }
 
-    private Dataset<Row> filter(Dataset<Row> dataset, List<FilterModel> filters) {
+    public Dataset<Row> filter(Dataset<Row> dataset, List<FilterModel> filters) {
         Dataset<Row> filteredDataset = dataset;
 
         for (FilterModel filterModel : filters) {
@@ -253,7 +258,7 @@ public class DataAnalysisJob extends Job {
         return filteredDataset;
     }
 
-    private Dataset<Row> plotSelect(Dataset<Row> dataset, PlotModel plotModel) {
+    public Dataset<Row> plotSelect(Dataset<Row> dataset, PlotModel plotModel) {
         Dataset<Row> selectedDataset;
 
         if (plotModel.identifier.equals(plotModel.xAxis) || plotModel.identifier.equals(plotModel.yAxis)){

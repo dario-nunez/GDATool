@@ -29,7 +29,7 @@ import java.util.Objects;
 import static org.apache.spark.sql.functions.*;
 import static org.junit.Assert.assertEquals;
 
-public class JobTest {
+public class JobTests {
     @Mock
     SparkSession sparkSessionMock;
     @Mock
