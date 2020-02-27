@@ -3,4 +3,5 @@
 --full-trace
 --bail
 --timeout 15000
+--file ./test/setupTeardown.spec.ts
 test/**/*.spec.ts

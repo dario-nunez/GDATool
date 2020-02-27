@@ -1,42 +1,31 @@
 import * as chai from "chai";
 import chaiHttp = require('chai-http');
-import { after, before, describe, it } from "mocha";
+import { before, describe, it } from "mocha";
 import { IUser } from "../../../common-service/src/models/userModel";
 import { UserRepository } from "../../../common-service/src/repositories/userRepository";
-import { ApiServer } from "../../src/api-server";
-import { start } from "../../src/start";
 
 chai.use(chaiHttp);
 const expect = chai.expect;
-let apiServer: ApiServer;
+let userRepository: UserRepository;
 
-async function deleteExistingUserById(user: IUser, userRepository: UserRepository) {
-    await userRepository.delete(user._id);
-}
+const testUser = {
+    password: "test_password",
+    email: "test_email",
+    name: "test_user",
+    dashboards: [],
+    __v: 0,
+    roles: []
+} as IUser;
+
+before(async () => {
+    userRepository = new UserRepository();
+    const existingUser = await userRepository.getUserByEmail(testUser.email);
+    if (existingUser) {
+        await userRepository.delete(existingUser._id);
+    }
+});
 
 describe("User controller tests", () => {
-    let userRepository: UserRepository;
-    userRepository = new UserRepository();
-
-    const testUser = {
-        password: "test_password",
-        email: "test_email",
-        name: "test_user",
-        dashboards: [],
-        __v: 0,
-        roles: []
-    } as IUser;
-    
-    before(async () => {
-        apiServer = await start();
-        return apiServer;
-    });
-
-    after(async () => {
-        await deleteExistingUserById(testUser, userRepository);
-        return apiServer.stop();
-    });
-
     describe("create user", () => {
         it("create user with a unique email succeeds", (done) => {
             chai.request("http://localhost:5000")

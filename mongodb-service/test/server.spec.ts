@@ -1,29 +1,12 @@
-import logger from "../logger/loggerFactory";
+// import logger from "../logger/loggerFactory";
 import * as chai from "chai";
-import { after, before, describe, it } from "mocha";
+import { describe, it } from "mocha";
 import { Server, HttpMethod } from "typescript-rest";
-import { ApiServer } from "../src/api-server";
-import { start } from "../src/start";
 
 const expect = chai.expect;
 
-let apiServer: ApiServer;
-
 // For the test to run, MongoDb must be available
 describe("Rest Server Tests", () => {
-    // Before every test
-    before(async () => {
-        logger.info("Starting server")
-        apiServer = await start();
-        return apiServer;
-    });
-
-    // After every test
-    after(() => {
-        logger.info("Stopping server")
-        return apiServer.stop();
-    });
-
     // A single test checking all exposed routes of the API
     describe("Check the exposed routes", () => {
         it("Contains all paths and they are of the correct type", (done) => {
@@ -52,6 +35,7 @@ describe("Rest Server Tests", () => {
                 '/ms/job/getAll',
                 '/ms/job/:id',
                 '/ms/job',
+                '/ms/job/noAws',
                 '/ms/job/recursive/:id',
                 '/ms/job/byUser/:id',
                 '/ms/job/getUploadFileUrl',
@@ -82,6 +66,7 @@ describe("Rest Server Tests", () => {
             expect(Server.getHttpMethods("/ms/job/getAll")).to.have.members([HttpMethod.GET]);
             expect(Server.getHttpMethods("/ms/job/:id")).to.have.members([HttpMethod.PUT, HttpMethod.GET, HttpMethod.DELETE]);
             expect(Server.getHttpMethods("/ms/job")).to.have.members([HttpMethod.POST]);
+            expect(Server.getHttpMethods("/ms/job/noAws")).to.have.members([HttpMethod.POST]);
             expect(Server.getHttpMethods("/ms/job/byUser/:id")).to.have.members([HttpMethod.GET]);
             expect(Server.getHttpMethods("/ms/job/getUploadFileUrl")).to.have.members([HttpMethod.POST]);
             expect(Server.getHttpMethods("/ms/job/readFile")).to.have.members([HttpMethod.POST]);

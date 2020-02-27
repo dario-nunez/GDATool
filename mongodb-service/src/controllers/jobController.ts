@@ -29,6 +29,12 @@ export class JobController extends Controller<IJob> {
         return await this.jobRepository.getById(id);
     }
 
+    @Path("noAws")
+    @POST
+    public async createJobWithoutAWSInitialization(job: IJobModel): Promise<IJobModel> {
+        return await this.jobRepository.create(job);
+    }
+
     @POST
     public async createJob(job: IJobModel): Promise<IJobModel> {
         const newJob: IJob = await this.jobRepository.create(job);
