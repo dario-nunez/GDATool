@@ -1,5 +1,5 @@
 import { Inject } from "typescript-ioc";
-import { GET, Path, PathParam, POST } from "typescript-rest";
+import { DELETE, GET, Path, PathParam, POST } from "typescript-rest";
 import { Controller } from "../../../common-service/src/controllers/controller";
 import { IPlot, IPlotModel } from "../../../common-service/src/models/plotModel";
 import { PlotRepository } from "../../../common-service/src/repositories/plotRepository";
@@ -18,7 +18,7 @@ export class PlotController extends Controller<IPlot> {
 
     @Path("byJob/:id")
     @GET
-    public async getPlotsByJobId(@PathParam("id") id: string): Promise<IPlotModel> {
+    public async getPlotsByJobId(@PathParam("id") id: string): Promise<Array<IPlotModel>> {
         return await this.plotRepository.getPlotsByJobId(id);
     }
 
@@ -31,5 +31,11 @@ export class PlotController extends Controller<IPlot> {
     @POST
     public async createPlot(plot: IPlotModel): Promise<IPlotModel> {
         return await this.plotRepository.create(plot);
+    }
+
+    @Path(":id")
+    @DELETE
+    public async deleteAggregation(@PathParam("id") id: string): Promise<IPlotModel> {
+        return await this.plotRepository.delete(id);
     }
 }

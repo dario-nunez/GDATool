@@ -4,6 +4,7 @@ import { before, describe, it } from "mocha";
 import { IJob } from "../../../common-service/src/models/jobModel";
 import { IUser } from "../../../common-service/src/models/userModel";
 import { JobRepository } from "../../../common-service/src/repositories/jobRepository";
+import { Repository } from "../../../common-service/src/repositories/repository";
 import { UserRepository } from "../../../common-service/src/repositories/userRepository";
 
 chai.use(chaiHttp);
@@ -32,19 +33,19 @@ const testJob = {
     jobStatus: 0,
 } as IJob;
 
+async function deleteIfPresent(model: any, repository: Repository<any> ) {
+    const existingModel = await repository.getById(model._id);
+    if (existingModel) {
+        await repository.delete(existingModel._id);
+    }
+}
+
 before(async () => {
     userRepository = new UserRepository();
     jobRepository = new JobRepository();
 
-    const existingUser = await userRepository.getById(testUser._id);
-    if (existingUser) {
-        await userRepository.delete(existingUser._id);
-    }
-
-    const existingjob = await jobRepository.getById(testJob._id);
-    if (existingjob) {
-        await jobRepository.delete(existingjob._id);
-    }
+    await deleteIfPresent(testUser, userRepository);
+    await deleteIfPresent(testJob, jobRepository);
 });
 
 describe("User controller tests", () => {

@@ -6,7 +6,9 @@ import { IJob } from "../../../common-service/src/models/jobModel";
 import { IUser } from "../../../common-service/src/models/userModel";
 import { AggregationRepository } from "../../../common-service/src/repositories/aggregationRepository";
 import { JobRepository } from "../../../common-service/src/repositories/jobRepository";
+import { Repository } from "../../../common-service/src/repositories/repository";
 import { UserRepository } from "../../../common-service/src/repositories/userRepository";
+
 
 chai.use(chaiHttp);
 const expect = chai.expect;
@@ -53,30 +55,22 @@ const testAggregation2 = {
     name: "aggregation2_test_name"
 } as IAggregation;
 
+async function deleteIfPresent(model: any, repository: Repository<any> ) {
+    const existingModel = await repository.getById(model._id);
+    if (existingModel) {
+        await repository.delete(existingModel._id);
+    }
+}
+
 before(async () => {
     userRepository = new UserRepository();
     jobRepository = new JobRepository();
     aggregationRepository = new AggregationRepository();
 
-    const existingUser = await userRepository.getById(testUser._id);
-    if (existingUser) {
-        await userRepository.delete(existingUser._id);
-    }
-
-    const existingjob = await jobRepository.getById(testJob._id);
-    if (existingjob) {
-        await jobRepository.delete(existingjob._id);
-    }
-
-    const existingAggregation = await aggregationRepository.getById(testAggregation1._id);
-    if (existingAggregation) {
-        await aggregationRepository.delete(existingAggregation._id);
-    }
-
-    const existingAggregation2 = await aggregationRepository.getById(testAggregation2._id);
-    if (existingAggregation2) {
-        await aggregationRepository.delete(existingAggregation2._id);
-    }
+    await deleteIfPresent(testUser, userRepository);
+    await deleteIfPresent(testJob, jobRepository);
+    await deleteIfPresent(testAggregation1, aggregationRepository);
+    await deleteIfPresent(testAggregation2, aggregationRepository);
 
     await userRepository.create(testUser);
     testJob.userId = testUser._id;

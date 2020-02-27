@@ -6,7 +6,7 @@ export class PlotRepository extends Repository<IPlot> {
         super(Plot);
     }
 
-    public getPlotsByJobId(id: any): Promise<any> {
+    public getPlotsByJobId(id: any): Promise<Array<IPlot>> {
         return Plot.find({jobId: id}).exec();
     }
 
