@@ -7,8 +7,6 @@ export interface IUserModel {
     _id: string;
     password: string;
     email: string;
-    roles: Array<string>;
-    dashboards: Array<string>;
     name: string;
 }
 

@@ -1,8 +1,8 @@
 import { Inject } from "typescript-ioc";
 import { DELETE, GET, Path, PathParam, POST, PUT } from "typescript-rest";
-import { Controller } from "../../../common-service/src/controllers/controller";
-import { IAggregation, IAggregationModel } from "../../../common-service/src/models/aggregationModel";
+import { IAggregation, IAggregationModel } from "../models/aggregationModel";
 import { AggregationRepository } from "../repositories/aggregationRepository";
+import { Controller } from "./controller";
 
 @Path("/ms/aggregation")
 export class AggregationController extends Controller<IAggregation> {

@@ -1,8 +1,8 @@
 import * as chai from "chai";
 import chaiHttp = require('chai-http');
 import { before, describe, it } from "mocha";
-import { IUser } from "../../../common-service/src/models/userModel";
-import { UserRepository } from "../../../common-service/src/repositories/userRepository";
+import { IUser } from "../../src/models/userModel";
+import { UserRepository } from "../../src/repositories/userRepository";
 
 chai.use(chaiHttp);
 const expect = chai.expect;
@@ -11,10 +11,7 @@ let userRepository: UserRepository;
 const testUser = {
     password: "test_password",
     email: "test_email",
-    name: "test_user",
-    dashboards: [],
-    __v: 0,
-    roles: []
+    name: "test_user"
 } as IUser;
 
 before(async () => {

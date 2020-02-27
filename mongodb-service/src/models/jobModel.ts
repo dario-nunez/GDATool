@@ -11,7 +11,6 @@ export interface IJobModel {
     stagingFileName: string;
     userId: string;
     generateESIndices: boolean;
-    runs: Array<string>;
     jobStatus: number;
 }
 

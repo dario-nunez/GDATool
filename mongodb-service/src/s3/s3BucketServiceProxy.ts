@@ -1,6 +1,6 @@
 import { Provided, Provider } from "typescript-ioc";
-import { S3BucketService } from "../../../common-service/src/s3/s3BucketService";
 import { Providers } from "../providers";
+import { S3BucketService } from "./s3BucketService";
 
 const s3BucketServiceProxyProvider: Provider = {
     get: () =>  Providers.getS3BucketServiceProxy()

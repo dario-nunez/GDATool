@@ -1,8 +1,8 @@
 import { Inject } from "typescript-ioc";
 import { DELETE, GET, Path, PathParam, POST } from "typescript-rest";
-import { Controller } from "../../../common-service/src/controllers/controller";
-import { IFilter, IFilterModel } from "../../../common-service/src/models/filterModel";
-import { FilterRepository } from "../../../common-service/src/repositories/filterRepository";
+import { IFilter, IFilterModel } from "../models/filterModel";
+import { FilterRepository } from "../repositories/filterRepository";
+import { Controller } from "./controller";
 
 @Path("/ms/filter")
 export class FilterController extends Controller<IFilter> {

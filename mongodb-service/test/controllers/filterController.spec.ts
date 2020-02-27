@@ -1,11 +1,11 @@
 import * as chai from "chai";
 import chaiHttp = require('chai-http');
 import { before, describe, it } from "mocha";
-import { IAggregation } from "../../../common-service/src/models/aggregationModel";
-import { AggregationRepository } from "../../../common-service/src/repositories/aggregationRepository";
-import { FilterRepository } from "../../../common-service/src/repositories/filterRepository";
-import { Repository } from "../../../common-service/src/repositories/repository";
+import { IAggregation } from "../../src/models/aggregationModel";
 import { IFilter } from "../../src/models/filterModel";
+import { AggregationRepository } from "../../src/repositories/aggregationRepository";
+import { FilterRepository } from "../../src/repositories/filterRepository";
+import { Repository } from "../../src/repositories/repository";
 
 chai.use(chaiHttp);
 const expect = chai.expect;

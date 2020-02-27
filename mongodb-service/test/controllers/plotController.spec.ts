@@ -1,11 +1,11 @@
 import * as chai from "chai";
 import chaiHttp = require('chai-http');
 import { before, describe, it } from "mocha";
-import { IJob } from "../../../common-service/src/models/jobModel";
-import { JobRepository } from "../../../common-service/src/repositories/jobRepository";
-import { PlotRepository } from "../../../common-service/src/repositories/plotRepository";
-import { Repository } from "../../../common-service/src/repositories/repository";
+import { IJob } from "../../src/models/jobModel";
 import { IPlot } from "../../src/models/plotModel";
+import { JobRepository } from "../../src/repositories/jobRepository";
+import { PlotRepository } from "../../src/repositories/plotRepository";
+import { Repository } from "../../src/repositories/repository";
 
 chai.use(chaiHttp);
 const expect = chai.expect;
@@ -43,8 +43,7 @@ const testJob = {
     stagingFileName: "",
     userId: "101010101010101010101010",
     generateESIndices: true,
-    runs: [],
-    jobStatus: 0,
+    jobStatus: 0
 } as IJob;
 
 async function deleteIfPresent(model: any, repository: Repository<any>) {

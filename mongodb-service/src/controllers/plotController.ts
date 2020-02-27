@@ -1,8 +1,8 @@
 import { Inject } from "typescript-ioc";
 import { DELETE, GET, Path, PathParam, POST } from "typescript-rest";
-import { Controller } from "../../../common-service/src/controllers/controller";
-import { IPlot, IPlotModel } from "../../../common-service/src/models/plotModel";
-import { PlotRepository } from "../../../common-service/src/repositories/plotRepository";
+import { IPlot, IPlotModel } from "../models/plotModel";
+import { PlotRepository } from "../repositories/plotRepository";
+import { Controller } from "./controller";
 
 @Path("/ms/plot")
 export class PlotController extends Controller<IPlot> {

@@ -1,8 +1,8 @@
 import { Inject } from "typescript-ioc";
 import { DELETE, GET, Path, PathParam, POST } from "typescript-rest";
-import { Controller } from "../../../common-service/src/controllers/controller";
-import { ICluster, IClusterModel } from "../../../common-service/src/models/clusterModel";
-import { ClusterRepository } from "../../../common-service/src/repositories/clusterRerpository";
+import { ICluster, IClusterModel } from "../models/clusterModel";
+import { ClusterRepository } from "../repositories/clusterRerpository";
+import { Controller } from "./controller";
 
 @Path("/ms/cluster")
 export class ClusterController extends Controller<ICluster> {

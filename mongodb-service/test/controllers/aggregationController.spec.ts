@@ -1,14 +1,13 @@
 import * as chai from "chai";
 import chaiHttp = require('chai-http');
 import { before, describe, it } from "mocha";
-import { IAggregation } from "../../../common-service/src/models/aggregationModel";
-import { IJob } from "../../../common-service/src/models/jobModel";
-import { IUser } from "../../../common-service/src/models/userModel";
-import { AggregationRepository } from "../../../common-service/src/repositories/aggregationRepository";
-import { JobRepository } from "../../../common-service/src/repositories/jobRepository";
-import { Repository } from "../../../common-service/src/repositories/repository";
-import { UserRepository } from "../../../common-service/src/repositories/userRepository";
-
+import { IAggregation } from "../../src/models/aggregationModel";
+import { IJob } from "../../src/models/jobModel";
+import { IUser } from "../../src/models/userModel";
+import { AggregationRepository } from "../../src/repositories/aggregationRepository";
+import { JobRepository } from "../../src/repositories/jobRepository";
+import { Repository } from "../../src/repositories/repository";
+import { UserRepository } from "../../src/repositories/userRepository";
 
 chai.use(chaiHttp);
 const expect = chai.expect;
@@ -20,9 +19,7 @@ const testUser = {
     _id: "333333333333333333333333",
     password: "user_test_password",
     email: "user_test_email",
-    name: "user_test_user",
-    dashboards: [],
-    roles: []
+    name: "user_test_user"
 } as IUser;
 
 const testJob = {
@@ -33,8 +30,7 @@ const testJob = {
     rawInputDirectory: "",
     stagingFileName: "",
     generateESIndices: true,
-    runs: [],
-    jobStatus: 0,
+    jobStatus: 0
 } as IJob;
 
 const testAggregation1 = {

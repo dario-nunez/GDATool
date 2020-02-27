@@ -1,10 +1,10 @@
 import { Inject } from "typescript-ioc";
 import { Context, DELETE, Errors, GET, Path, PathParam, POST, PreProcessor, PUT, ServiceContext } from "typescript-rest";
-import { Controller } from "../../../common-service/src/controllers/controller";
-import logger from "../../../common-service/src/logger/loggerFactory";
-import { IUser, IUserModel } from "../../../common-service/src/models/userModel";
-import { UserRepository } from "../../../common-service/src/repositories/userRepository";
+import logger from "../logger/loggerFactory";
+import { IUser, IUserModel } from "../models/userModel";
+import { UserRepository } from "../repositories/userRepository";
 import { uniqueEmailValidator } from "../validators/validators";
+import { Controller } from "./controller";
 
 @Path("/ms/user")
 export class UserController extends Controller<IUser> {

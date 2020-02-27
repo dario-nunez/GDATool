@@ -1,4 +1,3 @@
-// import logger from "../logger/loggerFactory";
 import * as chai from "chai";
 import { describe, it } from "mocha";
 import { Server, HttpMethod } from "typescript-rest";
