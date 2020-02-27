@@ -44,8 +44,6 @@ export class Repository<T extends Document> implements IRepository<T> {
         return this.model.find(conditions, (err, obj) => {
             if (err) {
                 logger.error(err);
-            } else {
-                logger.info(obj);
             }
         }).select(projection).lean().exec();
     }

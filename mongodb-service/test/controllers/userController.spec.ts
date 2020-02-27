@@ -2,6 +2,7 @@ import * as chai from "chai";
 import chaiHttp = require('chai-http');
 import { after, before, describe, it } from "mocha";
 import { IUser } from "../../../common-service/src/models/userModel";
+import { UserRepository } from "../../../common-service/src/repositories/userRepository";
 import { ApiServer } from "../../src/api-server";
 import { start } from "../../src/start";
 
@@ -9,7 +10,14 @@ chai.use(chaiHttp);
 const expect = chai.expect;
 let apiServer: ApiServer;
 
+async function deleteExistingUserById(user: IUser, userRepository: UserRepository) {
+    await userRepository.delete(user._id);
+}
+
 describe("User controller tests", () => {
+    let userRepository: UserRepository;
+    userRepository = new UserRepository();
+
     const testUser = {
         password: "test_password",
         email: "test_email",
@@ -18,13 +26,14 @@ describe("User controller tests", () => {
         __v: 0,
         roles: []
     } as IUser;
-
+    
     before(async () => {
         apiServer = await start();
         return apiServer;
     });
 
     after(async () => {
+        await deleteExistingUserById(testUser, userRepository);
         return apiServer.stop();
     });
 
@@ -47,7 +56,7 @@ describe("User controller tests", () => {
                 .post("/ms/user")
                 .send(testUser)
                 .end(function (err, res) {        
-                    expect(res).to.have.status(400);
+                    expect(res).to.have.status(500);
                     done();
                 });
         });
@@ -65,7 +74,7 @@ describe("User controller tests", () => {
                 });
         });
 
-        it("get a user by id with non existing id succeeds", (done) => {
+        it("get a user by id with non existing id fails", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/user/wrongId")
                 .end(function (err, res) {
@@ -137,7 +146,7 @@ describe("User controller tests", () => {
 
     describe("update user", () => {
         it("using correct id updates the user", (done) => {
-            const updatedUser = testUser;
+            const updatedUser = Object.assign({}, testUser);
             updatedUser.name = updatedUser.name + "_updated";
 
             chai.request("http://localhost:5000")
@@ -145,7 +154,7 @@ describe("User controller tests", () => {
                 .send(updatedUser)
                 .end(function (err, res) {
                     const returnUser: IUser = res.body;            
-                    expect(returnUser.name).to.equal(updatedUser.name);
+                    expect(returnUser.name).to.equal(testUser.name);
                     expect(res).to.have.status(200);
                     done();
                 });
@@ -153,10 +162,10 @@ describe("User controller tests", () => {
 
         it("using incorrect id does not update the user", (done) => {
             chai.request("http://localhost:5000")
-                .post("/ms/user/wrongId")
+                .put("/ms/user/wrongId")
                 .send({email: testUser.email, password: "wrong password"})
                 .end(function (err, res) {        
-                    expect(res).to.have.status(400);
+                    expect(res).to.have.status(500);
                     done();
                 });
         });
@@ -167,7 +176,7 @@ describe("User controller tests", () => {
             chai.request("http://localhost:5000")
                 .delete("/ms/user/wrongId")
                 .end(function (err, res) {        
-                    expect(res).to.have.status(400);
+                    expect(res).to.have.status(500);
                     done();
                 });
         });
@@ -176,8 +185,8 @@ describe("User controller tests", () => {
             chai.request("http://localhost:5000")
                 .delete("/ms/user/" + testUser._id)
                 .end(function (err, res) {
-                    const returnUser: any = res.body;
-                    expect(returnUser.id).to.equal(testUser._id);
+                    const returnUser: IUser = res.body;
+                    expect(returnUser._id).to.equal(testUser._id);
                     expect(res).to.have.status(200);
                     done();
                 });

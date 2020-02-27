@@ -9,8 +9,14 @@ export async function uniqueEmailValidator(req: express.Request): Promise<expres
     const existingUsers: Array<IUser> = await userRepository.getByFields({
         email: user.email.trim()
     });
-    if (existingUsers.length > 0) {
+    
+    if (existingUsers.length < 1) {
+        // Allow if no user exists with that email
+        return req;
+    } else if (existingUsers.length === 1 && existingUsers[0]._id.toString() === user._id.toString()) {
+        // Allow if only one user with it exists and its id is the same as the user requesting a change
+        return req;
+    } else {
         throw new Errors.BadRequestError("Email already exists");
     }
-    return req;
 }

@@ -36,12 +36,12 @@ export class UserController extends Controller<IUser> {
     @Path("/getAll")
     @GET
     public async getAll(): Promise<Array<IUserModel>> {
-        try {
+        // try {
             return await this.userRepository.getAll();
-        } catch (error) {
-            logger.error(error.message);
-            throw new Errors.InternalServerError(error.message);
-        }
+        // } catch (error) {
+            // logger.error(error.message);
+            // throw new Errors.InternalServerError(error.message);
+        // }
     }
 
     @Path(":id")
@@ -53,8 +53,6 @@ export class UserController extends Controller<IUser> {
     @POST
     @PreProcessor(uniqueEmailValidator)
     public async createUser(user: IUserModel): Promise<IUserModel> {
-        logger.info("User at mongodb-service");
-        logger.info(this.context.request.body);
         const userModel: IUser = user as any;
 
         return await this.userRepository.create(userModel);
