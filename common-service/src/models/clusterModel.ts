@@ -7,7 +7,7 @@ export interface IClusterModel {
     _id: string;
     aggId: string;
     identifier: string;
-    indetifierType: string;
+    identifierType: string;
     xAxis: string;
     xType: string;
     yAxis: string;

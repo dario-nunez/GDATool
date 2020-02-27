@@ -1,5 +1,5 @@
 import { Inject } from "typescript-ioc";
-import { GET, Path, PathParam, POST } from "typescript-rest";
+import { DELETE, GET, Path, PathParam, POST } from "typescript-rest";
 import { Controller } from "../../../common-service/src/controllers/controller";
 import { ICluster, IClusterModel } from "../../../common-service/src/models/clusterModel";
 import { ClusterRepository } from "../../../common-service/src/repositories/clusterRerpository";
@@ -18,7 +18,7 @@ export class ClusterController extends Controller<ICluster> {
 
     @Path("byAgg/:id")
     @GET
-    public async getClustersByAggId(@PathParam("id") id: string): Promise<IClusterModel> {
+    public async getClustersByAggId(@PathParam("id") id: string): Promise<Array<IClusterModel>> {
         return await this.clusterRepository.getClustersByAggId(id);
     }
 
@@ -31,5 +31,11 @@ export class ClusterController extends Controller<ICluster> {
     @POST
     public async createCluster(cluster: IClusterModel): Promise<IClusterModel> {
         return await this.clusterRepository.create(cluster);
+    }
+
+    @Path(":id")
+    @DELETE
+    public async deleteAggregation(@PathParam("id") id: string): Promise<IClusterModel> {
+        return await this.clusterRepository.delete(id);
     }
 }

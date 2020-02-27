@@ -6,7 +6,7 @@ export class ClusterRepository extends Repository<ICluster> {
         super(Cluster);
     }
 
-    public getClustersByAggId(id: any): Promise<any> {
+    public getClustersByAggId(id: any): Promise<Array<ICluster>> {
         return Cluster.find({aggId: id}).exec();
     }
 

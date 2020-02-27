@@ -98,7 +98,7 @@ describe("Plot controller tests", () => {
     });
 
     describe("get plot", () => {
-        it("get aggregations with an existing job id", (done) => {
+        it("get plots with an existing job id", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/plot/byJob/" + testJob._id)
                 .end(function (err, res) {
@@ -111,12 +111,13 @@ describe("Plot controller tests", () => {
                 });
         });
 
-        it("get aggregations with a non existing job id", (done) => {
+        it("get plots with a non existing job id", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/plot/byJob/wrongId")
                 .end(function (err, res) {
                     const returnPlots: Array<IPlot> = res.body;
                     expect(returnPlots).to.be.an('array');
+                    expect(returnPlots).to.have.lengthOf(0);
                     expect(res).to.have.status(200);
                     done();
                 });
@@ -163,6 +164,17 @@ describe("Plot controller tests", () => {
                 .end(function (err, res) {
                     const returnPlot: IPlot = res.body;
                     expect(returnPlot._id).to.equal(returnPlot._id);
+                    expect(res).to.have.status(200);
+                    done();
+                });
+        });
+
+        it("job deletion succeeds", (done) => {
+            chai.request("http://localhost:5000")
+                .delete("/ms/job/" + testJob._id)
+                .end(function (err, res) {
+                    const returnJob: IJob = res.body;
+                    expect(returnJob._id).to.equal(testJob._id);
                     expect(res).to.have.status(200);
                     done();
                 });
