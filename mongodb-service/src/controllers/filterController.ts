@@ -1,5 +1,5 @@
 import { Inject } from "typescript-ioc";
-import { GET, Path, PathParam, POST } from "typescript-rest";
+import { DELETE, GET, Path, PathParam, POST } from "typescript-rest";
 import { Controller } from "../../../common-service/src/controllers/controller";
 import { IFilter, IFilterModel } from "../../../common-service/src/models/filterModel";
 import { FilterRepository } from "../../../common-service/src/repositories/filterRepository";
@@ -18,7 +18,7 @@ export class FilterController extends Controller<IFilter> {
 
     @Path("byAgg/:id")
     @GET
-    public async getFiltersByAggId(@PathParam("id") id: string): Promise<IFilterModel> {
+    public async getFiltersByAggId(@PathParam("id") id: string): Promise<Array<IFilterModel>> {
         return await this.filterRepository.getFiltersByAggId(id);
     }
 
@@ -31,5 +31,11 @@ export class FilterController extends Controller<IFilter> {
     @POST
     public async createFilter(cluster: IFilterModel): Promise<IFilterModel> {
         return await this.filterRepository.create(cluster);
+    }
+
+    @Path(":id")
+    @DELETE
+    public async deleteAggregation(@PathParam("id") id: string): Promise<IFilterModel> {
+        return await this.filterRepository.delete(id);
     }
 }

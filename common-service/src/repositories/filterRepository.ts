@@ -6,7 +6,7 @@ export class FilterRepository extends Repository<IFilter> {
         super(Filter);
     }
 
-    public getFiltersByAggId(id: string): Promise<any> {
+    public getFiltersByAggId(id: string): Promise<Array<IFilter>> {
         return Filter.find({aggId: id}).exec();
     }
 
