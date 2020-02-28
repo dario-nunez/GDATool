@@ -1,4 +1,4 @@
-import logger from '../../common-service/src/logger/loggerFactory';
+import logger from '../../mongodb-service/src/logger/loggerFactory';
 import * as cors from 'cors';
 import * as express from 'express';
 import * as http from 'http';

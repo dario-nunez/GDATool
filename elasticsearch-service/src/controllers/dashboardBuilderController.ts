@@ -1,7 +1,7 @@
-import logger from "../../../common-service/src/logger/loggerFactory";
+import logger from "../../../mongodb-service/src/logger/loggerFactory";
 import { Inject } from "typescript-ioc";
 import { GET, Path, PathParam } from "typescript-rest";
-import { IAggregation } from "../../../common-service/src/models/aggregationModel";
+import { IAggregation } from "../../../mongodb-service/src/models/aggregationModel";
 import { IDashboard } from "../elasticsearchModels/dashboardModel";
 import { IIndexPattern } from "../elasticsearchModels/indexPatternModel";
 import { IVisBarCHart } from "../elasticsearchModels/visBarChartModel";
