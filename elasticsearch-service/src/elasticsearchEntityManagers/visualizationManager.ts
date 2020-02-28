@@ -24,9 +24,15 @@ export class VisualizationManager {
             displayTitle: contentText
         };
 
+        const visualization: IVisualization = {
+            id: markupSeed.id,
+            type: markupSeed.type
+        };
+
         try {
-            const response = await this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getMarkup(markupSeed));
-            return response.data;
+            // const response = 
+            await this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getMarkup(markupSeed));
+            return visualization;
         } catch (error) {
             return error;
         }
@@ -100,7 +106,7 @@ export class VisualizationManager {
             yType: yType
         };
 
-        const visualizationPlot: IVisualization = {
+        const visualization: IVisualization = {
             id: plotSeed.id,
             type: plotSeed.type
         };
@@ -108,7 +114,7 @@ export class VisualizationManager {
         try {
             // const response = 
             await this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getVegaPlot(plotSeed));
-            return visualizationPlot;
+            return visualization;
         } catch (error) {
             return error;
         }
