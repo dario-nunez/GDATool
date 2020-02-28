@@ -1,9 +1,9 @@
-import { IVisMarkup } from "../elasticsearchModels/visMarkupModel";
-import { IVisBarCHart } from "../elasticsearchModels/visBarChartModel";
+import { ICluster } from "../elasticsearchModels/clusterModel";
 import { IDataTable } from "../elasticsearchModels/dataTableModel";
 import { IMetric } from "../elasticsearchModels/metricModel";
 import { IPlot } from "../elasticsearchModels/plotModel";
-import { ICluster } from "../elasticsearchModels/clusterModel";
+import { IVisBarCHart } from "../elasticsearchModels/visBarChartModel";
+import { IVisMarkup } from "../elasticsearchModels/visMarkupModel";
 
 export class VisualizationBuilder {
     protected elasticSearchUrl: string;
@@ -106,9 +106,9 @@ export class VisualizationBuilder {
     }
 
     public getDataTable(dataTableModel: IDataTable) {
-        let metricArray = this.getDataTableMetrics(0);
-        let bucketArray = this.getDataTableBuckets(dataTableModel.featureColumns, 1);
-        let aggArray = this.getDataTableAggs(dataTableModel);
+        const metricArray = this.getDataTableMetrics(0);
+        const bucketArray = this.getDataTableBuckets(dataTableModel.featureColumns, 1);
+        const aggArray = this.getDataTableAggs(dataTableModel);
 
         return {
             method: "PUT",
@@ -137,50 +137,15 @@ export class VisualizationBuilder {
                 },
                 updated_at: "2020-02-16T23:15:15.943Z"
             }
-        }
-    }
-
-    private getDataTableMetrics(currentIndex: number) {
-        return '{\"accessor\":' + currentIndex + ',\"format\":{\"id\":\"number\"},\"params\":{},\"aggType\":\"max\"}'
-    }
-
-    private getDataTableBuckets(featureColumns: string[], currentIndex: number) {
-        let bucketsArray = ""
-
-        featureColumns.forEach(column => {
-            bucketsArray = bucketsArray + ',{\"accessor\":' + currentIndex + ',\"format\":{\"id\":\"terms\",\"params\":{\"id\":\"string\",\"otherBucketLabel\":\"Other\",\"missingBucketLabel\":\"Missing\"}},\"params\":{},\"aggType\":\"terms\"}';
-
-            currentIndex = currentIndex + 1;
-        });
-
-        return bucketsArray.substring(1, bucketsArray.length);
-    }
-
-    private getDataTableAggs(dataTableModel: IDataTable) {
-        let currentId = 1;
-        let aggsArray = "";
-
-        dataTableModel.featureColumns.forEach(featureColumn => {
-            aggsArray = aggsArray + ',{\"id\":\"' + currentId + '\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"' + featureColumn + '.keyword\",\"orderBy\":\"_key\",\"order\":\"desc\",\"size\":10000,\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\"}}'
-
-            currentId = currentId + 1;
-        });
-
-        dataTableModel.operations.forEach(operationColumn => {
-            aggsArray = aggsArray + ',{\"id\":\"' + currentId + '\",\"enabled\":true,\"type\":\"max\",\"schema\":\"metric\",\"params\":{\"field\":\"' + operationColumn.toLocaleLowerCase() + '\",\"customLabel\":\"' + operationColumn.toLocaleLowerCase() + '\"}}'
-
-            currentId = currentId + 1;
-        });
-
-        return aggsArray.substring(1, aggsArray.length);
+        };
     }
 
     public getVegaPlot(plotModel: IPlot) {
         let sourceArray = "";
-        if (plotModel.identifier == plotModel.xAxis || plotModel.identifier == plotModel.yAxis) {
-            sourceArray = '\\n \\\"'+ plotModel.xAxis +'\\\",\\n \\\"'+ plotModel.yAxis +'\\\"\\n '
+        if (plotModel.identifier === plotModel.xAxis || plotModel.identifier === plotModel.yAxis) {
+            sourceArray = '\\n \\\"'+ plotModel.xAxis +'\\\",\\n \\\"'+ plotModel.yAxis +'\\\"\\n ';
         } else {
-            sourceArray = '\\n \\\"'+ plotModel.xAxis +'\\\",\\n \\\"'+ plotModel.yAxis +'\\\",\\n \\\"'+ plotModel.identifier +'\\\"\\n '
+            sourceArray = '\\n \\\"'+ plotModel.xAxis +'\\\",\\n \\\"'+ plotModel.yAxis +'\\\",\\n \\\"'+ plotModel.identifier +'\\\"\\n ';
         }
         
         return {
@@ -198,18 +163,18 @@ export class VisualizationBuilder {
                     }
                 },
                 type: "visualization",
-                references: [] as any[],
+                references: [] as Array<any>,
                 migrationVersion: {
                     "visualization": "7.3.0"
                 },
                 updated_at: "2020-02-19T23:01:38.803Z"
             }
-        }
+        };
     }
 
     public getVegaCluster(clusterModel: ICluster) {
         let sourceArray = "";
-        if (clusterModel.identifier == clusterModel.xAxis || clusterModel.identifier == clusterModel.yAxis) {
+        if (clusterModel.identifier === clusterModel.xAxis || clusterModel.identifier === clusterModel.yAxis) {
             sourceArray = '\\n \\\"'+ clusterModel.xAxis +'\\\",\\n \\\"'+ clusterModel.yAxis +'\\\",\\n \\\"cluster\\\"\\n ';
         } else {
             sourceArray = '\\n \\\"'+ clusterModel.xAxis +'\\\",\\n \\\"'+ clusterModel.yAxis +'\\\",\\n \\\"cluster\\\"\\n \\\"'+ clusterModel.identifier +'\\\"\\n ';
@@ -230,12 +195,47 @@ export class VisualizationBuilder {
                     }
                 },
                 type: "visualization",
-                references: [] as any[],
+                references: [] as Array<any>,
                 migrationVersion: {
                     "visualization": "7.3.0"
                 },
                 updated_at: "2020-02-19T23:01:38.803Z"
             }
-        }
+        };
+    }
+
+    private getDataTableMetrics(currentIndex: number) {
+        return '{\"accessor\":' + currentIndex + ',\"format\":{\"id\":\"number\"},\"params\":{},\"aggType\":\"max\"}';
+    }
+
+    private getDataTableBuckets(featureColumns: Array<string>, currentIndex: number) {
+        let bucketsArray = "";
+
+        featureColumns.forEach(column => {
+            bucketsArray = bucketsArray + ',{\"accessor\":' + currentIndex + ',\"format\":{\"id\":\"terms\",\"params\":{\"id\":\"string\",\"otherBucketLabel\":\"Other\",\"missingBucketLabel\":\"Missing\"}},\"params\":{},\"aggType\":\"terms\"}';
+
+            currentIndex = currentIndex + 1;
+        });
+
+        return bucketsArray.substring(1, bucketsArray.length);
+    }
+
+    private getDataTableAggs(dataTableModel: IDataTable) {
+        let currentId = 1;
+        let aggsArray = "";
+
+        dataTableModel.featureColumns.forEach(featureColumn => {
+            aggsArray = aggsArray + ',{\"id\":\"' + currentId + '\",\"enabled\":true,\"type\":\"terms\",\"schema\":\"bucket\",\"params\":{\"field\":\"' + featureColumn + '.keyword\",\"orderBy\":\"_key\",\"order\":\"desc\",\"size\":10000,\"otherBucket\":false,\"otherBucketLabel\":\"Other\",\"missingBucket\":false,\"missingBucketLabel\":\"Missing\"}}';
+
+            currentId = currentId + 1;
+        });
+
+        dataTableModel.operations.forEach(operationColumn => {
+            aggsArray = aggsArray + ',{\"id\":\"' + currentId + '\",\"enabled\":true,\"type\":\"max\",\"schema\":\"metric\",\"params\":{\"field\":\"' + operationColumn.toLocaleLowerCase() + '\",\"customLabel\":\"' + operationColumn.toLocaleLowerCase() + '\"}}';
+
+            currentId = currentId + 1;
+        });
+
+        return aggsArray.substring(1, aggsArray.length);
     }
 }

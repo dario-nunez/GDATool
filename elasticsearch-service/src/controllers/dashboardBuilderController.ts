@@ -1,21 +1,21 @@
-import logger from "../../../mongodb-service/src/logger/loggerFactory";
 import { Inject } from "typescript-ioc";
 import { GET, Path, PathParam } from "typescript-rest";
+import logger from "../../../mongodb-service/src/logger/loggerFactory";
 import { IAggregation } from "../../../mongodb-service/src/models/aggregationModel";
+import { DashboardBuilder } from "../elasticsearchEntities/DashboardBuilder";
+import { IndexPatternBuilder } from "../elasticsearchEntities/indexPatternBuilder";
+import { VisualizationBuilder } from "../elasticsearchEntities/visualizationBuilder";
+import { ICluster } from "../elasticsearchModels/clusterModel";
 import { IDashboard } from "../elasticsearchModels/dashboardModel";
+import { IDataTable } from "../elasticsearchModels/dataTableModel";
 import { IIndexPattern } from "../elasticsearchModels/indexPatternModel";
+import { IMetric } from "../elasticsearchModels/metricModel";
+import { IPlot } from "../elasticsearchModels/plotModel";
 import { IVisBarCHart } from "../elasticsearchModels/visBarChartModel";
 import { IVisMarkup } from "../elasticsearchModels/visMarkupModel";
 import { IVisualization } from "../elasticsearchModels/visualizationModel";
 import { KibanaService } from "../services/kibana-service";
 import { MongodbService } from "../services/mongodb-service";
-import { IndexPatternBuilder } from "../elasticsearchEntities/indexPatternBuilder";
-import { VisualizationBuilder } from "../elasticsearchEntities/visualizationBuilder";
-import { DashboardBuilder } from "../elasticsearchEntities/DashboardBuilder";
-import { IMetric } from "../elasticsearchModels/metricModel";
-import { IDataTable } from "../elasticsearchModels/dataTableModel";
-import { IPlot } from "../elasticsearchModels/plotModel";
-import { ICluster } from "../elasticsearchModels/clusterModel";
 
 /**
  * This class encapsulates the process of building the various types of dashboards.
@@ -51,14 +51,14 @@ export class DashboardBuilderController {
     @Path("basic/:id")
     @GET
     public async createBasicDashboard(@PathParam("id") jobId: string) {
-        let plots = await this.mongodbService.getPlotsByJob(jobId);
+        const plots = await this.mongodbService.getPlotsByJob(jobId);
         const aggregations = await this.mongodbService.getAggsByJob(jobId);
         const job = await this.mongodbService.getJobById(jobId);
 
         const visualizationsForDashboard = new Array();
 
-        let plotSection: IVisualization[] = [];
-        //Add a title to the general plots section
+        const plotSection: Array<IVisualization> = [];
+        // Add a title to the general plots section
         if (plots.data.length > 0) {
             this.createVisMarkup(job.data._id + "_general_plots", "general_plots_title");
             const visualizationMarkup: IVisualization = {
@@ -76,39 +76,39 @@ export class DashboardBuilderController {
             const visualizationPlot: IVisualization = {
                 id: plot._id + "_plot",
                 type: "vega"
-            }
+            };
 
-            plotSection.push(visualizationPlot)
+            plotSection.push(visualizationPlot);
         });
 
         visualizationsForDashboard.push(plotSection);
         
         // Get all clusters from the aggregations
-        let aggregationsData = aggregations.data;
-        let aggClusters: {[aggId: string] : ICluster[]} = {}
-        for (let i=0; i < aggregationsData.length; i++) {
-            let aggID = aggregationsData[i]._id
-            logger.info("Agg ID: " + aggID)
+        const aggregationsData = aggregations.data;
+        const aggClusters: {[aggId: string] : Array<ICluster>} = {};
+        for (const aggregation of aggregationsData){
+            const aggID = aggregation._id;
+            logger.info("Agg ID: " + aggID);
             const clusters = await this.mongodbService.getClustersByAgg(aggID);
-            const clustersData = clusters.data
+            const clustersData = clusters.data;
             aggClusters[aggID] = clustersData;
             logger.info("Agg's clusters: ");
             logger.info(clustersData);
         }
-        logger.info(aggClusters)
+        logger.info(aggClusters);
 
         // For each aggregation, generate it dashboard section
         aggregations.data.forEach((aggregation: IAggregation) => {
-            logger.info("----SECOND LOOP STARTED----")
+            logger.info("----SECOND LOOP STARTED----");
             // Holds the aggregation/dashboard section for each aggregation
-            let aggSection = [];
+            const aggSection = [];
 
             // Creates the index pattern for that aggreagtion
             this.createIndexPattern(aggregation._id, aggregation.aggs, aggregation.featureColumns);
 
             const visualizationIdPrefix = aggregation.jobId + "_" + aggregation._id;
 
-            //Title
+            // Title
             this.createVisMarkup(visualizationIdPrefix + "_markdown", aggregation.name);
             const visualizationMarkup: IVisualization = {
                 id: visualizationIdPrefix + "_markdown",
@@ -116,7 +116,7 @@ export class DashboardBuilderController {
             };
             aggSection.push(visualizationMarkup);
 
-            //Metrics   - one for each agg. Currently avg is beign hardcoded
+            // Metrics   - one for each agg. Currently avg is beign hardcoded
             for (const agg of aggregation.aggs) {
                 this.createMetric(visualizationIdPrefix + "_metric_" + agg.toLowerCase(), agg.toLowerCase(), aggregation._id);
                 const visualizationMetric: IVisualization = {
@@ -126,7 +126,7 @@ export class DashboardBuilderController {
                 aggSection.push(visualizationMetric);
             }
 
-            //BarCharts - one for each agg (operation)
+            // BarCharts - one for each agg (operation)
             for (const agg of aggregation.aggs) {
                 this.createVisBarChart(visualizationIdPrefix + "_bar_" + agg.toLowerCase(), agg.toLowerCase(), aggregation.metricColumn, aggregation.featureColumns[0], aggregation._id);
                 const visualizationBarChart: IVisualization = {
@@ -136,7 +136,7 @@ export class DashboardBuilderController {
                 aggSection.push(visualizationBarChart);
             }
 
-            //DataTables - one per aggregation record
+            // DataTables - one per aggregation record
             this.createDataTable(visualizationIdPrefix + "_table", aggregation.metricColumn, aggregation.aggs, aggregation.featureColumns, aggregation._id);
             const visualizationDataTable: IVisualization = {
                 id: visualizationIdPrefix + "_table",
@@ -144,18 +144,18 @@ export class DashboardBuilderController {
             };
             aggSection.push(visualizationDataTable);
 
-            //Clusters - n clusters stacked at the bottom of the aggregation section
+            // Clusters - n clusters stacked at the bottom of the aggregation section
             aggClusters[aggregation._id].forEach((cluster: any) => {
                 this.createCluster(aggregation._id + "_" + cluster._id + "_cluster", cluster._id, cluster.identifier, cluster.identifierType, cluster.xAxis, cluster.xType, cluster.yAxis, cluster.yType);
                 const visualizationCluster: IVisualization = {
                     id: aggregation._id + "_" + cluster._id + "_cluster",
                     type: "cluster"
-                }
+                };
 
                 aggSection.push(visualizationCluster);
             });
 
-            //Adding the visualization section of this aggregation to the list of all visualizations
+            // Adding the visualization section of this aggregation to the list of all visualizations
             visualizationsForDashboard.push(aggSection);
         });
 
@@ -169,12 +169,12 @@ export class DashboardBuilderController {
         const indexPatternSeed: IIndexPattern = {
             id: aggregationId,
             index: aggregationId,
-            featureColumns,
+            featureColumns: featureColumns,
             aggs: aggregations.map((e) => e.toLowerCase())
         };
 
         try {
-            const response = await this.kibanaService.createIndexPattern(this.indexPatternBuilder.getIndexPattern(indexPatternSeed));
+            const response = await this.kibanaService.createElasticsearchEntity(this.indexPatternBuilder.getIndexPattern(indexPatternSeed));
             return response.data;
         } catch (error) {
             return error;
@@ -191,7 +191,7 @@ export class DashboardBuilderController {
         };
 
         try {
-            const response = await this.kibanaService.createMarkupVisualization(this.visualizationBuilder.getMarkup(markupSeed));
+            const response = await this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getMarkup(markupSeed));
             return response.data;
         } catch (error) {
             return error;
@@ -204,14 +204,14 @@ export class DashboardBuilderController {
             id: visualizationId,
             type: "bar",
             explorerTitle: visualizationId,
-            aggregationName,
-            featureColumn,
-            metricColumn,
+            aggregationName: aggregationName,
+            featureColumn: featureColumn,
+            metricColumn: metricColumn,
             index: indexPatternId
         };
 
         try {
-            const response = await this.kibanaService.createBarChartVisualization(this.visualizationBuilder.getBarChart(barChartSeed));
+            const response = await this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getBarChart(barChartSeed));
             return response.data;
         } catch (error) {
             return error;
@@ -224,12 +224,12 @@ export class DashboardBuilderController {
             id: visualizationId,
             type: "metric",
             explorerTitle: visualizationId,
-            aggregationName,
+            aggregationName: aggregationName,
             index: indexPatternId
         };
 
         try {
-            const response = await this.kibanaService.createMetricVisualization(this.visualizationBuilder.getMetric(metricSeed));
+            const response = await this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getMetric(metricSeed));
             return response.data;
         } catch (error) {
             return error;
@@ -237,7 +237,7 @@ export class DashboardBuilderController {
     }
 
     // Create data table
-    private async createDataTable(visualizationId: string, aggregationName: string, operations: string[], featureColumns: string[], indexPatternId: string) {
+    private async createDataTable(visualizationId: string, aggregationName: string, operations: Array<string>, featureColumns: Array<string>, indexPatternId: string) {
         const dataTableSeed: IDataTable = {
             id: visualizationId,
             type: "table",
@@ -245,10 +245,10 @@ export class DashboardBuilderController {
             operations: operations,
             featureColumns: featureColumns,
             index: indexPatternId
-        }
+        };
 
         try {
-            const response = await this.kibanaService.createDataTable(this.visualizationBuilder.getDataTable(dataTableSeed));
+            const response = await this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getDataTable(dataTableSeed));
             return response.data;
         } catch (error) {
             return error;
@@ -268,14 +268,14 @@ export class DashboardBuilderController {
             xType: xType,
             yAxis: yAxis,
             yType: yType
-        }
+        };
 
-        logger.info("Plot seed")
+        logger.info("Plot seed");
         logger.info(plotSeed);
 
         try {
-            const response = await this.kibanaService.createPlot(this.kibanaService.createPlot(this.visualizationBuilder.getVegaPlot(plotSeed)));
-            logger.info(response.data)
+            const response = await this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getVegaPlot(plotSeed));
+            logger.info(response.data);
             return response.data;
         } catch (error) {
             return error;
@@ -296,14 +296,14 @@ export class DashboardBuilderController {
             yAxis: yAxis.toLowerCase(),
             yType: yType,
             cluster: 0
-        }
+        };
 
-        logger.info("Cluster seed")
+        logger.info("Cluster seed");
         logger.info(clusterSeed);
 
         try {
-            const response = await this.kibanaService.createCluster(this.kibanaService.createCluster(this.visualizationBuilder.getVegaCluster(clusterSeed)));
-            logger.info(response.data)
+            const response = await this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getVegaCluster(clusterSeed));
+            logger.info(response.data);
             return response.data;
         } catch (error) {
             return error;
@@ -315,15 +315,15 @@ export class DashboardBuilderController {
         const dashboardSeed: IDashboard = {
             id: jobId,
             title: jobId,
-            visualizations,
+            visualizations: visualizations,
             description: "This is a dashboard description"
         };
 
-        logger.info("Dashboard seed")
-        logger.info(dashboardSeed)
+        logger.info("Dashboard seed");
+        logger.info(dashboardSeed);
 
         try {
-            const response = await this.kibanaService.createSimpleDashbaord(this.dashboardBuilder.getDashboard(dashboardSeed));
+            const response = await this.kibanaService.createElasticsearchEntity(this.dashboardBuilder.getDashboard(dashboardSeed));
             return response.data;
         } catch (error) {
             return error;
