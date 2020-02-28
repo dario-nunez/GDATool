@@ -14,7 +14,6 @@ export interface IController {
 }
 
 export class Controller<T extends Document> implements IController {
-
     public repo: IRepository<T>;
 
     constructor(repo: IRepository<T>) {

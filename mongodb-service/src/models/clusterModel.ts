@@ -7,12 +7,11 @@ export interface IClusterModel {
     _id: string;
     aggId: string;
     identifier: string;
-    indetifierType: string;
+    identifierType: string;
     xAxis: string;
     xType: string;
     yAxis: string;
     yType: string;
-    cluster: number;
 }
 
 export interface ICluster extends IClusterModel, mongoose.Document {
@@ -47,11 +46,7 @@ export const ClusterSchema = new mongoose.Schema({
     yType: {
         required: true,
         type: String
-    },
-    cluster: {
-        required: false,
-        type: Number
-    },
+    }
 });
 
 const Cluster: Model<ICluster> = mongoose.model<ClusterType>("Cluster", ClusterSchema);

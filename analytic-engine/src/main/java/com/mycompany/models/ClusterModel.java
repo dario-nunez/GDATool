@@ -13,7 +13,6 @@ public class ClusterModel {
     public String xType;
     public String yAxis;
     public String yType;
-    public Integer cluster;
 
     @Override
     public boolean equals(Object o) {
@@ -29,12 +28,11 @@ public class ClusterModel {
                 Objects.equals(xAxis, that.xAxis) &&
                 Objects.equals(xType, that.xType) &&
                 Objects.equals(yAxis, that.yAxis) &&
-                Objects.equals(yType, that.yType) &&
-                Objects.equals(cluster, that.cluster);
+                Objects.equals(yType, that.yType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(_id, __v, aggId, aggName, identifier, identifierType, xAxis, xType, yAxis, yType, cluster);
+        return Objects.hash(_id, __v, aggId, aggName, identifier, identifierType, xAxis, xType, yAxis, yType);
     }
 }

@@ -19,32 +19,26 @@ export interface IAggregation extends IAggregationModel, mongoose.Document {
 
 export const AggregationSchema = new mongoose.Schema({
     aggs: {
-        default: ["dummy"],
         required: true,
         type: Array
     },
     featureColumns: {
-        default: ["dummy"],
         required: true,
         type: Array
     },
     jobId: {
-        default: "dummy",
         required: true,
         type: String
     },
     metricColumn: {
-        default: "dummy",
         required: true,
         type: String
     },
     name: {
-        default: "dummy",
         required: true,
         type: String
     },
     sortColumnName: {
-        default: "dummy",
         required: true,
         type: String
     }

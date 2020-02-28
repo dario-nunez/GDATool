@@ -1,4 +1,4 @@
-import Plot, { IPlot } from "../models/plotModel";
+import Plot, { IPlot, IPlotModel } from "../models/plotModel";
 import { Repository } from "./repository";
 
 export class PlotRepository extends Repository<IPlot> {
@@ -6,11 +6,11 @@ export class PlotRepository extends Repository<IPlot> {
         super(Plot);
     }
 
-    public getPlotsByJobId(id: any): Promise<any> {
+    public getPlotsByJobId(id: string): Promise<Array<IPlotModel>> {
         return Plot.find({jobId: id}).exec();
     }
 
-    public async createMultiplePlots(plots: Array<any>): Promise<Array<IPlot>> {
+    public async createMultiplePlots(plots: Array<IPlotModel>): Promise<Array<IPlotModel>> {
         for (const plot of plots) {
             this.create(plot);
         }

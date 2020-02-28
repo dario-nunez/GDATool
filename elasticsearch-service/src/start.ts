@@ -1,6 +1,6 @@
 'use strict';
 
-import { MongoConnector } from '../../common-service/src/mongodbConnector';
+import { MongoConnector } from '../../mongodb-service/src/mongodbConnector';
 import { ApiServer } from './api-server';
 
 export async function start(): Promise<ApiServer> {

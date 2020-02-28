@@ -1,8 +1,8 @@
-import { Controller } from "../../../common-service/src/controllers/controller";
 import { Inject } from "typescript-ioc";
-import { GET, Path, POST, PathParam } from "typescript-rest";
-import { PlotRepository } from "../../../common-service/src/repositories/plotRepository";
-import { IPlotModel, IPlot } from "../../../common-service/src/models/plotModel";
+import { DELETE, GET, Path, PathParam, POST } from "typescript-rest";
+import { IPlot, IPlotModel } from "../models/plotModel";
+import { PlotRepository } from "../repositories/plotRepository";
+import { Controller } from "./controller";
 
 @Path("/ms/plot")
 export class PlotController extends Controller<IPlot> {
@@ -18,18 +18,24 @@ export class PlotController extends Controller<IPlot> {
 
     @Path("byJob/:id")
     @GET
-    public async getPlotsByJobId(@PathParam("id") id: string): Promise<IPlotModel> {
+    public async getPlotsByJobId(@PathParam("id") id: string): Promise<Array<IPlotModel>> {
         return await this.plotRepository.getPlotsByJobId(id);
     }
 
     @Path("/multiple")
     @POST
-    public async createMultiplePlots(plots: IPlotModel[]): Promise<IPlotModel[]> {
+    public async createMultiplePlots(plots: Array<IPlotModel>): Promise<Array<IPlotModel>> {
         return await this.plotRepository.createMultiplePlots(plots);
     }
 
     @POST
     public async createPlot(plot: IPlotModel): Promise<IPlotModel> {
         return await this.plotRepository.create(plot);
+    }
+
+    @Path(":id")
+    @DELETE
+    public async deleteAggregation(@PathParam("id") id: string): Promise<IPlotModel> {
+        return await this.plotRepository.delete(id);
     }
 }

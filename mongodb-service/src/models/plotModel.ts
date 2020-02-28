@@ -7,7 +7,7 @@ export interface IPlotModel {
     _id: string;
     jobId: string;
     identifier: string;
-    indetifierType: string;
+    identifierType: string;
     xAxis: string;
     xType: string;
     yAxis: string;

@@ -7,8 +7,6 @@ export interface IUserModel {
     _id: string;
     password: string;
     email: string;
-    roles: Array<string>;
-    dashboards: Array<string>;
     name: string;
 }
 
@@ -25,14 +23,6 @@ export const UserSchema = new mongoose.Schema({
         required: true,
         unique: true,
         type: String
-    },
-    roles: {
-        required: false,
-        type: Array
-    },
-    dashboards: {
-        required: false,
-        type: Array
     },
     name: {
         required: false,

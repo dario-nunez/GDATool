@@ -1,10 +1,10 @@
-import { IUser, IUserModel } from "../../../common-service/src/models/userModel";
-import { UserRepository } from "../../../common-service/src/repositories/userRepository";
-import { Controller } from "../../../common-service/src/controllers/controller";
-import logger from "../../../common-service/src/logger/loggerFactory";
 import { Inject } from "typescript-ioc";
-import { Context, DELETE, Errors, GET, Path, PathParam, POST, PUT, ServiceContext, PreProcessor } from "typescript-rest";
+import { Context, DELETE, Errors, GET, Path, PathParam, POST, PreProcessor, PUT, ServiceContext } from "typescript-rest";
+import logger from "../logger/loggerFactory";
+import { IUser, IUserModel } from "../models/userModel";
+import { UserRepository } from "../repositories/userRepository";
 import { uniqueEmailValidator } from "../validators/validators";
+import { Controller } from "./controller";
 
 @Path("/ms/user")
 export class UserController extends Controller<IUser> {
@@ -18,7 +18,7 @@ export class UserController extends Controller<IUser> {
 
     @Path("/authenticate")
     @POST
-    public async authenticateUser(userAndPass: any): Promise<any> {
+    public async authenticateUser(userAndPass: any): Promise<IUserModel> {
         try {
             return await this.userRepository.authenticateUser(userAndPass.email, userAndPass.password);
         } catch (error) {
@@ -36,12 +36,7 @@ export class UserController extends Controller<IUser> {
     @Path("/getAll")
     @GET
     public async getAll(): Promise<Array<IUserModel>> {
-        try {
-            return await this.userRepository.getAll();
-        } catch (error) {
-            logger.error(error.message);
-            throw new Errors.InternalServerError(error.message);
-        }
+        return await this.userRepository.getAll();
     }
 
     @Path(":id")
@@ -53,11 +48,7 @@ export class UserController extends Controller<IUser> {
     @POST
     @PreProcessor(uniqueEmailValidator)
     public async createUser(user: IUserModel): Promise<IUserModel> {
-        logger.info("User at mongodb-service");
-        logger.info(this.context.request.body);
-        const userModel: IUser = user as any;
-
-        return await this.userRepository.create(userModel);
+        return await this.userRepository.create(user);
     }
 
     @Path(":id")

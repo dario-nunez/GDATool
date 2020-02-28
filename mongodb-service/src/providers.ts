@@ -1,4 +1,4 @@
-import { S3BucketService } from "../../common-service/src/s3/s3BucketService"
+import { S3BucketService } from "./s3/s3BucketService"
 import { ConfigurationOptions } from "aws-sdk/lib/config";
 import { AWSConfig } from "../src/AWSConfig";
 import { S3BucketServiceProxy } from "../src/s3/s3BucketServiceProxy";

@@ -1,6 +1,6 @@
 'use strict';
 
-import logger from '../../common-service/src/logger/loggerFactory';
+import logger from '../../mongodb-service/src/logger/loggerFactory';
 import { start } from './start';
 
 start().catch((err) => {

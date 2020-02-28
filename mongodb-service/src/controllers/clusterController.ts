@@ -1,8 +1,8 @@
-import { Controller } from "../../../common-service/src/controllers/controller";
 import { Inject } from "typescript-ioc";
-import { GET, Path, POST, PathParam } from "typescript-rest";
-import { ClusterRepository } from "../../../common-service/src/repositories/clusterRerpository";
-import { IClusterModel, ICluster } from "../../../common-service/src/models/clusterModel";
+import { DELETE, GET, Path, PathParam, POST } from "typescript-rest";
+import { ICluster, IClusterModel } from "../models/clusterModel";
+import { ClusterRepository } from "../repositories/clusterRerpository";
+import { Controller } from "./controller";
 
 @Path("/ms/cluster")
 export class ClusterController extends Controller<ICluster> {
@@ -18,18 +18,24 @@ export class ClusterController extends Controller<ICluster> {
 
     @Path("byAgg/:id")
     @GET
-    public async getClustersByAggId(@PathParam("id") id: string): Promise<IClusterModel> {
+    public async getClustersByAggId(@PathParam("id") id: string): Promise<Array<IClusterModel>> {
         return await this.clusterRepository.getClustersByAggId(id);
     }
 
     @Path("/multiple")
     @POST
-    public async createMultipleClusters(clusters: IClusterModel[]): Promise<IClusterModel[]> {
+    public async createMultipleClusters(clusters: Array<IClusterModel>): Promise<Array<IClusterModel>> {
         return await this.clusterRepository.createMultipleClusters(clusters);
     }
 
     @POST
     public async createCluster(cluster: IClusterModel): Promise<IClusterModel> {
         return await this.clusterRepository.create(cluster);
+    }
+
+    @Path(":id")
+    @DELETE
+    public async deleteAggregation(@PathParam("id") id: string): Promise<IClusterModel> {
+        return await this.clusterRepository.delete(id);
     }
 }
