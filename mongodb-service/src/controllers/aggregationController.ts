@@ -28,7 +28,7 @@ export class AggregationController extends Controller<IAggregation> {
         return await this.aggregationRepository.create(aggregation);
     }
 
-    @Path("/multiple")
+    @Path("multiple")
     @POST
     public async createMultipleAggregation(aggregations: Array<IAggregationModel>): Promise<Array<IAggregationModel>> {
         return await this.aggregationRepository.createMultipleAggregations(aggregations);
@@ -46,15 +46,21 @@ export class AggregationController extends Controller<IAggregation> {
         return await this.aggregationRepository.delete(id);
     }
 
+    @Path("recursive/:id")
+    @DELETE
+    public async deleteAggregationRecursive(@PathParam("id") id: string): Promise<IAggregationModel> {
+        return await this.aggregationRepository.deleteRecursive(id);
+    }
+
     @Path("byUser/:id")
     @GET
-    public async getAggregationsByUser(@PathParam("id") id: string): Promise<IAggregationModel> {
+    public async getAggregationsByUser(@PathParam("id") id: string): Promise<Array<IAggregationModel>> {
         return await this.aggregationRepository.getAggsByUser(id);
     }
 
     @Path("byJob/:id")
     @GET
-    public async getAggregationsByJob(@PathParam("id") id: string): Promise<IAggregationModel> {
+    public async getAggregationsByJob(@PathParam("id") id: string): Promise<Array<IAggregationModel>> {
         return await this.aggregationRepository.getAggsByJob(id);
     }
 }

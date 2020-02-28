@@ -1,9 +1,7 @@
 import * as mongoose from "mongoose";
-import Aggregation from "../models/aggregationModel";
-import { IAggregation } from "../models/aggregationModel";
-import { IJob } from "../models/jobModel";
 import Job from "../models/jobModel";
-import User, { IUser } from "../models/userModel";
+import User, { IUser, IUserModel } from "../models/userModel";
+import { JobRepository } from "./jobRepository";
 import { Repository } from "./repository";
 
 export class UserRepository extends Repository<IUser> {
@@ -11,47 +9,30 @@ export class UserRepository extends Repository<IUser> {
         super(User);
     }
 
-    public async authenticateUser(email: string, password: string): Promise<any> {
+    public async authenticateUser(email: string, password: string): Promise<IUserModel> {
         const user: IUser = await User.findOne({ email: email }).lean().exec();
 
         if (user != null && user.password === password) {
-            return {
-                id: user._id,
-                email: user.email
-            };
+            return user;
         }
 
-        return {
-            id: null,
-            email: null
-        };
+        return null;
     }
 
-    public async getUserByEmail(email: string): Promise<IUser> {
+    public async getUserByEmail(email: string): Promise<IUserModel> {
         return User.findOne({ email: email }).lean().exec();
     }
 
-    public async deleteRecursive(id: any): Promise<IUser> {
-        const jobIds = await Job.find({ userId: id }).exec();
-        const aggIds: Array<any> = [];
+    public async deleteRecursive(id: string): Promise<IUserModel> {
+        mongoose.set("useFindAndModify", false);
+        const jobs = await Job.find({ userId: id }).exec();
 
-        for (const job of jobIds){
-            const jobAggs = await Aggregation.find({ jobId: job._id }).exec();
-            jobAggs.forEach(element => {
-                aggIds.push(element);
-            });
+        const jobRepository: JobRepository = new JobRepository();
+
+        for (const job of jobs){
+            await jobRepository.deleteRecursive(job._id);
         }
 
-        mongoose.set("useFindAndModify", false);
-
-        await aggIds.forEach((agg: IAggregation) => {    
-            Aggregation.findByIdAndRemove(agg._id).exec();
-        });
-
-        await jobIds.forEach((job: IJob) => {    
-            Job.findByIdAndRemove(job._id).exec();
-        });
-
-        return User.findByIdAndRemove(id).exec();
+        return await User.findByIdAndRemove(id).exec();
     }
 }

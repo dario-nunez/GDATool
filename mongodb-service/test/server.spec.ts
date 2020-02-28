@@ -16,6 +16,7 @@ describe("Rest Server Tests", () => {
                 '/ms/aggregation/multiple',
                 '/ms/aggregation/byUser/:id',
                 '/ms/aggregation/byJob/:id',
+                '/ms/aggregation/recursive/:id',
 
                 '/ms/cluster/getAll',
                 '/ms/cluster/byAgg/:id',
@@ -27,10 +28,6 @@ describe("Rest Server Tests", () => {
                 '/ms/filter/multiple',
                 '/ms/filter',
 
-                '/ms/database/createCollections',
-                '/ms/database/addTestRecords',
-                '/ms/database/dropDatabase',
-
                 '/ms/job/getAll',
                 '/ms/job/:id',
                 '/ms/job',
@@ -39,6 +36,7 @@ describe("Rest Server Tests", () => {
                 '/ms/job/byUser/:id',
                 '/ms/job/getUploadFileUrl',
                 '/ms/job/readFile',
+                '/ms/job/recursive/:id',
 
                 '/ms/plot/getAll',
                 '/ms/plot/byJob/:id',

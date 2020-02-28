@@ -1,4 +1,4 @@
-import Cluster, { ICluster } from "../models/clusterModel";
+import Cluster, { ICluster, IClusterModel } from "../models/clusterModel";
 import { Repository } from "./repository";
 
 export class ClusterRepository extends Repository<ICluster> {
@@ -6,15 +6,15 @@ export class ClusterRepository extends Repository<ICluster> {
         super(Cluster);
     }
 
-    public getClustersByAggId(id: any): Promise<Array<ICluster>> {
+    public getClustersByAggId(id: string): Promise<Array<IClusterModel>> {
         return Cluster.find({aggId: id}).exec();
     }
 
-    public async createMultipleClusters(clusters: Array<any>): Promise<Array<ICluster>> {
+    public async createMultipleClusters(clusters: Array<IClusterModel>): Promise<Array<IClusterModel>> {
         for (const cluster of clusters) {
             this.create(cluster);
         }
-
+        
         return clusters;
     }
 }

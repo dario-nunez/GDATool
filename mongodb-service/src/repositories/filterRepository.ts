@@ -1,4 +1,4 @@
-import Filter, { IFilter } from "../models/filterModel";
+import Filter, { IFilter, IFilterModel } from "../models/filterModel";
 import { Repository } from "./repository";
 
 export class FilterRepository extends Repository<IFilter> {
@@ -6,11 +6,11 @@ export class FilterRepository extends Repository<IFilter> {
         super(Filter);
     }
 
-    public getFiltersByAggId(id: string): Promise<Array<IFilter>> {
+    public getFiltersByAggId(id: string): Promise<Array<IFilterModel>> {
         return Filter.find({aggId: id}).exec();
     }
 
-    public async createMultipleFilters(filters: Array<any>): Promise<Array<IFilter>> {
+    public async createMultipleFilters(filters: Array<any>): Promise<Array<IFilterModel>> {
         for (const filter of filters) {
             this.create(filter);
         }

@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import chaiHttp = require('chai-http');
 import { before, describe, it } from "mocha";
-import { IUser } from "../../src/models/userModel";
+import { IUserModel } from "../../src/models/userModel";
 import { UserRepository } from "../../src/repositories/userRepository";
 
 chai.use(chaiHttp);
@@ -12,7 +12,7 @@ const testUser = {
     password: "test_password",
     email: "test_email",
     name: "test_user"
-} as IUser;
+} as IUserModel;
 
 before(async () => {
     userRepository = new UserRepository();
@@ -29,7 +29,7 @@ describe("User controller tests", () => {
                 .post("/ms/user")
                 .send(testUser)
                 .end(function (err, res) {
-                    const returnUser: IUser = res.body;
+                    const returnUser: IUserModel = res.body;
                     testUser._id = returnUser._id;            
                     expect(returnUser.name).to.equal(testUser.name);
                     expect(res).to.have.status(200);
@@ -53,7 +53,7 @@ describe("User controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/user/" + testUser._id)
                 .end(function (err, res) {
-                    const returnUser: IUser = res.body;
+                    const returnUser: IUserModel = res.body;
                     expect(returnUser.name).to.equal(testUser.name);
                     expect(res).to.have.status(200);
                     done();
@@ -73,7 +73,7 @@ describe("User controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/user/byEmail/" + testUser.email)
                 .end(function (err, res) {        
-                    const returnUser: IUser = res.body;
+                    const returnUser: IUserModel = res.body;
                     expect(returnUser.name).to.equal(testUser.name);
                     expect(res).to.have.status(200);
                     done();
@@ -93,7 +93,7 @@ describe("User controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/user/getAll")
                 .end(function (err, res) {        
-                    const returnUsers: Array<IUser> = res.body;
+                    const returnUsers: Array<IUserModel> = res.body;
                     expect(returnUsers).to.be.an('array');
                     expect(returnUsers[0]).to.have.ownProperty("_id");
                     expect(res).to.have.status(200);
@@ -108,8 +108,8 @@ describe("User controller tests", () => {
                 .post("/ms/user/authenticate")
                 .send({email: testUser.email, password: testUser.password})
                 .end(function (err, res) {
-                    const returnUser: any = res.body;
-                    expect(returnUser.id).to.equal(testUser._id);
+                    const returnUser: IUserModel = res.body;
+                    expect(returnUser._id).to.equal(testUser._id);
                     expect(returnUser.email).to.equal(testUser.email);
                     expect(res).to.have.status(200);
                     done();
@@ -121,10 +121,9 @@ describe("User controller tests", () => {
                 .post("/ms/user/authenticate")
                 .send({email: testUser.email, password: "wrong password"})
                 .end(function (err, res) {        
-                    const returnUser: any = res.body;
-                    expect(returnUser.id).to.equal(null);
-                    expect(returnUser.email).to.equal(null);
-                    expect(res).to.have.status(200);
+                    const returnUser: IUserModel = res.body;
+                    expect(returnUser).to.be.an('Object');
+                    expect(res).to.have.status(500);
                     done();
                 });
         });
@@ -139,7 +138,7 @@ describe("User controller tests", () => {
                 .put("/ms/user/" + updatedUser._id)
                 .send(updatedUser)
                 .end(function (err, res) {
-                    const returnUser: IUser = res.body;            
+                    const returnUser: IUserModel = res.body;            
                     expect(returnUser.name).to.equal(testUser.name);
                     expect(res).to.have.status(200);
                     done();
@@ -171,7 +170,7 @@ describe("User controller tests", () => {
             chai.request("http://localhost:5000")
                 .delete("/ms/user/" + testUser._id)
                 .end(function (err, res) {
-                    const returnUser: IUser = res.body;
+                    const returnUser: IUserModel = res.body;
                     expect(returnUser._id).to.equal(testUser._id);
                     expect(res).to.have.status(200);
                     done();

@@ -20,12 +20,10 @@ export interface IJob extends IJobModel, mongoose.Document {
 
 export const JobSchema = new mongoose.Schema({
     description: {
-        default: "dummy",
         required: true,
         type: String
     },
     name: {
-        default: "dummy",
         required: true,
         type: String
     },
@@ -42,21 +40,16 @@ export const JobSchema = new mongoose.Schema({
         required: false,
         type: String
     },
-    runs: {
-        required: false,
-        type: Array
-    },
     jobStatus: {
         default: 0,
         required: true,
         type: Number
     },
     userId: {
-        default: "dummy",
         required: true,
         type: String
     }
 }, { timestamps: true });
 
-const Job: Model<JobType> = mongoose.model<JobType>("Job", JobSchema);
+const Job: Model<IJob> = mongoose.model<JobType>("Job", JobSchema);
 export default Job;

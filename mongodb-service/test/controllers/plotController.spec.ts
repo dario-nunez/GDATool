@@ -1,11 +1,11 @@
 import * as chai from "chai";
 import chaiHttp = require('chai-http');
 import { before, describe, it } from "mocha";
-import { IJob } from "../../src/models/jobModel";
-import { IPlot } from "../../src/models/plotModel";
+import { IJobModel } from "../../src/models/jobModel";
+import { IPlotModel } from "../../src/models/plotModel";
 import { JobRepository } from "../../src/repositories/jobRepository";
 import { PlotRepository } from "../../src/repositories/plotRepository";
-import { Repository } from "../../src/repositories/repository";
+import { deleteIfPresent } from "../deleteIfPresent.spec";
 
 chai.use(chaiHttp);
 const expect = chai.expect;
@@ -21,7 +21,7 @@ const testPlot1 = {
     xType: "plot1_test_xType",
     yAxis: "plot1_test_yAxis",
     yType: "plot1_test_yType"
-} as IPlot;
+} as IPlotModel;
 
 const testPlot2 = {
     _id: "888888888888888888888888",
@@ -32,7 +32,7 @@ const testPlot2 = {
     xType: "plot1_test_xType",
     yAxis: "plot1_test_yAxis",
     yType: "plot1_test_yType"
-} as IPlot;
+} as IPlotModel;
 
 
 const testJob = {
@@ -44,14 +44,7 @@ const testJob = {
     userId: "101010101010101010101010",
     generateESIndices: true,
     jobStatus: 0
-} as IJob;
-
-async function deleteIfPresent(model: any, repository: Repository<any>) {
-    const existingModel = await repository.getById(model._id);
-    if (existingModel) {
-        await repository.delete(existingModel._id);
-    }
-}
+} as IJobModel;
 
 before(async () => {
     jobRepository = new JobRepository();
@@ -73,7 +66,7 @@ describe("Plot controller tests", () => {
                 .post("/ms/plot")
                 .send(testPlot1)
                 .end(function (err, res) {
-                    const returnPlot: IPlot = res.body;
+                    const returnPlot: IPlotModel = res.body;
                     testPlot1._id = returnPlot._id;
                     expect(returnPlot.identifier).to.equal(returnPlot.identifier);
                     expect(res).to.have.status(200);
@@ -86,7 +79,7 @@ describe("Plot controller tests", () => {
                 .post("/ms/plot/multiple")
                 .send([testPlot2])
                 .end(function (err, res) {
-                    const returnPlots: Array<IPlot> = res.body;
+                    const returnPlots: Array<IPlotModel> = res.body;
                     expect(returnPlots).to.be.an('array');
                     expect(returnPlots).to.not.have.lengthOf(0);
                     expect(returnPlots[0]).to.have.ownProperty("_id");
@@ -101,7 +94,7 @@ describe("Plot controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/plot/byJob/" + testJob._id)
                 .end(function (err, res) {
-                    const returnPlots: Array<IPlot> = res.body;
+                    const returnPlots: Array<IPlotModel> = res.body;
                     expect(returnPlots).to.be.an('array');
                     expect(returnPlots).to.not.have.lengthOf(0);
                     expect(returnPlots[0]).to.have.ownProperty("_id");
@@ -114,7 +107,7 @@ describe("Plot controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/plot/byJob/wrongId")
                 .end(function (err, res) {
-                    const returnPlots: Array<IPlot> = res.body;
+                    const returnPlots: Array<IPlotModel> = res.body;
                     expect(returnPlots).to.be.an('array');
                     expect(returnPlots).to.have.lengthOf(0);
                     expect(res).to.have.status(200);
@@ -126,7 +119,7 @@ describe("Plot controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/plot/getAll")
                 .end(function (err, res) {
-                    const returnPlots: Array<IPlot> = res.body;
+                    const returnPlots: Array<IPlotModel> = res.body;
                     expect(returnPlots).to.be.an('array');
                     expect(returnPlots).to.not.have.lengthOf(0);
                     expect(returnPlots[0]).to.have.ownProperty("_id");
@@ -150,7 +143,7 @@ describe("Plot controller tests", () => {
             chai.request("http://localhost:5000")
                 .delete("/ms/plot/" + testPlot1._id)
                 .end(function (err, res) {
-                    const returnPlot: IPlot = res.body;
+                    const returnPlot: IPlotModel = res.body;
                     expect(returnPlot._id).to.equal(returnPlot._id);
                     expect(res).to.have.status(200);
                     done();
@@ -161,7 +154,7 @@ describe("Plot controller tests", () => {
             chai.request("http://localhost:5000")
                 .delete("/ms/plot/" + testPlot2._id)
                 .end(function (err, res) {
-                    const returnPlot: IPlot = res.body;
+                    const returnPlot: IPlotModel = res.body;
                     expect(returnPlot._id).to.equal(returnPlot._id);
                     expect(res).to.have.status(200);
                     done();
@@ -172,7 +165,7 @@ describe("Plot controller tests", () => {
             chai.request("http://localhost:5000")
                 .delete("/ms/job/" + testJob._id)
                 .end(function (err, res) {
-                    const returnJob: IJob = res.body;
+                    const returnJob: IJobModel = res.body;
                     expect(returnJob._id).to.equal(testJob._id);
                     expect(res).to.have.status(200);
                     done();

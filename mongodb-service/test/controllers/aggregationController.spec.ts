@@ -1,13 +1,14 @@
 import * as chai from "chai";
 import chaiHttp = require('chai-http');
 import { before, describe, it } from "mocha";
-import { IAggregation } from "../../src/models/aggregationModel";
-import { IJob } from "../../src/models/jobModel";
-import { IUser } from "../../src/models/userModel";
+import logger from "../../src/logger/loggerFactory";
+import { IAggregationModel } from "../../src/models/aggregationModel";
+import { IJobModel } from "../../src/models/jobModel";
+import { IUserModel } from "../../src/models/userModel";
 import { AggregationRepository } from "../../src/repositories/aggregationRepository";
 import { JobRepository } from "../../src/repositories/jobRepository";
-import { Repository } from "../../src/repositories/repository";
 import { UserRepository } from "../../src/repositories/userRepository";
+import { deleteIfPresent } from "../deleteIfPresent.spec";
 
 chai.use(chaiHttp);
 const expect = chai.expect;
@@ -18,9 +19,9 @@ let aggregationRepository: AggregationRepository;
 const testUser = {
     _id: "333333333333333333333333",
     password: "user_test_password",
-    email: "user_test_email",
+    email: "user_test_email_aggregationController",
     name: "user_test_user"
-} as IUser;
+} as IUserModel;
 
 const testJob = {
     _id: "444444444444444444444444",
@@ -31,7 +32,7 @@ const testJob = {
     stagingFileName: "",
     generateESIndices: true,
     jobStatus: 0
-} as IJob;
+} as IJobModel;
 
 const testAggregation1 = {
     _id: "555555555555555555555555",
@@ -39,8 +40,9 @@ const testAggregation1 = {
     aggs: [],
     featureColumns: [],
     metricColumn: "aggregation1_test_metricColumn",
-    name: "aggregation1_test_name"
-} as IAggregation;
+    name: "aggregation1_test_name",
+    sortColumnName: "aggregation1_test_sortColumnName"
+} as IAggregationModel;
 
 const testAggregation2 = {
     _id: "666666666666666666666666",
@@ -48,15 +50,9 @@ const testAggregation2 = {
     aggs: [],
     featureColumns: [],
     metricColumn: "aggregation2_test_metricColumn",
-    name: "aggregation2_test_name"
-} as IAggregation;
-
-async function deleteIfPresent(model: any, repository: Repository<any> ) {
-    const existingModel = await repository.getById(model._id);
-    if (existingModel) {
-        await repository.delete(existingModel._id);
-    }
-}
+    name: "aggregation2_test_name",
+    sortColumnName: "aggregation1_test_sortColumnName"
+} as IAggregationModel;
 
 before(async () => {
     userRepository = new UserRepository();
@@ -82,7 +78,7 @@ describe("Aggregation controller tests", () => {
                 .post("/ms/aggregation")
                 .send(testAggregation1)
                 .end(function (err, res) {
-                    const returnAggregation: IAggregation = res.body;
+                    const returnAggregation: IAggregationModel = res.body;
                     testAggregation1._id = returnAggregation._id;
                     expect(returnAggregation.name).to.equal(testAggregation1.name);
                     expect(res).to.have.status(200);
@@ -95,7 +91,7 @@ describe("Aggregation controller tests", () => {
                 .post("/ms/aggregation/multiple")
                 .send([testAggregation2])
                 .end(function (err, res) {
-                    const returnAggregations: Array<IAggregation> = res.body;
+                    const returnAggregations: Array<IAggregationModel> = res.body;
                     expect(returnAggregations).to.be.an('array');
                     expect(returnAggregations).to.not.have.lengthOf(0);
                     expect(returnAggregations[0]).to.have.ownProperty("_id");
@@ -110,7 +106,7 @@ describe("Aggregation controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/aggregation/" + testAggregation1._id)
                 .end(function (err, res) {
-                    const returnAggregation: IAggregation = res.body;
+                    const returnAggregation: IAggregationModel = res.body;
                     expect(returnAggregation.name).to.equal(testAggregation1.name);
                     expect(res).to.have.status(200);
                     done();
@@ -130,7 +126,8 @@ describe("Aggregation controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/aggregation/byUser/" + testUser._id)
                 .end(function (err, res) {
-                    const returnAggregations: Array<IAggregation> = res.body;
+                    logger.info(res.body);
+                    const returnAggregations: Array<IAggregationModel> = res.body;
                     expect(returnAggregations).to.be.an('array');
                     expect(returnAggregations).to.not.have.lengthOf(0);
                     expect(returnAggregations[0]).to.have.ownProperty("_id");
@@ -143,7 +140,7 @@ describe("Aggregation controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/aggregation/byUser/wrongId")
                 .end(function (err, res) {
-                    const returnAggregations: Array<IAggregation> = res.body;
+                    const returnAggregations: Array<IAggregationModel> = res.body;
                     expect(returnAggregations).to.be.an('array');
                     expect(returnAggregations).to.have.lengthOf(0);
                     expect(res).to.have.status(200);
@@ -155,7 +152,7 @@ describe("Aggregation controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/aggregation/byJob/" + testJob._id)
                 .end(function (err, res) {
-                    const returnAggregations: Array<IAggregation> = res.body;
+                    const returnAggregations: Array<IAggregationModel> = res.body;
                     expect(returnAggregations).to.be.an('array');
                     expect(returnAggregations).to.not.have.lengthOf(0);
                     expect(returnAggregations[0]).to.have.ownProperty("_id");
@@ -168,7 +165,7 @@ describe("Aggregation controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/aggregation/byJob/wrongId")
                 .end(function (err, res) {
-                    const returnAggregations: Array<IAggregation> = res.body;
+                    const returnAggregations: Array<IAggregationModel> = res.body;
                     expect(returnAggregations).to.be.an('array');
                     expect(returnAggregations).to.have.lengthOf(0);
                     expect(res).to.have.status(200);
@@ -180,7 +177,7 @@ describe("Aggregation controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/aggregation/getAll")
                 .end(function (err, res) {
-                    const returnAggregations: Array<IAggregation> = res.body;
+                    const returnAggregations: Array<IAggregationModel> = res.body;
                     expect(returnAggregations).to.be.an('array');
                     expect(returnAggregations).to.not.have.lengthOf(0);
                     expect(returnAggregations[0]).to.have.ownProperty("_id");
@@ -199,7 +196,7 @@ describe("Aggregation controller tests", () => {
                 .put("/ms/aggregation/" + updatedAggregation._id)
                 .send(updatedAggregation)
                 .end(function (err, res) {
-                    const returnAggregation: IUser = res.body;
+                    const returnAggregation: IUserModel = res.body;
                     expect(returnAggregation.name).to.equal(testAggregation1.name);
                     expect(res).to.have.status(200);
                     done();
@@ -231,19 +228,8 @@ describe("Aggregation controller tests", () => {
             chai.request("http://localhost:5000")
                 .delete("/ms/aggregation/" + testAggregation1._id)
                 .end(function (err, res) {
-                    const returnAggregation: IAggregation = res.body;
+                    const returnAggregation: IAggregationModel = res.body;
                     expect(returnAggregation._id).to.equal(testAggregation1._id);
-                    expect(res).to.have.status(200);
-                    done();
-                });
-        });
-
-        it("aggregation2 using existing id succeeds", (done) => {
-            chai.request("http://localhost:5000")
-                .delete("/ms/aggregation/" + testAggregation2._id)
-                .end(function (err, res) {
-                    const returnAggregation: IAggregation = res.body;
-                    expect(returnAggregation._id).to.equal(testAggregation2._id);
                     expect(res).to.have.status(200);
                     done();
                 });
@@ -251,9 +237,9 @@ describe("Aggregation controller tests", () => {
 
         it("job deletion succeeds", (done) => {
             chai.request("http://localhost:5000")
-                .delete("/ms/job/" + testJob._id)
+                .delete("/ms/job/recursive/" + testJob._id)
                 .end(function (err, res) {
-                    const returnJob: IJob = res.body;
+                    const returnJob: IJobModel = res.body;
                     expect(returnJob._id).to.equal(testJob._id);
                     expect(res).to.have.status(200);
                     done();
@@ -264,7 +250,7 @@ describe("Aggregation controller tests", () => {
             chai.request("http://localhost:5000")
                 .delete("/ms/user/" + testUser._id)
                 .end(function (err, res) {
-                    const returnUser: IUser = res.body;
+                    const returnUser: IUserModel = res.body;
                     expect(returnUser._id).to.equal(testUser._id);
                     expect(res).to.have.status(200);
                     done();

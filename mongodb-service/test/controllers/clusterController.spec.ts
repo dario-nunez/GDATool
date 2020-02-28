@@ -1,11 +1,12 @@
 import * as chai from "chai";
 import chaiHttp = require('chai-http');
 import { before, describe, it } from "mocha";
-import { IAggregation } from "../../src/models/aggregationModel";
-import { ICluster } from "../../src/models/clusterModel";
+import logger from "../../src/logger/loggerFactory";
+import { IAggregationModel } from "../../src/models/aggregationModel";
+import { IClusterModel } from "../../src/models/clusterModel";
 import { AggregationRepository } from "../../src/repositories/aggregationRepository";
 import { ClusterRepository } from "../../src/repositories/clusterRerpository";
-import { Repository } from "../../src/repositories/repository";
+import { deleteIfPresent } from "../deleteIfPresent.spec";
 
 chai.use(chaiHttp);
 const expect = chai.expect;
@@ -20,21 +21,19 @@ const testcluster1 = {
     xAxis: "cluster1_test_xAxis",
     xType: "cluster1_test_xType",
     yAxis: "cluster1_test_yAxis",
-    yType: "cluster1_test_yType",
-    cluster: 0
-} as ICluster;
+    yType: "cluster1_test_yType"
+} as IClusterModel;
 
 const testcluster2 = {
     _id: "131313131313131313131313",
     aggId: "",
-    identifier: "cluster1_test_identifier",
-    identifierType: "cluster1_test_identifierType",
-    xAxis: "cluster1_test_xAxis",
-    xType: "cluster1_test_xType",
-    yAxis: "cluster1_test_yAxis",
-    yType: "cluster1_test_yType",
-    cluster: 0
-} as ICluster;
+    identifier: "cluster2_test_identifier",
+    identifierType: "cluster2_test_identifierType",
+    xAxis: "cluster2_test_xAxis",
+    xType: "cluster2_test_xType",
+    yAxis: "cluster2_test_yAxis",
+    yType: "cluster2_test_yType"
+} as IClusterModel;
 
 const testAggregation = {
     _id: "141414141414141414141414",
@@ -42,15 +41,9 @@ const testAggregation = {
     aggs: [],
     featureColumns: [],
     metricColumn: "aggregation_test_metricColumn",
-    name: "aggregation_test_name"
-} as IAggregation;
-
-async function deleteIfPresent(model: any, repository: Repository<any>) {
-    const existingModel = await repository.getById(model._id);
-    if (existingModel) {
-        await repository.delete(existingModel._id);
-    }
-}
+    name: "aggregation_test_name",
+    sortColumnName: "aggregation1_test_sortColumnName"
+} as IAggregationModel;
 
 before(async () => {
     aggregationRepository = new AggregationRepository();
@@ -72,7 +65,7 @@ describe("cluster controller tests", () => {
                 .post("/ms/cluster")
                 .send(testcluster1)
                 .end(function (err, res) {
-                    const returncluster: ICluster = res.body;
+                    const returncluster: IClusterModel = res.body;
                     testcluster1._id = returncluster._id;
                     expect(returncluster.identifier).to.equal(returncluster.identifier);
                     expect(res).to.have.status(200);
@@ -85,7 +78,7 @@ describe("cluster controller tests", () => {
                 .post("/ms/cluster/multiple")
                 .send([testcluster2])
                 .end(function (err, res) {
-                    const returnclusters: Array<ICluster> = res.body;
+                    const returnclusters: Array<IClusterModel> = res.body;
                     expect(returnclusters).to.be.an('array');
                     expect(returnclusters).to.not.have.lengthOf(0);
                     expect(returnclusters[0]).to.have.ownProperty("_id");
@@ -100,7 +93,7 @@ describe("cluster controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/cluster/byAgg/" + testAggregation._id)
                 .end(function (err, res) {
-                    const returnclusters: Array<ICluster> = res.body;
+                    const returnclusters: Array<IClusterModel> = res.body;
                     expect(returnclusters).to.be.an('array');
                     expect(returnclusters).to.not.have.lengthOf(0);
                     expect(returnclusters[0]).to.have.ownProperty("_id");
@@ -113,7 +106,7 @@ describe("cluster controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/cluster/byAgg/wrongId")
                 .end(function (err, res) {
-                    const returnclusters: Array<ICluster> = res.body;
+                    const returnclusters: Array<IClusterModel> = res.body;
                     expect(returnclusters).to.be.an('array');
                     expect(returnclusters).to.have.lengthOf(0);
                     expect(res).to.have.status(200);
@@ -125,7 +118,7 @@ describe("cluster controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/cluster/getAll")
                 .end(function (err, res) {
-                    const returnclusters: Array<ICluster> = res.body;
+                    const returnclusters: Array<IClusterModel> = res.body;
                     expect(returnclusters).to.be.an('array');
                     expect(returnclusters).to.not.have.lengthOf(0);
                     expect(returnclusters[0]).to.have.ownProperty("_id");
@@ -149,29 +142,19 @@ describe("cluster controller tests", () => {
             chai.request("http://localhost:5000")
                 .delete("/ms/cluster/" + testcluster1._id)
                 .end(function (err, res) {
-                    const returncluster: ICluster = res.body;
+                    const returncluster: IClusterModel = res.body;
                     expect(returncluster._id).to.equal(returncluster._id);
                     expect(res).to.have.status(200);
                     done();
                 });
         });
 
-        it("cluster2 using existing id succeeds", (done) => {
+        it("aggregation using existing id succeeds", (done) => {
             chai.request("http://localhost:5000")
-                .delete("/ms/cluster/" + testcluster2._id)
+                .delete("/ms/aggregation/recursive/" + testAggregation._id)
                 .end(function (err, res) {
-                    const returncluster: ICluster = res.body;
-                    expect(returncluster._id).to.equal(returncluster._id);
-                    expect(res).to.have.status(200);
-                    done();
-                });
-        });
-
-        it("aggregation2 using existing id succeeds", (done) => {
-            chai.request("http://localhost:5000")
-                .delete("/ms/aggregation/" + testAggregation._id)
-                .end(function (err, res) {
-                    const returnAggregation: IAggregation = res.body;
+                    logger.info(res.body);
+                    const returnAggregation: IAggregationModel = res.body;
                     expect(returnAggregation._id).to.equal(testAggregation._id);
                     expect(res).to.have.status(200);
                     done();

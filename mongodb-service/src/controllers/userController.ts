@@ -18,7 +18,7 @@ export class UserController extends Controller<IUser> {
 
     @Path("/authenticate")
     @POST
-    public async authenticateUser(userAndPass: any): Promise<any> {
+    public async authenticateUser(userAndPass: any): Promise<IUserModel> {
         try {
             return await this.userRepository.authenticateUser(userAndPass.email, userAndPass.password);
         } catch (error) {
@@ -36,12 +36,7 @@ export class UserController extends Controller<IUser> {
     @Path("/getAll")
     @GET
     public async getAll(): Promise<Array<IUserModel>> {
-        // try {
-            return await this.userRepository.getAll();
-        // } catch (error) {
-            // logger.error(error.message);
-            // throw new Errors.InternalServerError(error.message);
-        // }
+        return await this.userRepository.getAll();
     }
 
     @Path(":id")
@@ -53,9 +48,7 @@ export class UserController extends Controller<IUser> {
     @POST
     @PreProcessor(uniqueEmailValidator)
     public async createUser(user: IUserModel): Promise<IUserModel> {
-        const userModel: IUser = user as any;
-
-        return await this.userRepository.create(userModel);
+        return await this.userRepository.create(user);
     }
 
     @Path(":id")

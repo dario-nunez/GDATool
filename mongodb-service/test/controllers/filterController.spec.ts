@@ -1,11 +1,11 @@
 import * as chai from "chai";
 import chaiHttp = require('chai-http');
 import { before, describe, it } from "mocha";
-import { IAggregation } from "../../src/models/aggregationModel";
-import { IFilter } from "../../src/models/filterModel";
+import { IAggregationModel } from "../../src/models/aggregationModel";
+import { IFilterModel } from "../../src/models/filterModel";
 import { AggregationRepository } from "../../src/repositories/aggregationRepository";
 import { FilterRepository } from "../../src/repositories/filterRepository";
-import { Repository } from "../../src/repositories/repository";
+import { deleteIfPresent } from "../deleteIfPresent.spec";
 
 chai.use(chaiHttp);
 const expect = chai.expect;
@@ -16,13 +16,13 @@ const testfilter1 = {
     _id: "161616161616161616161616",
     aggId: "",
     query: "fliter1_test_query"
-} as IFilter;
+} as IFilterModel;
 
 const testfilter2 = {
     _id: "171717171717171717171717",
     aggId: "",
     query: "fliter2_test_query"
-} as IFilter;
+} as IFilterModel;
 
 const testAggregation = {
     _id: "181818181818181818181818",
@@ -30,15 +30,9 @@ const testAggregation = {
     aggs: [],
     featureColumns: [],
     metricColumn: "aggregation_test_metricColumn",
-    name: "aggregation_test_name"
-} as IAggregation;
-
-async function deleteIfPresent(model: any, repository: Repository<any>) {
-    const existingModel = await repository.getById(model._id);
-    if (existingModel) {
-        await repository.delete(existingModel._id);
-    }
-}
+    name: "aggregation_test_name",
+    sortColumnName: "aggregation1_test_sortColumnName"
+} as IAggregationModel;
 
 before(async () => {
     aggregationRepository = new AggregationRepository();
@@ -60,7 +54,7 @@ describe("filter controller tests", () => {
                 .post("/ms/filter")
                 .send(testfilter1)
                 .end(function (err, res) {
-                    const returnfilter: IFilter = res.body;
+                    const returnfilter: IFilterModel = res.body;
                     testfilter1._id = returnfilter._id;
                     expect(returnfilter.query).to.equal(returnfilter.query);
                     expect(res).to.have.status(200);
@@ -73,7 +67,7 @@ describe("filter controller tests", () => {
                 .post("/ms/filter/multiple")
                 .send([testfilter2])
                 .end(function (err, res) {
-                    const returnfilters: Array<IFilter> = res.body;
+                    const returnfilters: Array<IFilterModel> = res.body;
                     expect(returnfilters).to.be.an('array');
                     expect(returnfilters).to.not.have.lengthOf(0);
                     expect(returnfilters[0]).to.have.ownProperty("_id");
@@ -88,7 +82,7 @@ describe("filter controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/filter/byAgg/" + testAggregation._id)
                 .end(function (err, res) {
-                    const returnfilters: Array<IFilter> = res.body;
+                    const returnfilters: Array<IFilterModel> = res.body;
                     expect(returnfilters).to.be.an('array');
                     expect(returnfilters).to.not.have.lengthOf(0);
                     expect(returnfilters[0]).to.have.ownProperty("_id");
@@ -101,7 +95,7 @@ describe("filter controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/filter/byAgg/wrongId")
                 .end(function (err, res) {
-                    const returnfilters: Array<IFilter> = res.body;
+                    const returnfilters: Array<IFilterModel> = res.body;
                     expect(returnfilters).to.be.an('array');
                     expect(returnfilters).to.have.lengthOf(0);
                     expect(res).to.have.status(200);
@@ -113,7 +107,7 @@ describe("filter controller tests", () => {
             chai.request("http://localhost:5000")
                 .get("/ms/filter/getAll")
                 .end(function (err, res) {
-                    const returnfilters: Array<IFilter> = res.body;
+                    const returnfilters: Array<IFilterModel> = res.body;
                     expect(returnfilters).to.be.an('array');
                     expect(returnfilters).to.not.have.lengthOf(0);
                     expect(returnfilters[0]).to.have.ownProperty("_id");
@@ -137,7 +131,7 @@ describe("filter controller tests", () => {
             chai.request("http://localhost:5000")
                 .delete("/ms/filter/" + testfilter1._id)
                 .end(function (err, res) {
-                    const returnfilter: IFilter = res.body;
+                    const returnfilter: IFilterModel = res.body;
                     expect(returnfilter._id).to.equal(returnfilter._id);
                     expect(res).to.have.status(200);
                     done();
@@ -148,7 +142,7 @@ describe("filter controller tests", () => {
             chai.request("http://localhost:5000")
                 .delete("/ms/filter/" + testfilter2._id)
                 .end(function (err, res) {
-                    const returnfilter: IFilter = res.body;
+                    const returnfilter: IFilterModel = res.body;
                     expect(returnfilter._id).to.equal(returnfilter._id);
                     expect(res).to.have.status(200);
                     done();
@@ -159,7 +153,7 @@ describe("filter controller tests", () => {
             chai.request("http://localhost:5000")
                 .delete("/ms/aggregation/" + testAggregation._id)
                 .end(function (err, res) {
-                    const returnAggregation: IAggregation = res.body;
+                    const returnAggregation: IAggregationModel = res.body;
                     expect(returnAggregation._id).to.equal(testAggregation._id);
                     expect(res).to.have.status(200);
                     done();

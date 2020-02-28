@@ -24,19 +24,11 @@ export const UserSchema = new mongoose.Schema({
         unique: true,
         type: String
     },
-    roles: {
-        required: false,
-        type: Array
-    },
-    dashboards: {
-        required: false,
-        type: Array
-    },
     name: {
         required: false,
         type: String
     }
 });
 
-const User: Model<UserType> = mongoose.model<UserType>("User", UserSchema);
+const User: Model<IUser> = mongoose.model<UserType>("User", UserSchema);
 export default User;
