@@ -7,7 +7,7 @@ import { IMetric } from "../../src/elasticsearchModels/metricModel";
 import { IPlot } from "../../src/elasticsearchModels/plotModel";
 import { IVisBarCHart } from "../../src/elasticsearchModels/visBarChartModel";
 import { IVisMarkup } from "../../src/elasticsearchModels/visMarkupModel";
-import { expectedBarChartVisualization, expectedClusterVisualization, expectedDataTableVisualization, expectedMarkupVisualization, expectedMetricVisualization, expectedPlotVisualization } from "./elasticsearchEntityJsonBuilderTestResources/visualizationBuilder.spec.resources";
+import { expectedBarChartVisualization, expectedClusterVisualization, expectedDataTableVisualization, expectedMarkupVisualization, expectedMetricVisualization, expectedPlotVisualization } from "./elasticsearchBuilderTestResources/visualizationBuilder.spec.resources";
 
 const assert = chai.assert;
 let visualizationBuilder: VisualizationBuilder;

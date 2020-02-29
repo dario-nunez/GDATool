@@ -4,8 +4,8 @@ import { before, describe, it } from "mocha";
 import { DashboardBuilder } from "../../src/elasticsearchEntityJsonBuilders/DashboardBuilder";
 import { IDashboard } from "../../src/elasticsearchModels/dashboardModel";
 import { IVisualization } from '../../src/elasticsearchModels/visualizationModel';
-import { dashboardSeed } from "./elasticsearchEntityJsonBuilderTestResources/dashboardBuilder.spec.resources";
-import { expectedDashboard1, expectedDashboard2 } from "./elasticsearchEntityJsonBuilderTestResources/dashboardBuilder.spec.resources";
+import { dashboardSeed } from "./elasticsearchBuilderTestResources/dashboardBuilder.spec.resources";
+import { expectedDashboard1, expectedDashboard2 } from "./elasticsearchBuilderTestResources/dashboardBuilder.spec.resources";
 
 const assert = chai.assert;
 let dashboardBuilder: DashboardBuilder;

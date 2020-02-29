@@ -1,6 +1,5 @@
 import * as chai from "chai";
 import { before, describe, it } from "mocha";
-// import logger from "../../../mongodb-service/src/logger/loggerFactory";
 import { IndexPatternManager } from "../../src/elasticsearchEntityManagers/indexPatternManager";
 import { IIndexPattern } from "../../src/elasticsearchModels/indexPatternModel";
 import { KibanaService } from "../../src/services/kibana-service";
