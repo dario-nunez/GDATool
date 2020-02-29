@@ -4,7 +4,7 @@ import logger from '../../../mongodb-service/src/logger/loggerFactory';
 import { DashboardBuilder } from "../../src/elasticsearchEntityJsonBuilders/DashboardBuilder";
 import { IDashboard } from "../../src/elasticsearchModels/dashboardModel";
 import { IVisualization } from '../../src/elasticsearchModels/visualizationModel';
-import { expectedDashboard } from "./dashboardBuilder.spec.resources";
+import { expectedDashboard } from "./elasticsearchEntityJsonBuilderTestResources/dashboardBuilder.spec.resources";
 
 const assert = chai.assert;
 let dashboardBuilder: DashboardBuilder;

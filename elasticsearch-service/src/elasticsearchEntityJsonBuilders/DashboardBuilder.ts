@@ -88,7 +88,7 @@ export class DashboardBuilder {
                     metrics.push(vis);
                 } else if (vis.type === "bar") {
                     barCharts.push(vis);
-                } else if (vis.type === "vega") {
+                } else if (vis.type === "plot") {
                     plots.push(vis);
                 } else if (vis.type === "markdown") {
                     markdowns.push(vis);

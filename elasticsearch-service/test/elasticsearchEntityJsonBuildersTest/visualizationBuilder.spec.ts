@@ -7,7 +7,7 @@ import { IMetric } from "../../src/elasticsearchModels/metricModel";
 import { IPlot } from "../../src/elasticsearchModels/plotModel";
 import { IVisBarCHart } from "../../src/elasticsearchModels/visBarChartModel";
 import { IVisMarkup } from "../../src/elasticsearchModels/visMarkupModel";
-import { expectedBarChartVisualization, expectedClusterVisualization, expectedDataTableVisualization, expectedMarkupVisualization, expectedMetricVisualization, expectedPlotVisualization } from "./visualizationBuilder.spec.resources";
+import { expectedBarChartVisualization, expectedClusterVisualization, expectedDataTableVisualization, expectedMarkupVisualization, expectedMetricVisualization, expectedPlotVisualization } from "./elasticsearchEntityJsonBuilderTestResources/visualizationBuilder.spec.resources";
 
 const assert = chai.assert;
 let visualizationBuilder: VisualizationBuilder;
@@ -23,11 +23,11 @@ describe("Visualization builder tests", () => {
                 id: "test_id",
                 type: "test_type",
                 explorerTitle: "test_explorerTitle",
-                displayTitle: "test_displayTitle"
+                displayText: "test_displayTitle"
             };
 
-            const markupJson = visualizationBuilder.getMarkup(testMarkupSeed);
-            assert.deepEqual(markupJson, expectedMarkupVisualization);
+            const json = visualizationBuilder.getMarkup(testMarkupSeed);
+            assert.deepEqual(json, expectedMarkupVisualization);
             done();
         });
     });
@@ -44,8 +44,8 @@ describe("Visualization builder tests", () => {
                 index: "test_index"
             };
 
-            const markupJson = visualizationBuilder.getBarChart(testBarChartSeed);
-            assert.deepEqual(markupJson, expectedBarChartVisualization);
+            const json = visualizationBuilder.getBarChart(testBarChartSeed);
+            assert.deepEqual(json, expectedBarChartVisualization);
             done();
         });
     });
@@ -60,8 +60,8 @@ describe("Visualization builder tests", () => {
                 index: "test_index"
             };
 
-            const markupJson = visualizationBuilder.getMetric(testMetricSeed);
-            assert.deepEqual(markupJson, expectedMetricVisualization);
+            const json = visualizationBuilder.getMetric(testMetricSeed);
+            assert.deepEqual(json, expectedMetricVisualization);
             done();
         });
     });
@@ -77,8 +77,8 @@ describe("Visualization builder tests", () => {
                 index: "test_index"
             };
 
-            const markupJson = visualizationBuilder.getDataTable(testDataTableSeed);
-            assert.deepEqual(markupJson, expectedDataTableVisualization);
+            const json = visualizationBuilder.getDataTable(testDataTableSeed);
+            assert.deepEqual(json, expectedDataTableVisualization);
             done();
         });
     });
@@ -98,8 +98,8 @@ describe("Visualization builder tests", () => {
                 yType: "test_yType"
             };
 
-            const markupJson = visualizationBuilder.getVegaPlot(testPlotSeed);
-            assert.deepEqual(markupJson, expectedPlotVisualization);
+            const json = visualizationBuilder.getVegaPlot(testPlotSeed);
+            assert.deepEqual(json, expectedPlotVisualization);
             done();
         });
     });
@@ -117,11 +117,10 @@ describe("Visualization builder tests", () => {
                 xType: "test_xType",
                 yAxis: "test_yAxis",
                 yType: "test_yType",
-                cluster: 0
             };
 
-            const markupJson = visualizationBuilder.getVegaCluster(testClusterSeed);
-            assert.deepEqual(markupJson, expectedClusterVisualization);
+            const json = visualizationBuilder.getVegaCluster(testClusterSeed);
+            assert.deepEqual(json, expectedClusterVisualization);
             done();
         });
     });

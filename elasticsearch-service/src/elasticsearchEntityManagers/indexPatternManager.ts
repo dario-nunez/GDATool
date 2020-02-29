@@ -10,7 +10,7 @@ export class IndexPatternManager {
         this.indexPatternBuilder = new IndexPatternBuilder();
     }
 
-    public async createIndexPattern(aggregationId: string, aggregations: Array<string>, featureColumns: Array<string>) {
+    public createIndexPattern(aggregationId: string, aggregations: Array<string>, featureColumns: Array<string>) {
         const indexPatternSeed: IIndexPattern = {
             id: aggregationId,
             index: aggregationId,
@@ -19,8 +19,8 @@ export class IndexPatternManager {
         };
 
         try {
-            const response = await this.kibanaService.createElasticsearchEntity(this.indexPatternBuilder.getIndexPattern(indexPatternSeed));
-            return response.data;
+            this.kibanaService.createElasticsearchEntity(this.indexPatternBuilder.getIndexPattern(indexPatternSeed));
+            return indexPatternSeed;
         } catch (error) {
             return error;
         }

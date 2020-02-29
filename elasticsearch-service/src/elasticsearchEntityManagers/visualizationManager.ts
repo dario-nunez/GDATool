@@ -16,12 +16,12 @@ export class VisualizationManager {
         this.visualizationBuilder = new VisualizationBuilder();
     }
 
-    public async createVisMarkup(visualizationId: string, contentText: string) {
+    public createVisMarkup(id: string, name: string) {
         const markupSeed: IVisMarkup = {
-            id: visualizationId,
+            id: id + "_markdown",
             type: "markdown",
-            explorerTitle: visualizationId,
-            displayTitle: contentText
+            explorerTitle: name,
+            displayText: name
         };
 
         const visualization: IVisualization = {
@@ -30,74 +30,88 @@ export class VisualizationManager {
         };
 
         try {
-            // const response = 
-            await this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getMarkup(markupSeed));
+            this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getMarkup(markupSeed));
             return visualization;
         } catch (error) {
             return error;
         }
     }
 
-    public async createVisBarChart(visualizationId: string, aggregationName: string, metricColumn: string, featureColumn: string, indexPatternId: string) {
+    public createVisBarChart(id: string, aggregationName: string, metricColumn: string, featureColumn: string, indexPatternId: string) {
         const barChartSeed: IVisBarCHart = {
-            id: visualizationId,
+            id: id + "_bar",
             type: "bar",
-            explorerTitle: visualizationId,
+            explorerTitle: featureColumn + " by " + metricColumn + " by " + aggregationName,
             aggregationName: aggregationName,
             featureColumn: featureColumn,
             metricColumn: metricColumn,
             index: indexPatternId
         };
 
-        try {
-            const response = await this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getBarChart(barChartSeed));
-            return response.data;
+        const visualization: IVisualization = {
+            id: barChartSeed.id,
+            type: barChartSeed.type
+        };
+
+        try { 
+            this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getBarChart(barChartSeed));
+            return visualization;
         } catch (error) {
             return error;
         }
     }
 
-    public async createMetric(visualizationId: string, aggregationName: string, indexPatternId: string) {
+    public createMetric(id: string, aggregationName: string, indexPatternId: string) {
         const metricSeed: IMetric = {
-            id: visualizationId,
+            id: id + "_metric",
             type: "metric",
-            explorerTitle: visualizationId,
+            explorerTitle: aggregationName,
             aggregationName: aggregationName,
             index: indexPatternId
         };
 
+        const visualization: IVisualization = {
+            id: metricSeed.id,
+            type: metricSeed.type
+        };
+
         try {
-            const response = await this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getMetric(metricSeed));
-            return response.data;
+            this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getMetric(metricSeed));
+            return visualization;
         } catch (error) {
             return error;
         }
     }
 
-    public async createDataTable(visualizationId: string, aggregationName: string, operations: Array<string>, featureColumns: Array<string>, indexPatternId: string) {
+    public createDataTable(id: string, aggregationName: string, operations: Array<string>, featureColumns: Array<string>, indexPatternId: string) {
         const dataTableSeed: IDataTable = {
-            id: visualizationId,
+            id: id + "_table",
             type: "table",
-            explorerTitle: visualizationId,
+            explorerTitle: aggregationName + " table",
             operations: operations,
             featureColumns: featureColumns,
             index: indexPatternId
         };
 
+        const visualization: IVisualization = {
+            id: dataTableSeed.id,
+            type: dataTableSeed.type
+        };
+
         try {
-            const response = await this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getDataTable(dataTableSeed));
-            return response.data;
+            this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getDataTable(dataTableSeed));
+            return visualization;
         } catch (error) {
             return error;
         }
     }
 
-    public async createPlot(id: string, index: string, identifier: string, identifierType: string, xAxis: string, xType: string, yAxis: string, yType: string): Promise<IVisualization> {
+    public createPlot(id: string, index: string, identifier: string, identifierType: string, xAxis: string, xType: string, yAxis: string, yType: string) {
         const plotSeed: IPlot = {
-            id: id,
-            type: "vega",
+            id: id + "_plot",
+            type: "plot",
             index: index,
-            explorerTitle: id,
+            explorerTitle: xAxis + " by " + yAxis + " plot",
             identifier: identifier,
             identifierType: identifierType,
             xAxis: xAxis,
@@ -112,32 +126,35 @@ export class VisualizationManager {
         };
 
         try {
-            // const response = 
-            await this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getVegaPlot(plotSeed));
+            this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getVegaPlot(plotSeed));
             return visualization;
         } catch (error) {
             return error;
         }
     }
 
-    public async createCluster(id: string, index: string, identifier: string, identifierType: string, xAxis: string, xType: string, yAxis: string, yType: string) {
+    public createCluster(id: string, index: string, identifier: string, identifierType: string, xAxis: string, xType: string, yAxis: string, yType: string) {
         const clusterSeed: ICluster = {
-            id: id,
+            id: id + "_cluster",
             type: "cluster",
             index: index,
-            explorerTitle: id,
+            explorerTitle: xAxis + " by " + yAxis + " cluster plot",
             identifier: identifier,
             identifierType: identifierType,
             xAxis: xAxis.toLowerCase(),
             xType: xType,
             yAxis: yAxis.toLowerCase(),
-            yType: yType,
-            cluster: 0
+            yType: yType
+        };
+
+        const visualization: IVisualization = {
+            id: clusterSeed.id,
+            type: clusterSeed.type
         };
 
         try {
-            const response = await this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getVegaCluster(clusterSeed));
-            return response.data;
+            this.kibanaService.createElasticsearchEntity(this.visualizationBuilder.getVegaCluster(clusterSeed));
+            return visualization;
         } catch (error) {
             return error;
         }

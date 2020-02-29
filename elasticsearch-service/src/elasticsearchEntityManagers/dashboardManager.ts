@@ -1,6 +1,5 @@
 import { Inject } from "typescript-ioc";
-import logger from "../../../mongodb-service/src/logger/loggerFactory";
-import { DashboardBuilder } from "../elasticsearchEntityJsonBuilders/DashboardBuilder";
+import { DashboardBuilder } from "../elasticsearchEntityJsonBuilders/dashboardBuilder";
 import { IDashboard } from "../elasticsearchModels/dashboardModel";
 import { IVisualization } from "../elasticsearchModels/visualizationModel";
 import { KibanaService } from "../services/kibana-service";
@@ -12,7 +11,7 @@ export class DashboardManager {
         this.dashboardBuilder = new DashboardBuilder();
     }
 
-    public async createDashboard(jobId: string, visualizations: Array<Array<IVisualization>>) {
+    public  createDashboard(jobId: string, visualizations: Array<Array<IVisualization>>) {
         const dashboardSeed: IDashboard = {
             id: jobId,
             title: jobId,
@@ -20,12 +19,9 @@ export class DashboardManager {
             description: "This is a dashboard description"
         };
 
-        logger.info("Dashboard seed");
-        logger.info(dashboardSeed);
-
         try {
-            const response = await this.kibanaService.createElasticsearchEntity(this.dashboardBuilder.getDashboard(dashboardSeed));
-            return response.data;
+            this.kibanaService.createElasticsearchEntity(this.dashboardBuilder.getDashboard(dashboardSeed));
+            return dashboardSeed;
         } catch (error) {
             return error;
         }

@@ -105,8 +105,8 @@ export const expectedPlotVisualization = {
     url: 'http://localhost:9200/.kibana/_doc/visualization:test_id',
     data: {
         visualization: {
-            title: 'test_id',
-            visState: '{"title":"test_id","type":"test_type","params":{"spec":"{\\n $schema: https: //vega.github.io/schema/vega-lite/v2.json\\n mark: {\\n type: point\\n filled: true\\n }\\n \\n data: {\\n url: {\\n index: \\"test_index\\"\\n \\n body: {\\n size: 10000\\n _source: [\\n \\"test_xAxis\\",\\n \\"test_yAxis\\",\\n \\"test_identifier\\"\\n ]\\n }\\n }\\n \\n format: {property: \\"hits.hits\\"\\n }\\n }\\n \\n encoding: {\\n x: {\\n field: _source.test_xAxis\\n type: test_xType\\n axis: {title: \\"test_xAxis\\"\\n }\\n }\\n \\n y: {\\n field: _source.test_yAxis\\n type: test_yType\\n axis: {title: \\"test_yAxis\\"\\n }\\n }\\n \\n tooltip: {\\n field: _source.test_identifier\\n type: test_identifierType\\n }\\n }\\n}"},"aggs":[]}',
+            title: 'test_explorerTitle',
+            visState: '{"title":"test_explorerTitle","type":"vega","params":{"spec":"{\\n $schema: https: //vega.github.io/schema/vega-lite/v2.json\\n mark: {\\n type: point\\n filled: true\\n }\\n \\n data: {\\n url: {\\n index: \\"test_index\\"\\n \\n body: {\\n size: 10000\\n _source: [\\n \\"test_xAxis\\",\\n \\"test_yAxis\\",\\n \\"test_identifier\\"\\n ]\\n }\\n }\\n \\n format: {property: \\"hits.hits\\"\\n }\\n }\\n \\n encoding: {\\n x: {\\n field: _source.test_xAxis\\n type: test_xType\\n axis: {title: \\"test_xAxis\\"\\n }\\n }\\n \\n y: {\\n field: _source.test_yAxis\\n type: test_yType\\n axis: {title: \\"test_yAxis\\"\\n }\\n }\\n \\n tooltip: {\\n field: _source.test_identifier\\n type: test_identifierType\\n }\\n }\\n}"},"aggs":[]}',
             uiStateJSON: '{}',
             description: '',
             version: 1,
@@ -126,8 +126,8 @@ export const expectedClusterVisualization = {
     url: 'http://localhost:9200/.kibana/_doc/visualization:test_id',
     data: {
         visualization: {
-            title: 'test_id',
-            visState: '{"title":"test_id","type":"vega","params":{"spec":"{\\n $schema: https: //vega.github.io/schema/vega-lite/v2.json\\n mark: {\\n type: point\\n }\\n \\n data: {\\n url: {\\n index: \\"test_index\\"\\n \\n body: {\\n size: 10000\\n _source: [\\n \\"test_xAxis\\",\\n \\"test_yAxis\\",\\n \\"cluster\\"\\n \\"test_identifier\\"\\n ]\\n }\\n }\\n \\n format: {property: \\"hits.hits\\"\\n }\\n }\\n \\n encoding: {\\n x: {\\n field: _source.test_xAxis\\n type: test_xType\\n axis: {title: \\"test_xAxis\\"\\n }\\n }\\n \\n y: {\\n field: _source.test_yAxis\\n type: test_yType\\n axis: {title: \\"test_yAxis\\"\\n }\\n }\\n \\n tooltip: {\\n field: _source.test_identifier\\n type: test_identifierType\\n } \\n \\"color\\": {\\n \\"field\\": \\"_source.cluster\\",\\n \\"title\\": \\"clusters\\",\\n \\"type\\": \\"nominal\\"\\n }\\n \\"shape\\": {\\n \\"field\\": \\"_source.cluster\\",\\n \\"type\\": \\"nominal\\"\\n}\\n }\\n}"},"aggs":[]}',
+            title: 'test_explorerTitle',
+            visState: '{"title":"test_explorerTitle","type":"vega","params":{"spec":"{\\n $schema: https: //vega.github.io/schema/vega-lite/v2.json\\n mark: {\\n type: point\\n }\\n \\n data: {\\n url: {\\n index: \\"test_index\\"\\n \\n body: {\\n size: 10000\\n _source: [\\n \\"test_xAxis\\",\\n \\"test_yAxis\\",\\n \\"cluster\\"\\n \\"test_identifier\\"\\n ]\\n }\\n }\\n \\n format: {property: \\"hits.hits\\"\\n }\\n }\\n \\n encoding: {\\n x: {\\n field: _source.test_xAxis\\n type: test_xType\\n axis: {title: \\"test_xAxis\\"\\n }\\n }\\n \\n y: {\\n field: _source.test_yAxis\\n type: test_yType\\n axis: {title: \\"test_yAxis\\"\\n }\\n }\\n \\n tooltip: {\\n field: _source.test_identifier\\n type: test_identifierType\\n } \\n \\"color\\": {\\n \\"field\\": \\"_source.cluster\\",\\n \\"title\\": \\"clusters\\",\\n \\"type\\": \\"nominal\\"\\n }\\n \\"shape\\": {\\n \\"field\\": \\"_source.cluster\\",\\n \\"type\\": \\"nominal\\"\\n}\\n }\\n}"},"aggs":[]}',
             uiStateJSON: '{}',
             description: '',
             version: 1,

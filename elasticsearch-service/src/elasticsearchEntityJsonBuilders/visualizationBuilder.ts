@@ -23,7 +23,7 @@ export class VisualizationBuilder {
                 visualization:
                 {
                     title: markupModel.explorerTitle,
-                    visState: '{"aggs":[],"params":{"fontSize":13,"markdown":"# ' + markupModel.displayTitle + ' #","openLinksInNewTab":false},"title":"whats this?","type":"markdown"}',
+                    visState: '{"aggs":[],"params":{"fontSize":13,"markdown":"# ' + markupModel.displayText + ' #","openLinksInNewTab":false},"title":"whats this?","type":"markdown"}',
                     uiStateJSON: "{}",
                     description: "",
                     version: 1,
@@ -153,8 +153,8 @@ export class VisualizationBuilder {
             url: this.elasticSearchUrl + this.indexName + "_doc/visualization:" + plotModel.id,
             data: {
                 visualization: {
-                    title: plotModel.id,
-                    visState: '{\"title\":\"'+ plotModel.id +'\",\"type\":\"'+ plotModel.type +'\",\"params\":{\"spec\":\"{\\n $schema: https: //vega.github.io/schema/vega-lite/v2.json\\n mark: {\\n type: point\\n filled: true\\n }\\n \\n data: {\\n url: {\\n index: \\\"'+ plotModel.index +'\\\"\\n \\n body: {\\n size: 10000\\n _source: ['+ sourceArray +']\\n }\\n }\\n \\n format: {property: \\\"hits.hits\\\"\\n }\\n }\\n \\n encoding: {\\n x: {\\n field: _source.'+ plotModel.xAxis +'\\n type: '+ plotModel.xType +'\\n axis: {title: \\\"'+ plotModel.xAxis +'\\\"\\n }\\n }\\n \\n y: {\\n field: _source.'+ plotModel.yAxis +'\\n type: '+ plotModel.yType +'\\n axis: {title: \\\"'+ plotModel.yAxis +'\\\"\\n }\\n }\\n \\n tooltip: {\\n field: _source.'+ plotModel.identifier +'\\n type: '+ plotModel.identifierType +'\\n }\\n }\\n}\"},\"aggs\":[]}',
+                    title: plotModel.explorerTitle,
+                    visState: '{\"title\":\"'+ plotModel.explorerTitle +'\",\"type\":\"vega\",\"params\":{\"spec\":\"{\\n $schema: https: //vega.github.io/schema/vega-lite/v2.json\\n mark: {\\n type: point\\n filled: true\\n }\\n \\n data: {\\n url: {\\n index: \\\"'+ plotModel.index +'\\\"\\n \\n body: {\\n size: 10000\\n _source: ['+ sourceArray +']\\n }\\n }\\n \\n format: {property: \\\"hits.hits\\\"\\n }\\n }\\n \\n encoding: {\\n x: {\\n field: _source.'+ plotModel.xAxis +'\\n type: '+ plotModel.xType +'\\n axis: {title: \\\"'+ plotModel.xAxis +'\\\"\\n }\\n }\\n \\n y: {\\n field: _source.'+ plotModel.yAxis +'\\n type: '+ plotModel.yType +'\\n axis: {title: \\\"'+ plotModel.yAxis +'\\\"\\n }\\n }\\n \\n tooltip: {\\n field: _source.'+ plotModel.identifier +'\\n type: '+ plotModel.identifierType +'\\n }\\n }\\n}\"},\"aggs\":[]}',
                     uiStateJSON: "{}",
                     description: "",
                     version: 1,
@@ -185,8 +185,8 @@ export class VisualizationBuilder {
             url: this.elasticSearchUrl + this.indexName + "_doc/visualization:" + clusterModel.id,
             data: {
                 visualization: {
-                    title: clusterModel.id,
-                    visState: '{\"title\":\"'+ clusterModel.id +'\",\"type\":\"vega\",\"params\":{\"spec\":\"{\\n $schema: https: //vega.github.io/schema/vega-lite/v2.json\\n mark: {\\n type: point\\n }\\n \\n data: {\\n url: {\\n index: \\\"'+ clusterModel.index +'\\\"\\n \\n body: {\\n size: 10000\\n _source: ['+ sourceArray +']\\n }\\n }\\n \\n format: {property: \\\"hits.hits\\\"\\n }\\n }\\n \\n encoding: {\\n x: {\\n field: _source.'+ clusterModel.xAxis +'\\n type: '+ clusterModel.xType +'\\n axis: {title: \\\"'+ clusterModel.xAxis +'\\\"\\n }\\n }\\n \\n y: {\\n field: _source.'+ clusterModel.yAxis +'\\n type: '+ clusterModel.yType +'\\n axis: {title: \\\"'+ clusterModel.yAxis +'\\\"\\n }\\n }\\n \\n tooltip: {\\n field: _source.'+ clusterModel.identifier +'\\n type: '+ clusterModel.identifierType +'\\n } \\n \\\"color\\\": {\\n \\\"field\\\": \\\"_source.cluster\\\",\\n \\\"title\\\": \\\"clusters\\\",\\n \\\"type\\\": \\\"nominal\\\"\\n }\\n \\\"shape\\\": {\\n \\\"field\\\": \\\"_source.cluster\\\",\\n \\\"type\\\": \\\"nominal\\\"\\n}\\n }\\n}\"},\"aggs\":[]}',
+                    title: clusterModel.explorerTitle,
+                    visState: '{\"title\":\"'+ clusterModel.explorerTitle +'\",\"type\":\"vega\",\"params\":{\"spec\":\"{\\n $schema: https: //vega.github.io/schema/vega-lite/v2.json\\n mark: {\\n type: point\\n }\\n \\n data: {\\n url: {\\n index: \\\"'+ clusterModel.index +'\\\"\\n \\n body: {\\n size: 10000\\n _source: ['+ sourceArray +']\\n }\\n }\\n \\n format: {property: \\\"hits.hits\\\"\\n }\\n }\\n \\n encoding: {\\n x: {\\n field: _source.'+ clusterModel.xAxis +'\\n type: '+ clusterModel.xType +'\\n axis: {title: \\\"'+ clusterModel.xAxis +'\\\"\\n }\\n }\\n \\n y: {\\n field: _source.'+ clusterModel.yAxis +'\\n type: '+ clusterModel.yType +'\\n axis: {title: \\\"'+ clusterModel.yAxis +'\\\"\\n }\\n }\\n \\n tooltip: {\\n field: _source.'+ clusterModel.identifier +'\\n type: '+ clusterModel.identifierType +'\\n } \\n \\\"color\\\": {\\n \\\"field\\\": \\\"_source.cluster\\\",\\n \\\"title\\\": \\\"clusters\\\",\\n \\\"type\\\": \\\"nominal\\\"\\n }\\n \\\"shape\\\": {\\n \\\"field\\\": \\\"_source.cluster\\\",\\n \\\"type\\\": \\\"nominal\\\"\\n}\\n }\\n}\"},\"aggs\":[]}',
                     uiStateJSON: "{}",
                     description: "",
                     version: 1,

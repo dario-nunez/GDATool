@@ -2,7 +2,7 @@ import * as chai from "chai";
 import { before, describe, it } from "mocha";
 import { IndexPatternBuilder } from "../../src/elasticsearchEntityJsonBuilders/indexPatternBuilder";
 import { IIndexPattern } from "../../src/elasticsearchModels/indexPatternModel";
-import { expectedIndexPatternEntity } from "./indexPatternBuilder.spec.resources";
+import { expectedIndexPatternEntity } from "./elasticsearchEntityJsonBuilderTestResources/indexPatternBuilder.spec.resources";
 
 const assert = chai.assert;
 let indexPatternBuilder: IndexPatternBuilder;
