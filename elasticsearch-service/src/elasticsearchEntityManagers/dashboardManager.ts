@@ -20,7 +20,7 @@ export class DashboardManager {
         };    
 
         try {
-            this.kibanaService.createElasticsearchEntity(this.dashboardBuilder.getDashboard(dashboardSeed));
+            this.kibanaService.createElasticsearchEntity(this.dashboardBuilder.getBasicDashboard(dashboardSeed));
             return dashboardSeed;
         } catch (error) {
             return error;

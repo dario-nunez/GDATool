@@ -34,7 +34,7 @@ describe("Dashbaord builder tests", () => {
                 description: "test_description"
             };
 
-            const json = dashboardBuilder.getDashboard(testDashboardSeed);
+            const json = dashboardBuilder.getBasicDashboard(testDashboardSeed);
 
             assert.deepEqual(json, expectedDashboard1);
             done();
@@ -43,7 +43,7 @@ describe("Dashbaord builder tests", () => {
 
     describe("create dashboard entity", () => {
         it("create succeeds", (done) => {
-            const json = dashboardBuilder.getDashboard(dashboardSeed);
+            const json = dashboardBuilder.getBasicDashboard(dashboardSeed);
             assert.deepEqual(json, expectedDashboard2);
             done();
         });

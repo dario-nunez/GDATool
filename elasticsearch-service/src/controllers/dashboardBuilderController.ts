@@ -35,52 +35,50 @@ export class DashboardBuilderController {
         const job = await this.mongodbService.getJobById(jobId);
 
         const visualizationsForDashboard = new Array();
-        const plotSection: Array<IVisualization> = [];
+        const plotSection: Array<IVisualization> = new Array();
 
-        // ------------------------- Add a title to the general plots section
+        // Plot section title
         if (plots.data.length > 0) {
             plotSection.push(this.visualizationManager.createVisMarkup(job.data._id, "General plots"));
         }
 
-        // ------------------------- For each plot, add it to the tpo of the dashboard
+        // Plots
         for (const plot of plots.data) {
             plotSection.push(this.visualizationManager.createPlot(plot._id, plot._id, plot.identifier, plot.identifierType, plot.xAxis, plot.xType, plot.yAxis, plot.yType));
         }
 
+        // Add Plot section
         visualizationsForDashboard.push(plotSection);
 
-        // For each aggregation, generate it dashboard section
+        // Aggregation section
         for (const aggregation of aggregations.data) {
-            // Holds the aggregation/dashboard section for each aggregation
             const aggSection = [];
-
             this.indexPatterManager.createIndexPattern(aggregation._id, aggregation.aggs, aggregation.featureColumns);
-
             const visualizationIdPrefix = aggregation.jobId + "_" + aggregation._id;
 
-            // ------------------------- Title
+            // Title
             aggSection.push(this.visualizationManager.createVisMarkup(visualizationIdPrefix, aggregation.name));
 
-            // ------------------------- Metrics   - one for each agg. Currently avg is beign hardcoded
+            // Metrics
             for (const agg of aggregation.aggs) {
                 aggSection.push(this.visualizationManager.createMetric(visualizationIdPrefix + agg.toLowerCase(), agg.toLowerCase(), aggregation._id));
             }
 
-            // ------------------------- BarCharts - one for each agg (operation)
+            // Bar charts
             for (const agg of aggregation.aggs) {                
                 aggSection.push(this.visualizationManager.createVisBarChart(visualizationIdPrefix + "_" + agg.toLowerCase(), agg.toLowerCase(), aggregation.metricColumn, aggregation.featureColumns[0], aggregation._id));
             }
 
-            // ------------------------- DataTables - one per aggregation record
+            // Data tables
             aggSection.push(this.visualizationManager.createDataTable(visualizationIdPrefix, aggregation.name , aggregation.aggs, aggregation.featureColumns, aggregation._id));
 
-            // ------------------------- Clusters - n clusters stacked at the bottom of the agg section
+            // Clusters
             const clusters = await this.mongodbService.getClustersByAgg(aggregation._id);
             for (const cluster of clusters.data) {
                 aggSection.push(this.visualizationManager.createCluster(aggregation._id + "_" + cluster._id, cluster._id, cluster.identifier, cluster.identifierType, cluster.xAxis, cluster.xType, cluster.yAxis, cluster.yType));
             }
 
-            // Adding the visualization section of this aggregation to the list of all visualizations
+            // Add a visualisation section
             visualizationsForDashboard.push(aggSection);
         }
 
