@@ -1,117 +1,69 @@
-export const dashboardSeed = {
-    id: '5e58d68f0c2f923ec696b639',
-    title: '5e58d68f0c2f923ec696b639',
+export const expectedDashboardSeed = {
+    id: '222222222222222222222222',
+    title: '222222222222222222222222',
     visualizations: [
         [
-            { id: '5e58d68f0c2f923ec696b639_markdown', type: 'markdown' },
-            { id: '5e58d8850c2f923ec696b63c_plot', type: 'plot' },
-            { id: '5e58d8850c2f923ec696b63d_plot', type: 'plot' }
+            { id: '222222222222222222222222_markdown', type: 'markdown' },
+            { id: '777777777777777777777777_plot', type: 'plot' },
+            { id: '888888888888888888888888_plot', type: 'plot' }
         ],
         [
             {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63a_markdown',
+                id: '222222222222222222222222_555555555555555555555555_markdown',
                 type: 'markdown'
             },
             {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63acount_metric',
+                id: '222222222222222222222222_555555555555555555555555agg1_metric',
                 type: 'metric'
             },
             {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63asum_metric',
+                id: '222222222222222222222222_555555555555555555555555agg2_metric',
                 type: 'metric'
             },
             {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63amax_metric',
-                type: 'metric'
-            },
-            {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63amin_metric',
-                type: 'metric'
-            },
-            {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63aavg_metric',
-                type: 'metric'
-            },
-            {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63a_count_bar',
+                id: '222222222222222222222222_555555555555555555555555_agg1_bar',
                 type: 'bar'
             },
             {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63a_sum_bar',
+                id: '222222222222222222222222_555555555555555555555555_agg2_bar',
                 type: 'bar'
             },
             {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63a_max_bar',
-                type: 'bar'
-            },
-            {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63a_min_bar',
-                type: 'bar'
-            },
-            {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63a_avg_bar',
-                type: 'bar'
-            },
-            {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63a_table',
+                id: '222222222222222222222222_555555555555555555555555_table',
                 type: 'table'
             },
             {
-                id: '5e58d8850c2f923ec696b63a_5e58d8850c2f923ec696b63e_cluster',
+                id: '555555555555555555555555_121212121212121212121212_cluster',
                 type: 'cluster'
             }
         ],
         [
             {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63b_markdown',
+                id: '222222222222222222222222_666666666666666666666666_markdown',
                 type: 'markdown'
             },
             {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63bcount_metric',
+                id: '222222222222222222222222_666666666666666666666666agg1_metric',
                 type: 'metric'
             },
             {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63bsum_metric',
+                id: '222222222222222222222222_666666666666666666666666agg2_metric',
                 type: 'metric'
             },
             {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63bmax_metric',
-                type: 'metric'
-            },
-            {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63bmin_metric',
-                type: 'metric'
-            },
-            {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63bavg_metric',
-                type: 'metric'
-            },
-            {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63b_count_bar',
+                id: '222222222222222222222222_666666666666666666666666_agg1_bar',
                 type: 'bar'
             },
             {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63b_sum_bar',
+                id: '222222222222222222222222_666666666666666666666666_agg2_bar',
                 type: 'bar'
             },
             {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63b_max_bar',
-                type: 'bar'
-            },
-            {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63b_min_bar',
-                type: 'bar'
-            },
-            {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63b_avg_bar',
-                type: 'bar'
-            },
-            {
-                id: '5e58d68f0c2f923ec696b639_5e58d8850c2f923ec696b63b_table',
+                id: '222222222222222222222222_666666666666666666666666_table',
                 type: 'table'
             },
             {
-                id: '5e58d8850c2f923ec696b63b_5e58d8850c2f923ec696b63f_cluster',
+                id: '666666666666666666666666_131313131313131313131313_cluster',
                 type: 'cluster'
             }
         ]

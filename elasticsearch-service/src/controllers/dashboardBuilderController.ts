@@ -10,8 +10,8 @@ import { MongodbService } from "../services/mongodb-service";
 @Path("/es/dashboardBuilder")
 export class DashboardBuilderController {
     private dashboardManager: DashboardManager;
-    private indexPatterManager:IndexPatternManager;
-    private visualizationManager:VisualizationManager;
+    private indexPatterManager: IndexPatternManager;
+    private visualizationManager: VisualizationManager;
 
     public constructor(@Inject private kibanaService: KibanaService, @Inject private mongodbService: MongodbService) {
         this.dashboardManager = new DashboardManager(this.kibanaService);
@@ -19,11 +19,11 @@ export class DashboardBuilderController {
         this.visualizationManager = new VisualizationManager(this.kibanaService);
     }
 
-    @Path("test/:name")
+    @Path("status")
     @GET
-    public sayHello(@PathParam("name") name: string): Promise<string> {
+    public status(): Promise<string> {
         return new Promise((resolve, reject) => {
-            resolve("Hello " + name);
+            resolve("listening :)");
         });
     }
 
@@ -84,6 +84,7 @@ export class DashboardBuilderController {
             visualizationsForDashboard.push(aggSection);
         }
 
-        return this.dashboardManager.createDashboard(job.data._id, visualizationsForDashboard);
+        const returnDash = this.dashboardManager.createDashboard(job.data._id, visualizationsForDashboard);
+        return returnDash;
     }
 }

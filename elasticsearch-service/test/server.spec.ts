@@ -10,12 +10,12 @@ describe("Rest Server Tests", () => {
     describe("Check the exposed routes", () => {
         it("Contains all paths and they are of the correct type", (done) => {
             expect(Server.getPaths()).to.include.members([
-                '/es/dashboardBuilder/test/:name',
+                '/es/dashboardBuilder/status',
                 '/es/dashboardBuilder/basic/:id'
             ]);
 
             // Checking types of filter endpoints
-            expect(Server.getHttpMethods("/es/dashboardBuilder/test/:name")).to.have.members([HttpMethod.GET]);
+            expect(Server.getHttpMethods("/es/dashboardBuilder/status")).to.have.members([HttpMethod.GET]);
             expect(Server.getHttpMethods("/es/dashboardBuilder/basic/:id")).to.have.members([HttpMethod.GET]);
             
             done();

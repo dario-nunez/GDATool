@@ -4,7 +4,7 @@ import { before, describe, it } from "mocha";
 import { DashboardBuilder } from "../../src/elasticsearchEntityJsonBuilders/DashboardBuilder";
 import { IDashboard } from "../../src/elasticsearchModels/dashboardModel";
 import { IVisualization } from '../../src/elasticsearchModels/visualizationModel';
-import { dashboardSeed } from "../controllersTest/controllersTestResources/dashboardController.spec.resources";
+import { dashboardSeed } from "./elasticsearchEntityJsonBuilderTestResources/dashboardBuilder.spec.resources";
 import { expectedDashboard1, expectedDashboard2 } from "./elasticsearchEntityJsonBuilderTestResources/dashboardBuilder.spec.resources";
 
 const assert = chai.assert;
