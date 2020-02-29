@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DashboardPageComponent } from './dashboard-page.component';
+import { COMMON_DECLARATIONS, COMMON_IMPORTS } from '../commonDependencies';
 
 describe('DashboardPageComponent', () => {
   let component: DashboardPageComponent;
@@ -8,7 +9,8 @@ describe('DashboardPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DashboardPageComponent ]
+      declarations: COMMON_DECLARATIONS,
+      imports: COMMON_IMPORTS
     })
     .compileComponents();
   }));

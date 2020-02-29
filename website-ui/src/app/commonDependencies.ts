@@ -26,6 +26,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { RouterTestingModule } from '@angular/router/testing';
 
 export function tokenGetter(): string {
     return localStorage.getItem("auth_token");
@@ -58,7 +59,7 @@ export const COMMON_DECLARATIONS = [
 
 export const COMMON_IMPORTS = [
     BrowserModule,
-    AppRoutingModule,
+    RouterTestingModule,
     FormsModule,
     HttpClientModule,
     JwtModule.forRoot({

@@ -1,25 +1,53 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { of as observableOf, of } from 'rxjs';
 import { JobsPageComponent } from './jobs-page.component';
+import { COMMON_DECLARATIONS, COMMON_IMPORTS } from '../commonDependencies';
+import { MongodbService } from 'src/services/mongodb/mongodb.service';
+import { ActivatedRoute } from '@angular/router';
+import { IJob } from 'src/models/job.model';
 
 describe('JobsPageComponent', () => {
   let component: JobsPageComponent;
   let fixture: ComponentFixture<JobsPageComponent>;
 
+  const mockJobs: Array<IJob> = [
+    {
+      name: "string",
+      _id: "string",
+      description: "string",
+      rawInputDirectory: "string",
+      stagingFileName: "string",
+      userId: "string",
+      generateESIndices: true,
+      jobStatus: 0,
+      runs: []
+    }
+  ]
+
+  const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobsByUserId"])
+  mockMongodbService.getJobsByUserId.and.returnValue(of(mockJobs));
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ JobsPageComponent ]
-    })
-    .compileComponents();
+      declarations: COMMON_DECLARATIONS,
+      imports: COMMON_IMPORTS,
+      providers: [
+        {
+          provide: MongodbService,
+          useValue: mockMongodbService
+        }
+      ]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
+    localStorage.setItem("user", JSON.stringify("user"));
     fixture = TestBed.createComponent(JobsPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create', async () => {
     expect(component).toBeTruthy();
   });
 });

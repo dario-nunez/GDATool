@@ -34,7 +34,7 @@ export class ExecuteComponent implements OnInit {
       this.mongodbService.getJobById(this.jobId).subscribe(job => {
         this.job = job;
         if (this.job.jobStatus >= 5) {
-            this.analysisJobExecuted = true;
+          this.analysisJobExecuted = true;
         }
         this.ioDisabled = false;
       });

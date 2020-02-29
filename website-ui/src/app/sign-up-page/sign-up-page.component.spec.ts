@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SignUpPageComponent } from './sign-up-page.component';
+import { COMMON_DECLARATIONS, COMMON_IMPORTS } from '../commonDependencies';
 
 describe('SignUpPageComponent', () => {
   let component: SignUpPageComponent;
@@ -8,7 +9,8 @@ describe('SignUpPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SignUpPageComponent ]
+      declarations: COMMON_DECLARATIONS,
+      imports: COMMON_IMPORTS
     })
     .compileComponents();
   }));

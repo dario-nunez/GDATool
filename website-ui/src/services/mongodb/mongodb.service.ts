@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { IUser } from 'src/models/user.model';
 import { Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { IJob } from 'src/models/job.model';
 import { IAggregation } from 'src/models/aggregation.model';
 import { IPlot } from 'src/models/plot.model';

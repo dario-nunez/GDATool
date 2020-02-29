@@ -31,7 +31,7 @@ export class LogInPageComponent implements OnInit {
     this.authenticationService.authenticate(this.userEmail, this.userPassword).subscribe(user => {
       console.log("LOGIN RETURNED USED: ");
       console.log(user);
-      if (user.id != null) {
+      if (user._id != null) {
         localStorage.setItem("user", JSON.stringify(user));
         this.router.navigate(["/jobsPage"]);
       } else {

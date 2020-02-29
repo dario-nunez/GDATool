@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AggregationClusteringComponent } from './aggregation-clustering.component';
+import { COMMON_DECLARATIONS, COMMON_IMPORTS } from 'src/app/commonDependencies';
 
 describe('AggregationClusteringComponent', () => {
   let component: AggregationClusteringComponent;
@@ -8,7 +9,8 @@ describe('AggregationClusteringComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AggregationClusteringComponent ]
+      declarations: COMMON_DECLARATIONS,
+      imports: COMMON_IMPORTS
     })
     .compileComponents();
   }));
