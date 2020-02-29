@@ -9,5 +9,4 @@ export interface ICluster extends IVisualization {
     xType: string;
     yAxis: string;
     yType: string;
-    cluster: number;
 }
