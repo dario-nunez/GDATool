@@ -1,6 +1,5 @@
 import { Inject } from "typescript-ioc";
 import { GET, Path, PathParam } from "typescript-rest";
-import logger from "../../../mongodb-service/src/logger/loggerFactory";
 import { DashboardManager } from "../elasticsearchEntityManagers/dashboardManager";
 import { IndexPatternManager } from "../elasticsearchEntityManagers/indexPatternManager";
 import { VisualizationManager } from "../elasticsearchEntityManagers/visualizationManager";
@@ -52,7 +51,6 @@ export class DashboardBuilderController {
 
         // For each aggregation, generate it dashboard section
         for (const aggregation of aggregations.data) {
-            logger.info("----SECOND LOOP STARTED----");
             // Holds the aggregation/dashboard section for each aggregation
             const aggSection = [];
 
@@ -86,7 +84,6 @@ export class DashboardBuilderController {
             visualizationsForDashboard.push(aggSection);
         }
 
-        this.dashboardManager.createDashboard(job.data._id, visualizationsForDashboard);
-        // return dashboardSeed;
+        return this.dashboardManager.createDashboard(job.data._id, visualizationsForDashboard);
     }
 }

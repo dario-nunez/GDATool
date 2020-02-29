@@ -17,7 +17,7 @@ export class DashboardManager {
             title: jobId,
             visualizations: visualizations,
             description: "This is a dashboard description"
-        };
+        };    
 
         try {
             this.kibanaService.createElasticsearchEntity(this.dashboardBuilder.getDashboard(dashboardSeed));

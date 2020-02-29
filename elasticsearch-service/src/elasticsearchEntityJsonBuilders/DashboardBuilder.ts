@@ -17,7 +17,7 @@ export class DashboardBuilder {
     }
 
     public getDashboard(dashboardModel: IDashboard) {
-        return {
+        const returnJson = {
             method: "PUT",
             url: this.elasticSearchUrl + this.indexName + "_doc/dashboard:" + dashboardModel.id + "_dashboard",
             data:
@@ -41,6 +41,8 @@ export class DashboardBuilder {
                 updated_at: "2019-07-04T16:35:09.831Z"
             }
         };
+
+        return returnJson;
     }
 
     private getReferences(dashboardModel: IDashboard) {
@@ -108,15 +110,6 @@ export class DashboardBuilder {
                 panelIndex = panelIndex + 1;
                 panelCounter = panelCounter + 1;
             }
-
-            // Plots:
-            // for (let i: number = 0; i < plots.length; i++) {
-            //     visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.MAX_WIDTH, currentX, currentY, panelIndex, panelCounter);
-            //     currentX = 0;
-            //     panelIndex = panelIndex + 1;
-            //     panelCounter = panelCounter + 1;
-            //     currentY = currentY + this.BAR_CHART_HEIGHT;
-            // }
 
             // Better plots:
             for (let i: number = 0; i < plots.length; i++) {
@@ -204,21 +197,12 @@ export class DashboardBuilder {
 
             // Data tables: added second from the bottom
             for (let i: number = 1; i <= tables.length; i++) {
-                visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.MAX_WIDTH, currentX, currentY, panelIndex, panelCounter);
+                visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT + 1, this.MAX_WIDTH, currentX, currentY, panelIndex, panelCounter);
                 currentX = 0;
                 panelIndex = panelIndex + 1;
                 panelCounter = panelCounter + 1;
-                currentY = currentY + this.BAR_CHART_HEIGHT;
+                currentY = currentY + this.BAR_CHART_HEIGHT + 1;
             }
-
-            // Clusters: added at the bottom
-            // for (let i: number = 1; i <= clusters.length; i++) {
-            //     visualizationMetadata = visualizationMetadata + this.generateGridData(this.BAR_CHART_HEIGHT, this.MAX_WIDTH, currentX, currentY, panelIndex, panelCounter);
-            //     currentX = 0;
-            //     panelIndex = panelIndex + 1;
-            //     panelCounter = panelCounter + 1;
-            //     currentY = currentY + this.BAR_CHART_HEIGHT
-            // }
 
             // Better clusters:
             for (let i: number = 0; i < clusters.length; i++) {

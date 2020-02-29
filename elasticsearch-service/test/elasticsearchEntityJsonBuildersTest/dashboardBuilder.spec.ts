@@ -1,10 +1,11 @@
 import * as chai from "chai";
 import { before, describe, it } from "mocha";
-import logger from '../../../mongodb-service/src/logger/loggerFactory';
+// import logger from '../../../mongodb-service/src/logger/loggerFactory';
 import { DashboardBuilder } from "../../src/elasticsearchEntityJsonBuilders/DashboardBuilder";
 import { IDashboard } from "../../src/elasticsearchModels/dashboardModel";
 import { IVisualization } from '../../src/elasticsearchModels/visualizationModel';
-import { expectedDashboard } from "./elasticsearchEntityJsonBuilderTestResources/dashboardBuilder.spec.resources";
+import { dashboardSeed } from "../controllersTest/controllersTestResources/dashboardController.spec.resources";
+import { expectedDashboard1, expectedDashboard2 } from "./elasticsearchEntityJsonBuilderTestResources/dashboardBuilder.spec.resources";
 
 const assert = chai.assert;
 let dashboardBuilder: DashboardBuilder;
@@ -35,11 +36,15 @@ describe("Dashbaord builder tests", () => {
 
             const json = dashboardBuilder.getDashboard(testDashboardSeed);
 
-            logger.info(json);
-            logger.info(json.data.references);
-            logger.info(json.data.dashboard.kibanaSavedObjectMeta);
+            assert.deepEqual(json, expectedDashboard1);
+            done();
+        });
+    });
 
-            assert.deepEqual(json, expectedDashboard);
+    describe("create dashboard entity", () => {
+        it("create succeeds", (done) => {
+            const json = dashboardBuilder.getDashboard(dashboardSeed);
+            assert.deepEqual(json, expectedDashboard2);
             done();
         });
     });
