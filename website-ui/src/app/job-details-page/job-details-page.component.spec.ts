@@ -17,12 +17,12 @@ const mockJobs: IJobModel = {
   jobStatus: 0
 }
 
-const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobById"])
-mockMongodbService.getJobsByUserId.and.returnValue(of(mockJobs));
-
 describe('JobDetailsPageComponent', () => {
   let component: JobDetailsPageComponent;
   let fixture: ComponentFixture<JobDetailsPageComponent>;
+
+  const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobById"])
+  mockMongodbService.getJobById.and.returnValue(of(mockJobs));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

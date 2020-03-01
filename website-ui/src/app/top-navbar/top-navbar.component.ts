@@ -12,7 +12,13 @@ export class TopNavbarComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    this.loggedInUser = JSON.parse(localStorage.getItem("user")).email;
+    console.info(JSON.parse(localStorage.getItem("user")));
+    // console.info(JSON.parse(localStorage.getItem("user")).email);
+    if (JSON.parse(localStorage.getItem("user"))) {
+      this.loggedInUser = JSON.parse(localStorage.getItem("user")).email;
+    } else {
+      this.loggedInUser = "Nope";
+    }
   }
 
   logOut() {

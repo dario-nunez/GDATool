@@ -6,7 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
 
-const mockJobs: IJobModel = {
+const mockJob: IJobModel = {
   name: "string",
   _id: "string",
   description: "string",
@@ -17,12 +17,12 @@ const mockJobs: IJobModel = {
   jobStatus: 0
 }
 
-const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobById"])
-mockMongodbService.getJobsByUserId.and.returnValue(of(mockJobs));
-
 describe('UploadComponent', () => {
   let component: UploadComponent;
   let fixture: ComponentFixture<UploadComponent>;
+
+  const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobById"])
+  mockMongodbService.getJobById.and.returnValue(of(mockJob));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -50,7 +50,7 @@ describe('UploadComponent', () => {
         }
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

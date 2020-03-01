@@ -21,7 +21,6 @@ import { AggregationsComponent } from './create-job-page/query/aggregations/aggr
 import { AggregationFilteringComponent } from './create-job-page/query/aggregation-filtering/aggregation-filtering.component';
 import { AggregationClusteringComponent } from './create-job-page/query/aggregation-clustering/aggregation-clustering.component';
 import { BrowserModule } from '@angular/platform-browser';
-import { AppRoutingModule } from './app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -71,3 +70,16 @@ export const COMMON_IMPORTS = [
     }),
     NgbModule
 ]
+
+export const mockQueryService = {
+    aggregations: [],
+    generalPlots: [],
+    aggregationFilters: [],
+    aggregationClusters: []
+}
+
+export const mockSchemaService = {
+    featureColumns: [],
+    metricColumns: [],
+    schema: "mock_schema",
+}

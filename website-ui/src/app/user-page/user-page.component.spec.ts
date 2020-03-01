@@ -6,19 +6,25 @@ import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { ActivatedRoute } from '@angular/router';
 import { IUserModel } from '../../../../mongodb-service/src/models/userModel';
 
-const mockJobs: IUserModel = {
+const mockUser: IUserModel = {
   _id: "mock_id",
   name: "mock_name",
   email: "emock_mail",
   password: "mock_password"
 }
 
-const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getUserByEmail"])
-mockMongodbService.getJobsByUserId.and.returnValue(of(mockJobs));
+const mockLocalStorage = {
+  getItem: (key: string): string => {
+    return JSON.stringify(mockUser);
+  },
+};
 
 describe('UserPageComponent', () => {
   let component: UserPageComponent;
   let fixture: ComponentFixture<UserPageComponent>;
+
+  const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getUserByEmail"])
+  mockMongodbService.getUserByEmail.and.returnValue(of(mockUser));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -50,6 +56,7 @@ describe('UserPageComponent', () => {
   }));
 
   beforeEach(() => {
+    spyOn(localStorage, "getItem").and.callFake(mockLocalStorage.getItem);
     fixture = TestBed.createComponent(UserPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

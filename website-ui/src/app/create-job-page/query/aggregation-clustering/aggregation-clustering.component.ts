@@ -1,5 +1,4 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { SchemaService } from 'src/services/schema/schema.service';
 import { QueryService } from 'src/services/query/query.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IJobModel } from '../../../../../../mongodb-service/src/models/jobModel';

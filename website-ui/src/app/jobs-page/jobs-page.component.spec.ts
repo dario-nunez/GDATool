@@ -5,22 +5,22 @@ import { COMMON_DECLARATIONS, COMMON_IMPORTS } from '../commonDependencies';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { IJobModel } from '../../../../mongodb-service/src/models/jobModel';
 
+const mockJobs: Array<IJobModel> = [
+  {
+    name: "string",
+    _id: "string",
+    description: "string",
+    rawInputDirectory: "string",
+    stagingFileName: "string",
+    userId: "string",
+    generateESIndices: true,
+    jobStatus: 0
+  }
+]
+
 describe('JobsPageComponent', () => {
   let component: JobsPageComponent;
   let fixture: ComponentFixture<JobsPageComponent>;
-
-  const mockJobs: Array<IJobModel> = [
-    {
-      name: "string",
-      _id: "string",
-      description: "string",
-      rawInputDirectory: "string",
-      stagingFileName: "string",
-      userId: "string",
-      generateESIndices: true,
-      jobStatus: 0
-    }
-  ]
 
   const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobsByUserId"])
   mockMongodbService.getJobsByUserId.and.returnValue(of(mockJobs));

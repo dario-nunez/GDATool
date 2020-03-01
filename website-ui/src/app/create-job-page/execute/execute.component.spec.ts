@@ -17,12 +17,30 @@ const mockJobs: IJobModel = {
   jobStatus: 0,
 }
 
-const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobById"])
-mockMongodbService.getJobsByUserId.and.returnValue(of(mockJobs));
+// class MockMongodbService {
+//   private mockJob: IJobModel = {
+//     name: "string",
+//     _id: "string",
+//     description: "string",
+//     rawInputDirectory: "string",
+//     stagingFileName: "string",
+//     userId: "string",
+//     generateESIndices: true,
+//     jobStatus: 0,
+//   }
+
+//   getJobById() {
+//     of(this.mockJob)
+//   }
+// }
 
 describe('ExecuteComponent', () => {
   let component: ExecuteComponent;
   let fixture: ComponentFixture<ExecuteComponent>;
+  // let mockMongodbService: MockMongodbService = new MockMongodbService();
+
+  const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobById"])
+  mockMongodbService.getJobById.and.returnValue(of(mockJobs));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -50,7 +68,7 @@ describe('ExecuteComponent', () => {
         }
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

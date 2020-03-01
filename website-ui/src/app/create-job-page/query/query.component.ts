@@ -39,25 +39,25 @@ export class QueryComponent implements OnInit {
   }
 
   next() {
-    this.mongodbService.updateJob(this.job).subscribe(retJob => {
-      this.mongodbService.createMultipleAggregations(this.queryService.aggregations).subscribe(aggs => {
-        // Add aggregation IDs before moving on to the clusters
-        aggs.forEach(agg => {
-          this.queryService.aggregations.find(obj => obj.name === agg.name)._id = agg._id
-        });
-        this.mongodbService.createMultiplePlots(this.queryService.generalPlots).subscribe(plots => {
-          // Update aggregation IDs in clusters
-          this.queryService.aggregationClusters.map(obj => obj.aggId = this.getAggId(obj.aggName));
-          this.mongodbService.createMultipleClusters(this.queryService.aggregationClusters).subscribe(clusters => {
-            // Update aggregation IDs in filters
-            this.queryService.aggregationFilters.map(obj => obj.aggId = this.getAggId(obj.aggName));
-            this.mongodbService.createMultipleFilters(this.queryService.aggregationFilters).subscribe(filters => {
-              this.router.navigate(['/execute', this.jobId]);
-            });
-          });
-        });
-      });
-    });
+    // this.mongodbService.updateJob(this.job).subscribe(retJob => {
+    //   this.mongodbService.createMultipleAggregations(this.queryService.aggregations).subscribe(aggs => {
+    //     // Add aggregation IDs before moving on to the clusters
+    //     aggs.forEach(agg => {
+    //       this.queryService.aggregations.find(obj => obj.name === agg.name)._id = agg._id
+    //     });
+    //     this.mongodbService.createMultiplePlots(this.queryService.generalPlots).subscribe(plots => {
+    //       // Update aggregation IDs in clusters
+    //       this.queryService.aggregationClusters.map(obj => obj.aggId = this.getAggId(obj.aggName));
+    //       this.mongodbService.createMultipleClusters(this.queryService.aggregationClusters).subscribe(clusters => {
+    //         // Update aggregation IDs in filters
+    //         this.queryService.aggregationFilters.map(obj => obj.aggId = this.getAggId(obj.aggName));
+    //         this.mongodbService.createMultipleFilters(this.queryService.aggregationFilters).subscribe(filters => {
+    //           this.router.navigate(['/execute', this.jobId]);
+    //         });
+    //       });
+    //     });
+    //   });
+    // });
   }
 
   getAggId(aggName: string) {

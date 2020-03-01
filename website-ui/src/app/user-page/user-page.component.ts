@@ -24,9 +24,21 @@ export class UserPageComponent implements OnInit {
       password: ""
     }
 
-    this.mongodbService.getUserByEmail(JSON.parse(localStorage.getItem("user")).email).subscribe(user => {
+    let loggedInUser;
+
+    if (JSON.parse(localStorage.getItem("user"))) {
+      loggedInUser = JSON.parse(localStorage.getItem("user")).email;
+    } else {
+      loggedInUser = "Nope";
+    }
+
+    this.mongodbService.getUserByEmail(loggedInUser).subscribe(user => {
       this.user = user
     });
+
+    // this.mongodbService.getUserByEmail(JSON.parse(localStorage.getItem("user")).email).subscribe(user => {
+    //   this.user = user
+    // });
   }
 
   updateAccount() {

@@ -10,6 +10,12 @@ const mockUser: IUserModel = {
   password: "mock_password"
 }
 
+const mockLocalStorage = {
+  getItem: (key: string): string => {
+    return JSON.stringify(mockUser);
+  },
+};
+
 describe('DetailsComponent', () => {
   let component: DetailsComponent;
   let fixture: ComponentFixture<DetailsComponent>;
@@ -23,9 +29,9 @@ describe('DetailsComponent', () => {
   }));
 
   beforeEach(() => {
+    spyOn(localStorage, "getItem").and.callFake(mockLocalStorage.getItem);
     fixture = TestBed.createComponent(DetailsComponent);
     component = fixture.componentInstance;
-    localStorage.setItem("user", JSON.stringify(mockUser))
     fixture.detectChanges();
   });
 
