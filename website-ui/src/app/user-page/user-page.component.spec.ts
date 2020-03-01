@@ -1,21 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { of as observableOf, of } from 'rxjs';
 import { UserPageComponent } from './user-page.component';
-import { COMMON_IMPORTS, COMMON_DECLARATIONS } from '../testResources';
+import { COMMON_IMPORTS, COMMON_DECLARATIONS, MOCK_USER } from '../testResources';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { ActivatedRoute } from '@angular/router';
-import { IUserModel } from '../../../../mongodb-service/src/models/userModel';
-
-const mockUser: IUserModel = {
-  _id: "mock_id",
-  name: "mock_name",
-  email: "emock_mail",
-  password: "mock_password"
-}
 
 const mockLocalStorage = {
   getItem: (key: string): string => {
-    return JSON.stringify(mockUser);
+    return JSON.stringify(MOCK_USER);
   },
 };
 
@@ -24,7 +16,7 @@ describe('UserPageComponent', () => {
   let fixture: ComponentFixture<UserPageComponent>;
 
   const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getUserByEmail"])
-  mockMongodbService.getUserByEmail.and.returnValue(of(mockUser));
+  mockMongodbService.getUserByEmail.and.returnValue(of(MOCK_USER));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

@@ -20,12 +20,20 @@ export class DetailsComponent implements OnInit {
   constructor(private mongodbService: MongodbService, private schemaService: SchemaService, private router: Router) { }
 
   ngOnInit() {
+    console.info(JSON.parse(localStorage.getItem("user")));
+    let loggedInUserId;
+    if (JSON.parse(localStorage.getItem("user"))) {
+      loggedInUserId = JSON.parse(localStorage.getItem("user"))._id;
+    } else {
+      loggedInUserId = "Nope";
+    }
+
     this.job = {
       name: "",
       description: "",
       rawInputDirectory: "",
       stagingFileName: "",
-      userId: JSON.parse(localStorage.getItem("user"))._id,
+      userId: loggedInUserId,
       generateESIndices: true,
       jobStatus: 1,
     }

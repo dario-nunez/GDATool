@@ -1,28 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { of as observableOf, of } from 'rxjs';
 import { ExecuteComponent } from './execute.component';
-import { COMMON_DECLARATIONS, COMMON_IMPORTS } from 'src/app/testResources';
+import { COMMON_DECLARATIONS, COMMON_IMPORTS, MOCK_JOB } from 'src/app/testResources';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { ActivatedRoute } from '@angular/router';
-import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
-
-const mockJobs: IJobModel = {
-  name: "string",
-  _id: "string",
-  description: "string",
-  rawInputDirectory: "string",
-  stagingFileName: "string",
-  userId: "string",
-  generateESIndices: true,
-  jobStatus: 0,
-}
 
 describe('ExecuteComponent', () => {
   let component: ExecuteComponent;
   let fixture: ComponentFixture<ExecuteComponent>;
 
   const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobById"])
-  mockMongodbService.getJobById.and.returnValue(of(mockJobs));
+  mockMongodbService.getJobById.and.returnValue(of(MOCK_JOB));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

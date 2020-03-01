@@ -26,6 +26,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterTestingModule } from '@angular/router/testing';
+import { IUserModel } from '../../../mongodb-service/src/models/userModel';
+import { IJobModel } from '../../../mongodb-service/src/models/jobModel';
+import { IAggregationModel } from '../../../mongodb-service/src/models/aggregationModel';
+import { IStatusLine } from 'src/models/statusLine.model';
 
 export function tokenGetter(): string {
     return localStorage.getItem("auth_token");
@@ -82,4 +86,72 @@ export const MOCK_SCHEMA_SERVICE = {
     featureColumns: [],
     metricColumns: [],
     schema: "mock_schema",
+}
+
+export const MOCK_USER: IUserModel = {
+    _id: "mock_id",
+    name: "mock_name",
+    email: "emock_mail",
+    password: "mock_password"
+}
+
+export const MOCK_JOB: IJobModel = {
+    name: "string",
+    _id: "string",
+    description: "string",
+    rawInputDirectory: "string",
+    stagingFileName: "string",
+    userId: "string",
+    generateESIndices: true,
+    jobStatus: 0,
+}
+
+export const MOCK_JOBS: Array<IJobModel> = [
+    {
+        name: "mock_name1",
+        _id: "mock_id1",
+        description: "mock_description1",
+        rawInputDirectory: "mock_rawInputDirectory1",
+        stagingFileName: "mock_stagingFileName1",
+        userId: "mock_userId1",
+        generateESIndices: true,
+        jobStatus: 0,
+    },
+    {
+        name: "mock_name2",
+        _id: "mock_id2",
+        description: "mock_description2",
+        rawInputDirectory: "mock_rawInputDirectory2",
+        stagingFileName: "mock_stagingFileName2",
+        userId: "mock_userId2",
+        generateESIndices: true,
+        jobStatus: 0,
+    }
+]
+
+export const MOCK_AGGREGATIONS: IAggregationModel[] = [
+    {
+        _id: "mock_id1",
+        aggs: [],
+        featureColumns: [],
+        jobId: "mock_jobId1",
+        metricColumn: "mock_metricColumn1",
+        name: "mock_name1",
+        sortColumnName: "mock_sortColumnName1"
+    },
+    {
+        _id: "mock_id2",
+        aggs: [],
+        featureColumns: [],
+        jobId: "mock_jobId2",
+        metricColumn: "mock_metricColumn2",
+        name: "mock_name2",
+        sortColumnName: "mock_sortColumnName2"
+    }
+]
+
+export const MOCK_STATUS_LINE: IStatusLine = {
+    jobStatus: 0,
+    lineText: "lineTest",
+    lineTriggerStatus: 1
 }

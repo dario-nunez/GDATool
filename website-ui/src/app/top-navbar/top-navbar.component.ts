@@ -13,7 +13,7 @@ export class TopNavbarComponent implements OnInit {
 
   ngOnInit() {
     console.info(JSON.parse(localStorage.getItem("user")));
-    // console.info(JSON.parse(localStorage.getItem("user")).email);
+    
     if (JSON.parse(localStorage.getItem("user"))) {
       this.loggedInUser = JSON.parse(localStorage.getItem("user")).email;
     } else {

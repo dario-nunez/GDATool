@@ -1,18 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DetailsComponent } from './details.component';
-import { COMMON_DECLARATIONS, COMMON_IMPORTS } from 'src/app/testResources';
-import { IUserModel } from '../../../../../mongodb-service/src/models/userModel';
-
-const mockUser: IUserModel = {
-  _id: "mock_id",
-  name: "mock_name",
-  email: "emock_mail",
-  password: "mock_password"
-}
+import { COMMON_DECLARATIONS, COMMON_IMPORTS, MOCK_USER } from 'src/app/testResources';
 
 const mockLocalStorage = {
   getItem: (key: string): string => {
-    return JSON.stringify(mockUser);
+    return JSON.stringify(MOCK_USER);
   },
 };
 
