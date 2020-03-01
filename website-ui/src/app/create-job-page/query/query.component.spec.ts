@@ -54,14 +54,6 @@ describe('QueryComponent', () => {
   mockMongodbService.getJobById.and.returnValue(of(mockJobs));
   mockMongodbService.createMultipleAggregations.and.returnValue(of(mockAggregations));
 
-  // Schema service
-  // const mockSchemaService = jasmine.createSpyObj("SchemaService", ["schema"])
-  // mockSchemaService.schema.and.returnValue(mockSchema);
-
-  // Query service
-  // const mockQueryService = jasmine.createSpyObj("QueryService", ["aggregations"])
-  // mockQueryService.aggregations.and.returnValue(mockAggregations);
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: COMMON_DECLARATIONS,
@@ -75,10 +67,6 @@ describe('QueryComponent', () => {
           provide: SchemaService,
           useValue: mockSchemaService
         },
-        // {
-        //   provide: QueryService,
-        //   useValue: 
-        // },
         {
           provide: ActivatedRoute,
           useValue: {
