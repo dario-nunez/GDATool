@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { AggregationFilteringComponent } from './aggregation-filtering.component';
 import { COMMON_IMPORTS, COMMON_DECLARATIONS } from 'src/app/commonDependencies';
 

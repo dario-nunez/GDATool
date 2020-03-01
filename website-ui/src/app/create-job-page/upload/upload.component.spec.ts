@@ -4,9 +4,9 @@ import { UploadComponent } from './upload.component';
 import { COMMON_DECLARATIONS, COMMON_IMPORTS } from 'src/app/commonDependencies';
 import { ActivatedRoute } from '@angular/router';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
-import { IJob } from 'src/models/job.model';
+import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
 
-const mockJobs: IJob = {
+const mockJobs: IJobModel = {
   name: "string",
   _id: "string",
   description: "string",
@@ -14,8 +14,7 @@ const mockJobs: IJob = {
   stagingFileName: "string",
   userId: "string",
   generateESIndices: true,
-  jobStatus: 0,
-  runs: []
+  jobStatus: 0
 }
 
 const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobById"])

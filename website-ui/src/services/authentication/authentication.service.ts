@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { IUser } from 'src/models/user.model';
 import { Observable } from 'rxjs';
 import { MongodbService } from '../mongodb/mongodb.service';
 

@@ -3,14 +3,13 @@ import { of as observableOf, of } from 'rxjs';
 import { JobsPageComponent } from './jobs-page.component';
 import { COMMON_DECLARATIONS, COMMON_IMPORTS } from '../commonDependencies';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
-import { ActivatedRoute } from '@angular/router';
-import { IJob } from 'src/models/job.model';
+import { IJobModel } from '../../../../mongodb-service/src/models/jobModel';
 
 describe('JobsPageComponent', () => {
   let component: JobsPageComponent;
   let fixture: ComponentFixture<JobsPageComponent>;
 
-  const mockJobs: Array<IJob> = [
+  const mockJobs: Array<IJobModel> = [
     {
       name: "string",
       _id: "string",
@@ -19,8 +18,7 @@ describe('JobsPageComponent', () => {
       stagingFileName: "string",
       userId: "string",
       generateESIndices: true,
-      jobStatus: 0,
-      runs: []
+      jobStatus: 0
     }
   ]
 

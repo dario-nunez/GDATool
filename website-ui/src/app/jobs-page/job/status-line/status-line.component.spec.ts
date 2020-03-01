@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { StatusLineComponent } from './status-line.component';
 import { COMMON_IMPORTS, COMMON_DECLARATIONS } from 'src/app/commonDependencies';
 import { By } from '@angular/platform-browser';

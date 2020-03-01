@@ -1,11 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DetailsComponent } from './details.component';
 import { COMMON_DECLARATIONS, COMMON_IMPORTS } from 'src/app/commonDependencies';
-import { IUser } from 'src/models/user.model';
+import { IUserModel } from '../../../../../mongodb-service/src/models/userModel';
 
-const mockUser: IUser = {
+const mockUser: IUserModel = {
   _id: "mock_id",
-  dashboards: [],
   name: "mock_name",
   email: "emock_mail",
   password: "mock_password"

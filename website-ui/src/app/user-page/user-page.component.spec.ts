@@ -4,11 +4,10 @@ import { UserPageComponent } from './user-page.component';
 import { COMMON_IMPORTS, COMMON_DECLARATIONS } from '../commonDependencies';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { ActivatedRoute } from '@angular/router';
-import { IUser } from 'src/models/user.model';
+import { IUserModel } from '../../../../mongodb-service/src/models/userModel';
 
-const mockJobs: IUser = {
+const mockJobs: IUserModel = {
   _id: "mock_id",
-  dashboards: [],
   name: "mock_name",
   email: "emock_mail",
   password: "mock_password"

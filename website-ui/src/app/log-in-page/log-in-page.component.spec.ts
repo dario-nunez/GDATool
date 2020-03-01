@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { LogInPageComponent } from './log-in-page.component';
 import { COMMON_DECLARATIONS, COMMON_IMPORTS } from '../commonDependencies';
 

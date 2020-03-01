@@ -1,5 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { TopNavbarComponent } from './top-navbar.component';
 import { COMMON_DECLARATIONS, COMMON_IMPORTS } from '../commonDependencies';
 

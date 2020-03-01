@@ -2,10 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MarketingPageComponent } from './marketing-page.component';
 import { COMMON_DECLARATIONS, COMMON_IMPORTS } from '../commonDependencies';
 
-export function tokenGetter(): string {
-  return localStorage.getItem("auth_token");
-}
-
 describe('MarketingPageComponent', () => {
   let component: MarketingPageComponent;
   let fixture: ComponentFixture<MarketingPageComponent>;
