@@ -11,5 +11,4 @@ export class MarketingPageComponent implements OnInit {
 
   ngOnInit() {
   }
-
 }

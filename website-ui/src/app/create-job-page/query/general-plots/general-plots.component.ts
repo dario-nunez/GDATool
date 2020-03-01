@@ -1,10 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { SchemaService } from 'src/services/schema/schema.service';
-import { IJob } from 'src/models/job.model';
 import { IPlot } from 'src/models/plot.model';
 import { QueryService } from 'src/services/query/query.service';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IJobModel } from '../../../../../../mongodb-service/src/models/jobModel';
 
 @Component({
   selector: 'app-general-plots',
@@ -12,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./general-plots.component.css']
 })
 export class GeneralPlotsComponent implements OnInit {
-  public job: IJob;
+  public job: IJobModel;
 
   typeList: Array<[string, string]> = [];
   COLUMNS: Array<string> = [];
@@ -88,9 +88,6 @@ export class GeneralPlotsComponent implements OnInit {
     this.chosenIdentifierColumn = "";
 
     this.queryService.generalPlots.push(newPlot);
-
-    console.log("Query Service object")
-    console.log(this.queryService)
   }
 
   private getVegaColumnType(columnName) {
@@ -104,7 +101,6 @@ export class GeneralPlotsComponent implements OnInit {
   }
 
   deletePlot(event, plot) {
-    console.log(plot)
     this.queryService.generalPlots = this.queryService.generalPlots.filter(obj => obj !== plot);
   }
 } 

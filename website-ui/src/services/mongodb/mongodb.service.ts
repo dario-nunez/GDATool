@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { IUser } from 'src/models/user.model';
+import { IUserModel } from '../../../../mongodb-service/src/models/userModel';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { IJob } from 'src/models/job.model';
+import { IJobModel } from '../../../../mongodb-service/src/models/jobModel';
 import { IAggregation } from 'src/models/aggregation.model';
 import { IPlot } from 'src/models/plot.model';
 import { ICluster } from 'src/models/cluster.model';
@@ -25,9 +25,8 @@ export class MongodbService {
 
   constructor(private http: HttpClient) { }
 
-  createUser(email: string, password: string): Observable<IUser> {
-    let user: IUser = {
-      dashboards: [],
+  createUser(email: string, password: string): Observable<IUserModel> {
+    let user: IUserModel = {
       name: email,
       email: email,
       password: password
@@ -36,61 +35,61 @@ export class MongodbService {
     console.log("User sent in the POST request: ");
     console.log(user);
 
-    return this.http.post<IUser>("http://localhost:5000/ms/user", user).pipe(
+    return this.http.post<IUserModel>("http://localhost:5000/ms/user", user).pipe(
       catchError(err => of(null))
     );
   }
 
-  getAllUsers(): Observable<IUser[]> {
-    return this.http.get<IUser[]>("http://localhost:5000/ms/user/getAll", {});
+  getAllUsers(): Observable<IUserModel[]> {
+    return this.http.get<IUserModel[]>("http://localhost:5000/ms/user/getAll", {});
   }
 
-  getUserByEmail(email: string): Observable<IUser> {
-    return this.http.get<IUser>("http://localhost:5000/ms/user/byEmail/" + email);
+  getUserByEmail(email: string): Observable<IUserModel> {
+    return this.http.get<IUserModel>("http://localhost:5000/ms/user/byEmail/" + email);
   }
 
-  deleteUser(id: string): Observable<IUser> {
-    return this.http.delete<IUser>("http://localhost:5000/ms/user/" + id);
+  deleteUser(id: string): Observable<IUserModel> {
+    return this.http.delete<IUserModel>("http://localhost:5000/ms/user/" + id);
   }
 
-  deleteUserRecursive(id: string): Observable<IUser> {
-    return this.http.delete<IUser>("http://localhost:5000/ms/user/recursive/" + id);
+  deleteUserRecursive(id: string): Observable<IUserModel> {
+    return this.http.delete<IUserModel>("http://localhost:5000/ms/user/recursive/" + id);
   }
 
-  updateUser(user: IUser): Observable<IUser> {
-    return this.http.put<IUser>("http://localhost:5000/ms/user/" + user._id, user).pipe(
+  updateUser(user: IUserModel): Observable<IUserModel> {
+    return this.http.put<IUserModel>("http://localhost:5000/ms/user/" + user._id, user).pipe(
       catchError(err => of(null))
     );
   }
 
-  getJobsByUserId(userId: string): Observable<IJob[]> {
-    return this.http.get<IUser>("http://localhost:5000/ms/job/byUser/" + userId).pipe(
+  getJobsByUserId(userId: string): Observable<IJobModel[]> {
+    return this.http.get<IJobModel>("http://localhost:5000/ms/job/byUser/" + userId).pipe(
       catchError(err => of(null))
     );
   }
 
-  getJobById(jobId: string): Observable<IJob> {
-    return this.http.get<IJob>("http://localhost:5000/ms/job/" + jobId).pipe(
+  getJobById(jobId: string): Observable<IJobModel> {
+    return this.http.get<IJobModel>("http://localhost:5000/ms/job/" + jobId).pipe(
       catchError(err => of(null))
     );
   }
 
-  updateJob(job: IJob): Observable<IJob> {
-    return this.http.put<IJob>("http://localhost:5000/ms/job/" + job._id, job).pipe(
+  updateJob(job: IJobModel): Observable<IJobModel> {
+    return this.http.put<IJobModel>("http://localhost:5000/ms/job/" + job._id, job).pipe(
       catchError(err => of(null))
     );
   }
 
-  deleteJob(id: string): Observable<IJob> {
-    return this.http.delete<IJob>("http://localhost:5000/ms/job/" + id);
+  deleteJob(id: string): Observable<IJobModel> {
+    return this.http.delete<IJobModel>("http://localhost:5000/ms/job/" + id);
   }
 
-  deleteJobRecusrive(id: string): Observable<IJob> {
-    return this.http.delete<IJob>("http://localhost:5000/ms/job/recursive/" + id);
+  deleteJobRecusrive(id: string): Observable<IJobModel> {
+    return this.http.delete<IJobModel>("http://localhost:5000/ms/job/recursive/" + id);
   }
 
-  createJob(job: IJob): Observable<IJob> {
-    return this.http.post<IJob>("http://localhost:5000/ms/job", job).pipe(
+  createJob(job: IJobModel): Observable<IJobModel> {
+    return this.http.post<IJobModel>("http://localhost:5000/ms/job", job).pipe(
       catchError(err => of(null))
     );
   }
@@ -104,7 +103,7 @@ export class MongodbService {
   createMultiplePlots(plots: IPlot[]): Observable<IPlot[]> {
     console.log("Plots at mongo service");
     console.log(plots);
-    return this.http.post<IUser>("http://localhost:5000/ms/plot/multiple", plots).pipe(
+    return this.http.post<IPlot[]>("http://localhost:5000/ms/plot/multiple", plots).pipe(
       catchError(err => of(null))
     );
   }
@@ -112,7 +111,7 @@ export class MongodbService {
   createMultipleClusters(clusters: ICluster[]): Observable<ICluster[]> {
     console.log("Clusters at mongo service");
     console.log(clusters);
-    return this.http.post<IUser>("http://localhost:5000/ms/cluster/multiple", clusters).pipe(
+    return this.http.post<ICluster[]>("http://localhost:5000/ms/cluster/multiple", clusters).pipe(
       catchError(err => of(null))
     );
   }
@@ -132,7 +131,7 @@ export class MongodbService {
     return this.http.post<string>("http://localhost:5000/ms/job/getUploadFileUrl", { jobId, fileName }, options);
   }
 
-  readFile(job: IJob): Observable<any> {
+  readFile(job: IJobModel): Observable<any> {
     const options: any = {
       responseType: "text"
     };

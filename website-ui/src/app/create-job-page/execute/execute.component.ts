@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IJob } from 'src/models/job.model';
+import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
 
 @Component({
   selector: 'app-execute',
@@ -10,7 +10,7 @@ import { IJob } from 'src/models/job.model';
 })
 export class ExecuteComponent implements OnInit {
   analysisJobExecuted = false;
-  job: IJob;
+  job: IJobModel;
   jobId: string;
   ioDisabled: boolean = true;
 
@@ -18,7 +18,6 @@ export class ExecuteComponent implements OnInit {
 
   ngOnInit() {
     this.job = {
-      _id: "",
       name: "",
       description: "",
       rawInputDirectory: "",
@@ -26,7 +25,6 @@ export class ExecuteComponent implements OnInit {
       userId: "",
       generateESIndices: true,
       jobStatus: 0,
-      runs: []
     }
 
     this.route.params.subscribe(params => {

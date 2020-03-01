@@ -8,7 +8,6 @@ import { AuthenticationService } from "../../services/authentication/authenticat
   styleUrls: ['./log-in-page.component.css']
 })
 export class LogInPageComponent implements OnInit {
-
   private incorrectPassword: boolean;
   private userEmail: string;
   private userPassword: string;
@@ -29,8 +28,6 @@ export class LogInPageComponent implements OnInit {
     console.log("Log in button pressed");
 
     this.authenticationService.authenticate(this.userEmail, this.userPassword).subscribe(user => {
-      console.log("LOGIN RETURNED USED: ");
-      console.log(user);
       if (user._id != null) {
         localStorage.setItem("user", JSON.stringify(user));
         this.router.navigate(["/jobsPage"]);

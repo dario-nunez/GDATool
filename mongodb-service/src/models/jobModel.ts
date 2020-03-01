@@ -4,7 +4,7 @@ import { Model } from "mongoose";
 type JobType = IJob & mongoose.Document;
 
 export interface IJobModel {
-    _id: string;
+    _id?: string;
     name: string;
     description: string;
     rawInputDirectory: string;

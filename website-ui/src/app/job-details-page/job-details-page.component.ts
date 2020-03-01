@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { IJob } from 'src/models/job.model';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { ActivatedRoute, Router } from '@angular/router'
+import { IJobModel } from '../../../../mongodb-service/src/models/jobModel';
 
 @Component({
   selector: 'app-job-details-page',
@@ -10,22 +10,20 @@ import { ActivatedRoute, Router } from '@angular/router'
 })
 export class JobDetailsPageComponent implements OnInit {
 
-  job: IJob;
+  job: IJobModel;
   public jobId: string;
 
   constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     this.job = {
-      _id: "",
       name: "",
       description: "",
       rawInputDirectory: "",
       stagingFileName: "",
       userId: "",
       generateESIndices: true,
-      jobStatus: 0,
-      runs: []
+      jobStatus: 0
     }
 
     this.route.params.subscribe(params => {
@@ -36,15 +34,11 @@ export class JobDetailsPageComponent implements OnInit {
 
   getJob() {
     this.mongodbService.getJobById(this.jobId).subscribe(job => {
-      console.log("Returned job");
-      console.log(job);
       this.job = job;
     });
   }
 
   updateJob() {
-    console.log("sent job: ");
-    console.log(this.job);
     this.mongodbService.updateJob(this.job).subscribe(job => {
       if (job != null) {
         this.router.navigate(['/jobsPage']);
@@ -57,8 +51,6 @@ export class JobDetailsPageComponent implements OnInit {
   deleteJob() {
     if (confirm("This job will be lost forever. Are you sure you want to delete it?")) {
       this.mongodbService.deleteJobRecusrive(this.job._id).subscribe(job => {
-        console.log("Deleted Job: ");
-        console.log(job);
         this.router.navigate(['/jobsPage']);
       });
     }

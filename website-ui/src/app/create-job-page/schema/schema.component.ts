@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SchemaService } from 'src/services/schema/schema.service';
-import { IJob } from 'src/models/job.model';
 import { ISchema } from 'src/models/schema.model';
+import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
 
 @Component({
   selector: 'app-schema',
@@ -12,7 +12,7 @@ import { ISchema } from 'src/models/schema.model';
 })
 export class SchemaComponent implements OnInit {
   ioDisabled: boolean = true;
-  job: IJob;
+  job: IJobModel;
   jobId: string;
   schemaFilePresent = false;
   COLUMNS: Array<[string, string]> = [];
@@ -26,15 +26,13 @@ export class SchemaComponent implements OnInit {
 
   ngOnInit() {
     this.job = {
-      _id: "",
       name: "",
       description: "",
       rawInputDirectory: "",
       stagingFileName: "",
       userId: "",
       generateESIndices: true,
-      jobStatus: 0,
-      runs: []
+      jobStatus: 0
     }
     
     this.route.params.subscribe(params => {
@@ -59,8 +57,6 @@ export class SchemaComponent implements OnInit {
   }
 
   moveColumn(event, element: [string, string], originArray: Array<[string, string]>, destinationArray: Array<[string, string]>) {
-    //console.log("from " + originArray + " to " + destinationArray)
-
     if (originArray == this.COLUMNS) {                   // From COLUMNS column
       if (element[1] == "double") {  // Numeric
         if (destinationArray == this.SELECTED_FEATURES) {
@@ -108,8 +104,6 @@ export class SchemaComponent implements OnInit {
   deleteJob() {
     if (confirm("This job will be lost forever. Are you sure you want to delete it?")) {
       this.mongodbService.deleteJobRecusrive(this.job._id).subscribe(job => {
-        console.log("Deleted Job: ");
-        console.log(job);
         this.router.navigate(['/jobsPage']);
       });
     }

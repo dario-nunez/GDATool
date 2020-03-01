@@ -4,7 +4,7 @@ import { Model } from "mongoose";
 type UserType = IUser & mongoose.Document;
 
 export interface IUserModel {
-    _id: string;
+    _id?: string;
     password: string;
     email: string;
     name: string;

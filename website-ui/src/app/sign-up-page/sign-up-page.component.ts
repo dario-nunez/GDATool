@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IUser } from 'src/models/user.model';
+import { IUserModel } from '../../../../mongodb-service/src/models/userModel';
 import { Router } from '@angular/router';
 import { MongodbService } from '../../services/mongodb/mongodb.service';
 
@@ -10,7 +10,7 @@ import { MongodbService } from '../../services/mongodb/mongodb.service';
 })
 export class SignUpPageComponent implements OnInit {
 
-  private user: IUser;
+  private user: IUserModel;
   private repeatedPassword: string;
   private emailExists: boolean;
 
@@ -18,9 +18,10 @@ export class SignUpPageComponent implements OnInit {
 
   ngOnInit() {
     this.user = {
+      name: "",
       email: "",
       password: ""
-    } as IUser;
+    }
 
     this.repeatedPassword = "";
     this.emailExists = false;
@@ -31,10 +32,8 @@ export class SignUpPageComponent implements OnInit {
   }
 
   createUser() {
-    this.mongodbService.createUser(this.user.email, this.user.password).subscribe(
-      user => {
+    this.mongodbService.createUser(this.user.email, this.user.password).subscribe(user => {
         if (user != null) {
-          console.log("Returned created user: " + user);
           const simplifiedUser = {
             id: user._id,
             email: user.email

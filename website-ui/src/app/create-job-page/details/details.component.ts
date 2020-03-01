@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { IJob } from 'src/models/job.model';
 import { IAggregation } from 'src/models/aggregation.model';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { Router } from '@angular/router';
 import { SchemaService } from 'src/services/schema/schema.service';
+import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
 
 @Component({
   selector: 'app-details',
@@ -11,7 +11,7 @@ import { SchemaService } from 'src/services/schema/schema.service';
   styleUrls: ['./details.component.css']
 })
 export class DetailsComponent implements OnInit {
-  job: IJob;
+  job: IJobModel;
   aggregations: IAggregation[];
   customAggregations: boolean;
   currentAggregationName: string;
@@ -25,10 +25,9 @@ export class DetailsComponent implements OnInit {
       description: "",
       rawInputDirectory: "",
       stagingFileName: "",
-      userId: JSON.parse(localStorage.getItem("user")).id,
+      userId: JSON.parse(localStorage.getItem("user"))._id,
       generateESIndices: true,
       jobStatus: 1,
-      runs: []
     }
   }
 

@@ -1,12 +1,12 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { SchemaService } from 'src/services/schema/schema.service';
-import { IJob } from 'src/models/job.model';
 import { IPlot } from 'src/models/plot.model';
 import { QueryService } from 'src/services/query/query.service';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IAggregation } from 'src/models/aggregation.model';
 import { ICluster } from 'src/models/cluster.model';
+import { IJobModel } from '../../../../../../mongodb-service/src/models/jobModel';
 
 @Component({
   selector: 'app-aggregation-clustering',
@@ -15,7 +15,7 @@ import { ICluster } from 'src/models/cluster.model';
 })
 
 export class AggregationClusteringComponent implements OnInit {
-  public job: IJob;
+  public job: IJobModel;
   aggregationSelected: boolean = false;
 
   chosenXColumn: string;

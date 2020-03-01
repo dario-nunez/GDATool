@@ -3,8 +3,8 @@ import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SchemaService } from 'src/services/schema/schema.service';
 import { QueryService } from 'src/services/query/query.service';
-import { IJob } from 'src/models/job.model';
 import { IAggregation } from 'src/models/aggregation.model';
+import { IJobModel } from '../../../../../../mongodb-service/src/models/jobModel';
 
 @Component({
   selector: 'app-aggregations',
@@ -14,7 +14,7 @@ import { IAggregation } from 'src/models/aggregation.model';
 export class AggregationsComponent implements OnInit {
   metricSelected: boolean = false;
   jobId: string;
-  public job: IJob;
+  public job: IJobModel;
 
   FEATURE_COLUMNS: Array<string> = [];
   OPERATIONS: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
@@ -93,9 +93,7 @@ export class AggregationsComponent implements OnInit {
         sortColumnName: this.selectedFeatureColumns[0]
       }
 
-      console.log("Agg created");
       this.queryService.aggregations.push(newAgg);
-      console.log(this.queryService.aggregations);
 
       this.currentAggregationMetricColumn = "Choose one";
       this.currentAggregationName = "";
@@ -143,7 +141,6 @@ export class AggregationsComponent implements OnInit {
   }
 
   selectMetricColumn(event, element) {
-    console.log("metric column: " + element);
     this.selectedFeatureColumns = []
     this.possibleFeatureColumns = this.FEATURE_COLUMNS.filter(obj => obj !== element);
     this.metricSelected = true;

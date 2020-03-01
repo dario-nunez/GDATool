@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IJob } from 'src/models/job.model';
 import { SchemaService } from 'src/services/schema/schema.service';
 import { QueryService } from 'src/services/query/query.service';
-import { IAggregation } from 'src/models/aggregation.model';
-import { ICluster } from 'src/models/cluster.model';
+import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
 
 @Component({
   selector: 'app-query',
@@ -17,8 +15,8 @@ export class QueryComponent implements OnInit {
   ioDisabled: boolean = true;
   metricSelected: boolean = false;
   jobId: string;
-  job: IJob;
-  paramJob: IJob[] = [];
+  job: IJobModel;
+  paramJob: IJobModel[] = [];
 
   constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, private queryService: QueryService, private router: Router) { }
 
@@ -41,8 +39,6 @@ export class QueryComponent implements OnInit {
   }
 
   next() {
-    console.log("Query service before submitting:");
-    console.log(this.queryService);
     this.mongodbService.updateJob(this.job).subscribe(retJob => {
       this.mongodbService.createMultipleAggregations(this.queryService.aggregations).subscribe(aggs => {
         // Add aggregation IDs before moving on to the clusters
@@ -72,8 +68,6 @@ export class QueryComponent implements OnInit {
   deleteJob() {
     if (confirm("This job will be lost forever. Are you sure you want to delete it?")) {
       this.mongodbService.deleteJobRecusrive(this.job._id).subscribe(job => {
-        console.log("Deleted Job: ");
-        console.log(job);
         this.router.navigate(['/jobsPage']);
       });
     }
