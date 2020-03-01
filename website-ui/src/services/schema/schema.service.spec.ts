@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { SchemaService } from './schema.service';
-import { COMMON_DECLARATIONS, COMMON_IMPORTS } from 'src/app/commonDependencies';
+import { COMMON_DECLARATIONS, COMMON_IMPORTS } from 'src/app/testResources';
 
 describe('SchemaService', () => {
   beforeEach(() => TestBed.configureTestingModule({

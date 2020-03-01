@@ -1,6 +1,6 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { COMMON_IMPORTS, COMMON_DECLARATIONS } from './commonDependencies';
+import { COMMON_IMPORTS, COMMON_DECLARATIONS } from './testResources';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {

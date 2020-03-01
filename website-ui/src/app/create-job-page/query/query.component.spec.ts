@@ -1,14 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { of as observableOf, of } from 'rxjs';
 import { QueryComponent } from './query.component';
-import { COMMON_IMPORTS, COMMON_DECLARATIONS, mockSchemaService } from 'src/app/commonDependencies';
+import { COMMON_IMPORTS, COMMON_DECLARATIONS, MOCK_SCHEMA_SERVICE } from 'src/app/testResources';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { ActivatedRoute } from '@angular/router';
 import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
 import { SchemaService } from 'src/services/schema/schema.service';
 import { ISchema } from 'src/models/schema.model';
 import { IColumn } from 'src/models/column.model';
-import { QueryService } from 'src/services/query/query.service';
 import { IAggregationModel } from '../../../../../mongodb-service/src/models/aggregationModel';
 
 const mockJobs: IJobModel = {
@@ -65,7 +64,7 @@ describe('QueryComponent', () => {
         },
         {
           provide: SchemaService,
-          useValue: mockSchemaService
+          useValue: MOCK_SCHEMA_SERVICE
         },
         {
           provide: ActivatedRoute,

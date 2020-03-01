@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { of as observableOf, of } from 'rxjs';
 import { JobsPageComponent } from './jobs-page.component';
-import { COMMON_DECLARATIONS, COMMON_IMPORTS } from '../commonDependencies';
+import { COMMON_DECLARATIONS, COMMON_IMPORTS } from '../testResources';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { IJobModel } from '../../../../mongodb-service/src/models/jobModel';
 

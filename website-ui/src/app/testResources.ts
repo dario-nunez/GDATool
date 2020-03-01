@@ -71,14 +71,14 @@ export const COMMON_IMPORTS = [
     NgbModule
 ]
 
-export const mockQueryService = {
+export const MOCK_QUERY_SERVICE = {
     aggregations: [],
     generalPlots: [],
     aggregationFilters: [],
     aggregationClusters: []
 }
 
-export const mockSchemaService = {
+export const MOCK_SCHEMA_SERVICE = {
     featureColumns: [],
     metricColumns: [],
     schema: "mock_schema",

@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DetailsComponent } from './details.component';
-import { COMMON_DECLARATIONS, COMMON_IMPORTS } from 'src/app/commonDependencies';
+import { COMMON_DECLARATIONS, COMMON_IMPORTS } from 'src/app/testResources';
 import { IUserModel } from '../../../../../mongodb-service/src/models/userModel';
 
 const mockUser: IUserModel = {

@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SignUpPageComponent } from './sign-up-page.component';
-import { COMMON_DECLARATIONS, COMMON_IMPORTS } from '../commonDependencies';
+import { COMMON_DECLARATIONS, COMMON_IMPORTS } from '../testResources';
 
 describe('SignUpPageComponent', () => {
   let component: SignUpPageComponent;

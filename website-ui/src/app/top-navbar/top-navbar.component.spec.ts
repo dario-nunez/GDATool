@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TopNavbarComponent } from './top-navbar.component';
-import { COMMON_DECLARATIONS, COMMON_IMPORTS } from '../commonDependencies';
+import { COMMON_DECLARATIONS, COMMON_IMPORTS } from '../testResources';
 import { IUserModel } from '../../../../mongodb-service/src/models/userModel';
 
 const mockUser: IUserModel = {

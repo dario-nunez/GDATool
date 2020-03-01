@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { AuthenticationService } from './authentication.service';
-import { COMMON_IMPORTS, COMMON_DECLARATIONS } from 'src/app/commonDependencies';
+import { COMMON_IMPORTS, COMMON_DECLARATIONS } from 'src/app/testResources';
 
 describe('AuthenticationService', () => {
   beforeEach(() => TestBed.configureTestingModule({

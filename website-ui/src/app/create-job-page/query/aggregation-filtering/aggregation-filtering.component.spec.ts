@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { AggregationFilteringComponent } from './aggregation-filtering.component';
-import { COMMON_IMPORTS, COMMON_DECLARATIONS, mockQueryService, mockSchemaService } from 'src/app/commonDependencies';
+import { COMMON_IMPORTS, COMMON_DECLARATIONS, MOCK_QUERY_SERVICE, MOCK_SCHEMA_SERVICE } from 'src/app/testResources';
 import { QueryService } from 'src/services/query/query.service';
 import { SchemaService } from 'src/services/schema/schema.service';
 
@@ -15,11 +15,11 @@ describe('AggregationFilteringComponent', () => {
       providers: [
         {
           provide: QueryService,
-          useValue: mockQueryService
+          useValue: MOCK_QUERY_SERVICE
         },
         {
           provide: SchemaService,
-          useValue: mockSchemaService
+          useValue: MOCK_SCHEMA_SERVICE
         }
       ]
     })

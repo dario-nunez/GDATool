@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardPageComponent } from './dashboard-page.component';
-import { COMMON_DECLARATIONS, COMMON_IMPORTS } from '../commonDependencies';
+import { COMMON_DECLARATIONS, COMMON_IMPORTS } from '../testResources';
 
 describe('DashboardPageComponent', () => {
   let component: DashboardPageComponent;
