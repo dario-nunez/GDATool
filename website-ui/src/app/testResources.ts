@@ -30,50 +30,21 @@ import { IUserModel } from '../../../mongodb-service/src/models/userModel';
 import { IJobModel } from '../../../mongodb-service/src/models/jobModel';
 import { IAggregationModel } from '../../../mongodb-service/src/models/aggregationModel';
 import { IStatusLine } from 'src/models/statusLine.model';
+import { Routes } from '@angular/router';
+import { IClusterModel } from '../../../mongodb-service/src/models/clusterModel';
+import { ISchema } from 'src/models/schema.model';
+import { IColumn } from 'src/models/column.model';
+import { IFilterModel } from '../../../mongodb-service/src/models/filterModel';
 
 export function tokenGetter(): string {
     return localStorage.getItem("auth_token");
 }
 
-export const COMMON_DECLARATIONS = [
-    AppComponent,
-    MarketingPageComponent,
-    LogInPageComponent,
-    SignUpPageComponent,
-    PasswordMathcValidatorDirective,
-    JobsPageComponent,
-    JobComponent,
-    UserPageComponent,
-    TopNavbarComponent,
-    JobDetailsPageComponent,
-    DashboardPageComponent,
-    DetailsComponent,
-    UploadComponent,
-    SchemaComponent,
-    QueryComponent,
-    ExecuteComponent,
-    StatusLineComponent,
-    FileSelectDirective,
-    GeneralPlotsComponent,
-    AggregationsComponent,
-    AggregationFilteringComponent,
-    AggregationClusteringComponent
-]
-
-export const COMMON_IMPORTS = [
-    BrowserModule,
-    RouterTestingModule,
-    FormsModule,
-    HttpClientModule,
-    JwtModule.forRoot({
-        config: {
-            tokenGetter,
-            whitelistedDomains: [],
-            blacklistedRoutes: ["/ms/user/createAndGetJWT", "/auth/jwt/getToken"]
-        }
-    }),
-    NgbModule
-]
+export const MOCK_FILTER:IFilterModel = {
+    _id: "mock_id",
+    aggName: "mock_aggName",
+    query: "mock_query"
+}
 
 export const MOCK_QUERY_SERVICE = {
     aggregations: [],
@@ -82,10 +53,25 @@ export const MOCK_QUERY_SERVICE = {
     aggregationClusters: []
 }
 
+export const MOCK_COLUMN: IColumn = {
+    name: "mock_name",
+    type: "mock_type",
+    range: ["0", "10"]
+}
+
+export const MOCK_SCHEMA: ISchema = {
+    datasetName: "mock_dataset_name",
+    schema: [MOCK_COLUMN]
+}
+
 export const MOCK_SCHEMA_SERVICE = {
     featureColumns: [],
     metricColumns: [],
     schema: "mock_schema",
+
+    getSchema() {
+        return MOCK_SCHEMA
+    }
 }
 
 export const MOCK_USER: IUserModel = {
@@ -104,6 +90,16 @@ export const MOCK_JOB: IJobModel = {
     userId: "string",
     generateESIndices: true,
     jobStatus: 0,
+}
+
+export const MOCK_CLUSTER: IClusterModel = {
+    aggName: "mock_name1",
+    identifier: "mock_identifier",
+    identifierType: "nominal",
+    xAxis: "mock_x",
+    xType: "quantitative",
+    yAxis: "mock_y",
+    yType: "quantitative"
 }
 
 export const MOCK_JOBS: Array<IJobModel> = [
@@ -155,3 +151,57 @@ export const MOCK_STATUS_LINE: IStatusLine = {
     lineText: "lineTest",
     lineTriggerStatus: 1
 }
+
+export const routes: Routes = [
+    { path: "", component: MarketingPageComponent },
+    { path: "logIn", component: LogInPageComponent },
+    { path: "signUp", component: SignUpPageComponent },
+    { path: "upload/" + MOCK_JOB._id, component: UploadComponent },
+    { path: "jobsPage", component: JobsPageComponent },
+    { path: "jobDetailsPage/" + MOCK_JOB._id, component: JobDetailsPageComponent },
+    { path: "details", component: DetailsComponent },
+    { path: "schema/" + MOCK_JOB._id, component: SchemaComponent },
+    { path: "query/" + MOCK_JOB._id, component: QueryComponent },
+    { path: "execute/" + MOCK_JOB._id, component: ExecuteComponent },
+    { path: "dashboardPage/" + MOCK_JOB._id, component: DashboardPageComponent }
+];
+
+export const COMMON_DECLARATIONS = [
+    AppComponent,
+    MarketingPageComponent,
+    LogInPageComponent,
+    SignUpPageComponent,
+    PasswordMathcValidatorDirective,
+    JobsPageComponent,
+    JobComponent,
+    UserPageComponent,
+    TopNavbarComponent,
+    JobDetailsPageComponent,
+    DashboardPageComponent,
+    DetailsComponent,
+    UploadComponent,
+    SchemaComponent,
+    QueryComponent,
+    ExecuteComponent,
+    StatusLineComponent,
+    FileSelectDirective,
+    GeneralPlotsComponent,
+    AggregationsComponent,
+    AggregationFilteringComponent,
+    AggregationClusteringComponent
+]
+
+export const COMMON_IMPORTS = [
+    BrowserModule,
+    RouterTestingModule.withRoutes(routes),
+    FormsModule,
+    HttpClientModule,
+    JwtModule.forRoot({
+        config: {
+            tokenGetter,
+            whitelistedDomains: [],
+            blacklistedRoutes: ["/ms/user/createAndGetJWT", "/auth/jwt/getToken"]
+        }
+    }),
+    NgbModule
+]

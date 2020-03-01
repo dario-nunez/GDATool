@@ -17,10 +17,9 @@ export class DetailsComponent implements OnInit {
   currentAggregationName: string;
   currentAggregationMetricColumn: string;
 
-  constructor(private mongodbService: MongodbService, private schemaService: SchemaService, private router: Router) { }
+  constructor(public mongodbService: MongodbService, private router: Router) { }
 
   ngOnInit() {
-    console.info(JSON.parse(localStorage.getItem("user")));
     let loggedInUserId;
     if (JSON.parse(localStorage.getItem("user"))) {
       loggedInUserId = JSON.parse(localStorage.getItem("user"))._id;

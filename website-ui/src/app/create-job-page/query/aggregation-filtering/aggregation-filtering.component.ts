@@ -30,7 +30,7 @@ export class AggregationFilteringComponent implements OnInit {
   chosenStringValue: string;
   chosenNumericValue: number;
 
-  constructor(private queryService: QueryService, private schemaService: SchemaService) { }
+  constructor(public queryService: QueryService, public schemaService: SchemaService) { }
 
   ngOnInit() {
     this.queryService.aggregationFilters = [];
@@ -39,11 +39,7 @@ export class AggregationFilteringComponent implements OnInit {
 
     this.FEATURE_COLUMNS = this.schemaService.featureColumns;
     this.METRIC_COLUMNS = this.schemaService.metricColumns;
-
     this.availableColumns = this.FEATURE_COLUMNS;
-
-    console.log(this.METRIC_COLUMNS);
-    console.log(this.availableColumns);
 
     this.METRIC_COLUMNS.forEach(element => {
       if (this.availableColumns.find(obj => obj[0] == element[0]) == undefined) {

@@ -9,8 +9,10 @@ describe('ExecuteComponent', () => {
   let component: ExecuteComponent;
   let fixture: ComponentFixture<ExecuteComponent>;
 
-  const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobById"])
+  const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobById", "updateJob", "deleteJobRecusrive"])
   mockMongodbService.getJobById.and.returnValue(of(MOCK_JOB));
+  mockMongodbService.updateJob.and.returnValue(of(MOCK_JOB));
+  mockMongodbService.deleteJobRecusrive.and.returnValue(of(MOCK_JOB));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -49,5 +51,16 @@ describe('ExecuteComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('submitAndRun button clicked', () => {
+    component.submitAndRun();
+    expect(component.mongodbService.updateJob).toHaveBeenCalled();
+  });
+
+  it('deleteJob button clicked', () => {
+    spyOn(window, 'confirm').and.returnValue(true);
+    component.deleteJob();
+    expect(component.mongodbService.deleteJobRecusrive).toHaveBeenCalled();
   });
 });

@@ -32,9 +32,6 @@ export class MongodbService {
       password: password
     }
 
-    console.log("User sent in the POST request: ");
-    console.log(user);
-
     return this.http.post<IUserModel>("http://localhost:5000/ms/user", user).pipe(
       catchError(err => of(null))
     );
@@ -101,24 +98,18 @@ export class MongodbService {
   }
 
   createMultiplePlots(plots: IPlotModel[]): Observable<IPlotModel[]> {
-    console.log("Plots at mongo service");
-    console.log(plots);
     return this.http.post<IPlotModel[]>("http://localhost:5000/ms/plot/multiple", plots).pipe(
       catchError(err => of(null))
     );
   }
 
   createMultipleClusters(clusters: IClusterModel[]): Observable<IClusterModel[]> {
-    console.log("Clusters at mongo service");
-    console.log(clusters);
     return this.http.post<IClusterModel[]>("http://localhost:5000/ms/cluster/multiple", clusters).pipe(
       catchError(err => of(null))
     );
   }
 
   createMultipleFilters(filters: IFilterModel[]): Observable<IFilterModel[]> {
-    console.log("Filters at mongo service");
-    console.log(filters);
     return this.http.post<IFilterModel>("http://localhost:5000/ms/filter/multiple", filters).pipe(
       catchError(err => of(null))
     );

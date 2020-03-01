@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { QueryService } from 'src/services/query/query.service';
-import { ActivatedRoute, Router } from '@angular/router';
 import { IJobModel } from '../../../../../../mongodb-service/src/models/jobModel';
 import { IAggregationModel } from '../../../../../../mongodb-service/src/models/aggregationModel';
 import { IClusterModel } from '../../../../../../mongodb-service/src/models/clusterModel';
@@ -27,7 +26,7 @@ export class AggregationClusteringComponent implements OnInit {
 
   selectedAggregation: string;
 
-  constructor(private route: ActivatedRoute, private queryService: QueryService, private router: Router) { }
+  constructor(public queryService: QueryService) { }
 
   ngOnInit() {
     this.queryService.aggregationClusters = [];    

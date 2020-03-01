@@ -14,7 +14,7 @@ export class ExecuteComponent implements OnInit {
   jobId: string;
   ioDisabled: boolean = true;
 
-  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) { }
+  constructor(public mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     this.job = {
@@ -41,7 +41,6 @@ export class ExecuteComponent implements OnInit {
 
   submitAndRun() {
     this.mongodbService.updateJob(this.job).subscribe(retJob => {
-      console.log("Trigger Spark job")
       this.router.navigate(['/jobsPage']);
     });
   }
@@ -49,8 +48,6 @@ export class ExecuteComponent implements OnInit {
   deleteJob() {
     if (confirm("This job will be lost forever. Are you sure you want to delete it?")) {
       this.mongodbService.deleteJobRecusrive(this.job._id).subscribe(job => {
-        console.log("Deleted Job: ");
-        console.log(job);
         this.router.navigate(['/jobsPage']);
       });
     }

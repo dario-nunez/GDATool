@@ -1,6 +1,9 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { DetailsComponent } from './details.component';
-import { COMMON_DECLARATIONS, COMMON_IMPORTS, MOCK_USER } from 'src/app/testResources';
+import { COMMON_DECLARATIONS, COMMON_IMPORTS, MOCK_USER, MOCK_JOB } from 'src/app/testResources';
+import { of as observableOf, of } from 'rxjs';
+import { MongodbService } from 'src/services/mongodb/mongodb.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 const mockLocalStorage = {
   getItem: (key: string): string => {
@@ -12,12 +15,27 @@ describe('DetailsComponent', () => {
   let component: DetailsComponent;
   let fixture: ComponentFixture<DetailsComponent>;
 
+  const mockMongodbService = jasmine.createSpyObj("MongodbService", ["createJob"]);
+  mockMongodbService.createJob.and.returnValue(of(MOCK_JOB));
+
+  const mockRouter = jasmine.createSpyObj("RouterTestingModule", ["navigate"]);
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: COMMON_DECLARATIONS,
-      imports: COMMON_IMPORTS
+      imports: COMMON_IMPORTS,
+      providers: [
+        {
+          provide: RouterTestingModule,
+          useValue: mockRouter
+        },
+        {
+          provide: MongodbService,
+          useValue: mockMongodbService
+        }
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -29,5 +47,10 @@ describe('DetailsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('createJob button clicked', () => {
+    component.createJob();
+    expect(component.mongodbService.createJob).toHaveBeenCalled();
   });
 });
