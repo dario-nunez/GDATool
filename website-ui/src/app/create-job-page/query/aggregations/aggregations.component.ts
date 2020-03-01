@@ -3,8 +3,8 @@ import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SchemaService } from 'src/services/schema/schema.service';
 import { QueryService } from 'src/services/query/query.service';
-import { IAggregation } from 'src/models/aggregation.model';
 import { IJobModel } from '../../../../../../mongodb-service/src/models/jobModel';
+import { IAggregationModel } from '../../../../../../mongodb-service/src/models/aggregationModel';
 
 @Component({
   selector: 'app-aggregations',
@@ -20,7 +20,7 @@ export class AggregationsComponent implements OnInit {
   OPERATIONS: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
   METRIC_COLUMNS: Array<string> = [];
 
-  aggregations: IAggregation[];
+  aggregations: IAggregationModel[];
   currentAggregationName: string;
   currentAggregationMetricColumn: string;
 
@@ -64,7 +64,7 @@ export class AggregationsComponent implements OnInit {
   addDefaultAggregations() {
     for (let mc of this.METRIC_COLUMNS) {
       for (let fc of this.FEATURE_COLUMNS.filter(obj => obj !== mc)) {
-        let agg: IAggregation = {
+        let agg: IAggregationModel = {
           aggs: this.OPERATIONS,
           featureColumns: [fc],
           jobId: this.job._id,
@@ -84,7 +84,7 @@ export class AggregationsComponent implements OnInit {
     if (this.queryService.aggregations.find(obj => obj.name === this.currentAggregationName) != null) {
       this.currentAggregationName = "";
     } else {
-      const newAgg: IAggregation = {
+      const newAgg: IAggregationModel = {
         aggs: this.selectedAggregations,
         featureColumns: this.selectedFeatureColumns,
         jobId: this.jobId,

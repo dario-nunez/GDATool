@@ -4,8 +4,9 @@ import { Model } from "mongoose";
 type FilterType = IFilter & mongoose.Document;
 
 export interface IFilterModel {
-    _id: string;
-    aggId: string;
+    _id?: string;
+    aggId?: string;
+    aggName: string;
     query: string;
 }
 
@@ -15,6 +16,10 @@ export interface IFilter extends IFilterModel, mongoose.Document {
 
 export const FilterSchema = new mongoose.Schema({
     aggId: {
+        required: true,
+        type: String
+    },
+    aggName: {
         required: true,
         type: String
     },

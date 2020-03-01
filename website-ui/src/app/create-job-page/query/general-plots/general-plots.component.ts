@@ -1,10 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SchemaService } from 'src/services/schema/schema.service';
-import { IPlot } from 'src/models/plot.model';
 import { QueryService } from 'src/services/query/query.service';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IJobModel } from '../../../../../../mongodb-service/src/models/jobModel';
+import { IPlotModel } from '../../../../../../mongodb-service/src/models/plotModel';
 
 @Component({
   selector: 'app-general-plots',
@@ -71,7 +71,7 @@ export class GeneralPlotsComponent implements OnInit {
   }
 
   createPlot() {
-    const newPlot: IPlot = {
+    const newPlot: IPlotModel = {
       jobId: this.job._id,
       identifier: this.chosenIdentifierColumn,
       identifierType: this.getVegaColumnType(this.chosenIdentifierColumn),

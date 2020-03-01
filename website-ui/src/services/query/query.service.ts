@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
-import { IAggregation } from 'src/models/aggregation.model';
+import { IAggregationModel } from '../../../../mongodb-service/src/models/aggregationModel';
+import { IPlotModel } from '../../../../mongodb-service/src/models/plotModel';
+import { IFilterModel } from '../../../../mongodb-service/src/models/filterModel';
 
 @Injectable({
   providedIn: 'root'
 })
 export class QueryService {
 
-  aggregations: IAggregation[];
-  generalPlots: any[];
-  aggregationFilters: any[];
-  aggregationClusters: any[];
+  aggregations: IAggregationModel[];
+  generalPlots: IPlotModel[];
+  aggregationFilters: IFilterModel[];
+  aggregationClusters: IAggregationModel[];
 
   constructor() { }
 }

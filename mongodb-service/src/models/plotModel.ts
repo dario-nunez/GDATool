@@ -4,7 +4,7 @@ import { Model } from "mongoose";
 type PlotType = IPlot & mongoose.Document;
 
 export interface IPlotModel {
-    _id: string;
+    _id?: string;
     jobId: string;
     identifier: string;
     identifierType: string;

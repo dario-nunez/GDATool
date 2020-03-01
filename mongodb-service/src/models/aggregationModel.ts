@@ -4,7 +4,7 @@ import { Model } from "mongoose";
 type AggregationType = IAggregation & mongoose.Document;
 
 export interface IAggregationModel {
-    _id: string;
+    _id?: string;
     aggs: Array<string>;
     featureColumns: Array<string>;
     jobId: string;

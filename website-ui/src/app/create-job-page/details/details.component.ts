@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { IAggregation } from 'src/models/aggregation.model';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { Router } from '@angular/router';
 import { SchemaService } from 'src/services/schema/schema.service';
 import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
+import { IAggregationModel } from '../../../../../mongodb-service/src/models/aggregationModel';
 
 @Component({
   selector: 'app-details',
@@ -12,7 +12,7 @@ import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
 })
 export class DetailsComponent implements OnInit {
   job: IJobModel;
-  aggregations: IAggregation[];
+  aggregations: IAggregationModel[];
   customAggregations: boolean;
   currentAggregationName: string;
   currentAggregationMetricColumn: string;

@@ -1,12 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { SchemaService } from 'src/services/schema/schema.service';
-import { IPlot } from 'src/models/plot.model';
 import { QueryService } from 'src/services/query/query.service';
-import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IAggregation } from 'src/models/aggregation.model';
-import { ICluster } from 'src/models/cluster.model';
 import { IJobModel } from '../../../../../../mongodb-service/src/models/jobModel';
+import { IAggregationModel } from '../../../../../../mongodb-service/src/models/aggregationModel';
+import { IClusterModel } from '../../../../../../mongodb-service/src/models/clusterModel';
 
 @Component({
   selector: 'app-aggregation-clustering',
@@ -50,7 +48,7 @@ export class AggregationClusteringComponent implements OnInit {
   }
 
   selectAggregation(event, agg) {
-    let chosenAgg: IAggregation = this.queryService.aggregations.filter(obj => obj.name === agg)[0];
+    let chosenAgg: IAggregationModel = this.queryService.aggregations.filter(obj => obj.name === agg)[0];
     
     this.OPERATIONS = chosenAgg.aggs;
     this.xAvailableColumns = chosenAgg.aggs;
@@ -60,16 +58,15 @@ export class AggregationClusteringComponent implements OnInit {
   }
 
   addCluster() {
-    let chosenAgg: IAggregation = this.queryService.aggregations.filter(obj => obj.name === this.selectedAggregation)[0];
-    const newCluster: ICluster = {
+    let chosenAgg: IAggregationModel = this.queryService.aggregations.filter(obj => obj.name === this.selectedAggregation)[0];
+    const newCluster: IClusterModel = {
       aggName: chosenAgg.name,
       identifier: this.chosenIdentifierColumn,
       identifierType: "nominal",
       xAxis: this.chosenXColumn,
       xType: "quantitative",
       yAxis: this.chosenYColumn,
-      yType: "quantitative",
-      cluster: 0
+      yType: "quantitative"
     }
 
     this.yAvailableColumns = this.OPERATIONS;

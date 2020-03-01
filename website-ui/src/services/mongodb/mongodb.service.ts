@@ -4,10 +4,10 @@ import { IUserModel } from '../../../../mongodb-service/src/models/userModel';
 import { Observable, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { IJobModel } from '../../../../mongodb-service/src/models/jobModel';
-import { IAggregation } from 'src/models/aggregation.model';
-import { IPlot } from 'src/models/plot.model';
-import { ICluster } from 'src/models/cluster.model';
-import { IFilter } from 'src/models/filter.model';
+import { IAggregationModel } from '../../../../mongodb-service/src/models/aggregationModel';
+import { IPlotModel } from '../../../../mongodb-service/src/models/plotModel';
+import { IClusterModel } from '../../../../mongodb-service/src/models/clusterModel';
+import { IFilterModel } from '../../../../mongodb-service/src/models/filterModel';
 
 @Injectable({
   providedIn: 'root'
@@ -94,32 +94,32 @@ export class MongodbService {
     );
   }
 
-  createMultipleAggregations(aggregations: IAggregation[]): Observable<IAggregation[]> {
-    return this.http.post<IAggregation[]>("http://localhost:5000/ms/aggregation/multiple", aggregations).pipe(
+  createMultipleAggregations(aggregations: IAggregationModel[]): Observable<IAggregationModel[]> {
+    return this.http.post<IAggregationModel[]>("http://localhost:5000/ms/aggregation/multiple", aggregations).pipe(
       catchError(err => of(null))
     );
   }
 
-  createMultiplePlots(plots: IPlot[]): Observable<IPlot[]> {
+  createMultiplePlots(plots: IPlotModel[]): Observable<IPlotModel[]> {
     console.log("Plots at mongo service");
     console.log(plots);
-    return this.http.post<IPlot[]>("http://localhost:5000/ms/plot/multiple", plots).pipe(
+    return this.http.post<IPlotModel[]>("http://localhost:5000/ms/plot/multiple", plots).pipe(
       catchError(err => of(null))
     );
   }
 
-  createMultipleClusters(clusters: ICluster[]): Observable<ICluster[]> {
+  createMultipleClusters(clusters: IClusterModel[]): Observable<IClusterModel[]> {
     console.log("Clusters at mongo service");
     console.log(clusters);
-    return this.http.post<ICluster[]>("http://localhost:5000/ms/cluster/multiple", clusters).pipe(
+    return this.http.post<IClusterModel[]>("http://localhost:5000/ms/cluster/multiple", clusters).pipe(
       catchError(err => of(null))
     );
   }
 
-  createMultipleFilters(filters: IFilter[]): Observable<IFilter[]> {
+  createMultipleFilters(filters: IFilterModel[]): Observable<IFilterModel[]> {
     console.log("Filters at mongo service");
     console.log(filters);
-    return this.http.post<IFilter>("http://localhost:5000/ms/filter/multiple", filters).pipe(
+    return this.http.post<IFilterModel>("http://localhost:5000/ms/filter/multiple", filters).pipe(
       catchError(err => of(null))
     );
   }

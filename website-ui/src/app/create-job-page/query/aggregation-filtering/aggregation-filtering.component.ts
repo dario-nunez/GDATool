@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { QueryService } from 'src/services/query/query.service';
 import { SchemaService } from 'src/services/schema/schema.service';
-import { IAggregation } from 'src/models/aggregation.model';
 import { IColumn } from 'src/models/column.model';
-import { IFilter } from 'src/models/filter.model';
+import { IAggregationModel } from '../../../../../../mongodb-service/src/models/aggregationModel';
+import { IFilterModel } from '../../../../../../mongodb-service/src/models/filterModel';
 
 @Component({
   selector: 'app-aggregation-filtering',
@@ -53,7 +53,7 @@ export class AggregationFilteringComponent implements OnInit {
   }
 
   selectAggregation($event, agg) {
-    let chosenAgg: IAggregation = this.queryService.aggregations.filter(obj => obj.name === agg)[0];
+    let chosenAgg: IAggregationModel = this.queryService.aggregations.filter(obj => obj.name === agg)[0];
 
     this.aggregationSelected = true;
   }
@@ -84,7 +84,7 @@ export class AggregationFilteringComponent implements OnInit {
   }
 
   addFilter() {
-    let chosenAgg: IAggregation = this.queryService.aggregations.filter(obj => obj.name === this.selectedAggregation)[0];
+    let chosenAgg: IAggregationModel = this.queryService.aggregations.filter(obj => obj.name === this.selectedAggregation)[0];
     let sqlString;
     let columnType = this.availableColumns.filter(obj => obj[0] == this.chosenIdentifierColumn)[0][1];
 
@@ -100,7 +100,7 @@ export class AggregationFilteringComponent implements OnInit {
       sqlString = this.chosenIdentifierColumn + " " + this.chosenOperator + " " + this.chosenNumericValue;
     }
 
-    const newFilter: IFilter = {
+    const newFilter: IFilterModel = {
       aggName: this.selectedAggregation,
       query: sqlString
     }
