@@ -8,11 +8,11 @@ chai.use(chaiHttp);
 const expect = chai.expect;
 let userRepository: UserRepository;
 
-const testUser = {
+const testUser: IUserModel = {
     password: "test_password",
     email: "test_email",
     name: "test_user"
-} as IUserModel;
+};
 
 before(async () => {
     userRepository = new UserRepository();

@@ -12,19 +12,21 @@ const expect = chai.expect;
 let aggregationRepository: AggregationRepository;
 let filterRepository: FilterRepository;
 
-const testfilter1 = {
+const testfilter1: IFilterModel = {
     _id: "161616161616161616161616",
     aggId: "",
+    aggName: "",
     query: "fliter1_test_query"
-} as IFilterModel;
+};
 
-const testfilter2 = {
+const testfilter2: IFilterModel = {
     _id: "171717171717171717171717",
     aggId: "",
+    aggName: "",
     query: "fliter2_test_query"
-} as IFilterModel;
+};
 
-const testAggregation = {
+const testAggregation: IAggregationModel = {
     _id: "181818181818181818181818",
     jobId: "191919191919191919191919",
     aggs: [],
@@ -32,7 +34,7 @@ const testAggregation = {
     metricColumn: "aggregation_test_metricColumn",
     name: "aggregation_test_name",
     sortColumnName: "aggregation1_test_sortColumnName"
-} as IAggregationModel;
+};
 
 before(async () => {
     aggregationRepository = new AggregationRepository();
@@ -45,6 +47,8 @@ before(async () => {
     await aggregationRepository.create(testAggregation);
     testfilter1.aggId = testAggregation._id;
     testfilter2.aggId = testAggregation._id;
+    testfilter1.aggName = testAggregation.name;
+    testfilter2.aggName = testAggregation.name;
 });
 
 describe("filter controller tests", () => {
