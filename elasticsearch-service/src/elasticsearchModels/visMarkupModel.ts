@@ -1,6 +1,6 @@
-import { IVisualization } from "./visualizationModel";
+import { IESVisualization } from "./visualizationModel";
 
-export interface IVisMarkup extends IVisualization {
+export interface IESMarkup extends IESVisualization {
     explorerTitle: string;
     displayText: string;
 }

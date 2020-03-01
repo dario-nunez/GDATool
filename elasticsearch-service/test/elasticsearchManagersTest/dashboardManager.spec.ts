@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import { before, describe, it } from "mocha";
 import { DashboardManager } from "../../src/elasticsearchEntityManagers/dashboardManager";
-import { IDashboard } from "../../src/elasticsearchModels/dashboardModel";
+import { IESDashboard } from "../../src/elasticsearchModels/dashboardModel";
 import { KibanaService } from "../../src/services/kibana-service";
 
 const assert = chai.assert;
@@ -20,8 +20,8 @@ before(async () => {
 describe("Dashboard manager tests", () => {
     describe("create dashboard", () => {
         it("create succeeds", (done) => {
-            const dashboardSeed: IDashboard = {
-                id: "jobId",
+            const dashboardSeed: IESDashboard = {
+                _id: "jobId",
                 title: "jobId",
                 visualizations: [],
                 description: "This is a dashboard description"

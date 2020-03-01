@@ -1,8 +1,8 @@
-import { IVisualization } from "./visualizationModel";
+import { IESVisualization } from "./visualizationModel";
 
-export interface IDashboard {
-    id: string;
+export interface IESDashboard {
+    _id: string;
     title: string;
-    visualizations: Array<Array<IVisualization>>;
+    visualizations: Array<Array<IESVisualization>>;
     description: string;
 }

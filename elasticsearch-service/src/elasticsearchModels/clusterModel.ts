@@ -1,6 +1,6 @@
-import { IVisualization } from "./visualizationModel";
+import { IESVisualization } from "./visualizationModel";
 
-export interface ICluster extends IVisualization {
+export interface IESCluster extends IESVisualization {
     index: string;
     explorerTitle: string;
     identifier: string;

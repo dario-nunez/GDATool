@@ -1,9 +1,9 @@
-import { ICluster } from "../elasticsearchModels/clusterModel";
-import { IDataTable } from "../elasticsearchModels/dataTableModel";
-import { IMetric } from "../elasticsearchModels/metricModel";
-import { IPlot } from "../elasticsearchModels/plotModel";
-import { IVisBarCHart } from "../elasticsearchModels/visBarChartModel";
-import { IVisMarkup } from "../elasticsearchModels/visMarkupModel";
+import { IESCluster } from "../elasticsearchModels/clusterModel";
+import { IESDataTable } from "../elasticsearchModels/dataTableModel";
+import { IESMetric } from "../elasticsearchModels/metricModel";
+import { IESPlot } from "../elasticsearchModels/plotModel";
+import { IESBarChart } from "../elasticsearchModels/visBarChartModel";
+import { IESMarkup } from "../elasticsearchModels/visMarkupModel";
 
 export class VisualizationBuilder {
     protected elasticSearchUrl: string;
@@ -14,10 +14,10 @@ export class VisualizationBuilder {
         this.indexName = ".kibana/";
     }
 
-    public getMarkup(markupModel: IVisMarkup) {
+    public getMarkup(markupModel: IESMarkup) {
         return {
             method: "PUT",
-            url: this.elasticSearchUrl + this.indexName + "_doc/visualization:" + markupModel.id,
+            url: this.elasticSearchUrl + this.indexName + "_doc/visualization:" + markupModel._id,
             data:
             {
                 visualization:
@@ -39,16 +39,16 @@ export class VisualizationBuilder {
         };
     }
 
-    public getBarChart(barChartModel: IVisBarCHart) {
+    public getBarChart(barChartModel: IESBarChart) {
         return {
             method: "PUT",
-            url: this.elasticSearchUrl + this.indexName + "_doc/visualization:" + barChartModel.id,
+            url: this.elasticSearchUrl + this.indexName + "_doc/visualization:" + barChartModel._id,
             data:
             {
                 visualization:
                 {
                     title: barChartModel.explorerTitle,
-                    visState: '{"title":"' + barChartModel.id + '","type":"histogram","params":{"type":"histogram","grid":{"categoryLines":false,"style":{"color":"#eee"}},"categoryAxes":[{"id":"CategoryAxis-1","type":"category","position":"bottom","show":true,"style":{},"scale":{"type":"linear"},"labels":{"show":true,"truncate":100},"title":{}}],"valueAxes":[{"id":"ValueAxis-1","name":"LeftAxis-1","type":"value","position":"left","show":true,"style":{},"scale":{"type":"linear","mode":"normal"},"labels":{"show":true,"rotate":0,"filter":false,"truncate":100},"title":{"text":"' + barChartModel.metricColumn + ' ' + barChartModel.aggregationName + '"}}],"seriesParams":[{"show":"true","type":"histogram","mode":"stacked","data":{"label":"' + barChartModel.metricColumn + ' ' + barChartModel.aggregationName + '","id":"1"},"valueAxis":"ValueAxis-1","drawLinesBetweenPoints":true,"showCircles":true}],"addTooltip":true,"addLegend":false,"legendPosition":"right","times":[],"addTimeMarker":false,"labels":{"show":false},"dimensions":{"x":{"accessor":0,"format":{"id":"terms","params":{"id":"string","otherBucketLabel":"Other","missingBucketLabel":"Missing"}},"params":{},"aggType":"terms"},"y":[{"accessor":1,"format":{"id":"number"},"params":{},"aggType":"max"}]}},"aggs":[{"id":"1","enabled":true,"type":"max","schema":"metric","params":{"field":"' + barChartModel.aggregationName + '","customLabel":"' + barChartModel.metricColumn + ' ' + barChartModel.aggregationName + '"}},{"id":"2","enabled":true,"type":"terms","schema":"segment","params":{"field":"' + barChartModel.featureColumn + '.keyword","orderBy":"1","order":"desc","size":40,"otherBucket":true,"otherBucketLabel":"Other","missingBucket":false,"missingBucketLabel":"Missing"}}]}',
+                    visState: '{"title":"' + barChartModel._id + '","type":"histogram","params":{"type":"histogram","grid":{"categoryLines":false,"style":{"color":"#eee"}},"categoryAxes":[{"id":"CategoryAxis-1","type":"category","position":"bottom","show":true,"style":{},"scale":{"type":"linear"},"labels":{"show":true,"truncate":100},"title":{}}],"valueAxes":[{"id":"ValueAxis-1","name":"LeftAxis-1","type":"value","position":"left","show":true,"style":{},"scale":{"type":"linear","mode":"normal"},"labels":{"show":true,"rotate":0,"filter":false,"truncate":100},"title":{"text":"' + barChartModel.metricColumn + ' ' + barChartModel.aggregationName + '"}}],"seriesParams":[{"show":"true","type":"histogram","mode":"stacked","data":{"label":"' + barChartModel.metricColumn + ' ' + barChartModel.aggregationName + '","id":"1"},"valueAxis":"ValueAxis-1","drawLinesBetweenPoints":true,"showCircles":true}],"addTooltip":true,"addLegend":false,"legendPosition":"right","times":[],"addTimeMarker":false,"labels":{"show":false},"dimensions":{"x":{"accessor":0,"format":{"id":"terms","params":{"id":"string","otherBucketLabel":"Other","missingBucketLabel":"Missing"}},"params":{},"aggType":"terms"},"y":[{"accessor":1,"format":{"id":"number"},"params":{},"aggType":"max"}]}},"aggs":[{"id":"1","enabled":true,"type":"max","schema":"metric","params":{"field":"' + barChartModel.aggregationName + '","customLabel":"' + barChartModel.metricColumn + ' ' + barChartModel.aggregationName + '"}},{"id":"2","enabled":true,"type":"terms","schema":"segment","params":{"field":"' + barChartModel.featureColumn + '.keyword","orderBy":"1","order":"desc","size":40,"otherBucket":true,"otherBucketLabel":"Other","missingBucket":false,"missingBucketLabel":"Missing"}}]}',
                     uiStateJSON: "{}",
                     description: "",
                     version: 1,
@@ -72,16 +72,16 @@ export class VisualizationBuilder {
         };
     }
 
-    public getMetric(metricModel: IMetric) {
+    public getMetric(metricModel: IESMetric) {
         // logger.info(metricModel);
         return {
             method: "PUT",
-            url: this.elasticSearchUrl + this.indexName + "_doc/visualization:" + metricModel.id,
+            url: this.elasticSearchUrl + this.indexName + "_doc/visualization:" + metricModel._id,
             data:
             {
                 visualization: {
                     title: metricModel.explorerTitle,
-                    visState: '{"title":"' + metricModel.id + '","type":"metric","params":{"metric":{"percentageMode":false,"useRanges":false,"colorSchema":"Green to Red","metricColorMode":"None","colorsRange":[{"type":"range","from":0,"to":10000}],"labels":{"show":true},"invertColors":false,"style":{"bgFill":"#000","bgColor":false,"labelColor":false,"subText":"","fontSize":25}},"dimensions":{"metrics":[{"type":"vis_dimension","accessor":0,"format":{"id":"number","params":{}}}]},"addTooltip":true,"addLegend":false,"type":"metric"},"aggs":[{"id":"1","enabled":true,"type":"' + metricModel.aggregationName + '","schema":"metric","params":{"field":"' + metricModel.aggregationName + '"}}]}',
+                    visState: '{"title":"' + metricModel._id + '","type":"metric","params":{"metric":{"percentageMode":false,"useRanges":false,"colorSchema":"Green to Red","metricColorMode":"None","colorsRange":[{"type":"range","from":0,"to":10000}],"labels":{"show":true},"invertColors":false,"style":{"bgFill":"#000","bgColor":false,"labelColor":false,"subText":"","fontSize":25}},"dimensions":{"metrics":[{"type":"vis_dimension","accessor":0,"format":{"id":"number","params":{}}}]},"addTooltip":true,"addLegend":false,"type":"metric"},"aggs":[{"id":"1","enabled":true,"type":"' + metricModel.aggregationName + '","schema":"metric","params":{"field":"' + metricModel.aggregationName + '"}}]}',
                     uiStateJSON: "{}",
                     description: "",
                     version: 1,
@@ -105,14 +105,14 @@ export class VisualizationBuilder {
         };
     }
 
-    public getDataTable(dataTableModel: IDataTable) {
+    public getDataTable(dataTableModel: IESDataTable) {
         const metricArray = this.getDataTableMetrics(0);
         const bucketArray = this.getDataTableBuckets(dataTableModel.featureColumns, 1);
         const aggArray = this.getDataTableAggs(dataTableModel);
 
         return {
             method: "PUT",
-            url: this.elasticSearchUrl + this.indexName + "_doc/visualization:" + dataTableModel.id,
+            url: this.elasticSearchUrl + this.indexName + "_doc/visualization:" + dataTableModel._id,
             data: {
                 visualization: {
                     title: dataTableModel.explorerTitle,
@@ -140,7 +140,7 @@ export class VisualizationBuilder {
         };
     }
 
-    public getVegaPlot(plotModel: IPlot) {
+    public getVegaPlot(plotModel: IESPlot) {
         let sourceArray = "";
         if (plotModel.identifier === plotModel.xAxis || plotModel.identifier === plotModel.yAxis) {
             sourceArray = '\\n \\\"'+ plotModel.xAxis +'\\\",\\n \\\"'+ plotModel.yAxis +'\\\"\\n ';
@@ -150,7 +150,7 @@ export class VisualizationBuilder {
         
         return {
             method: "PUT",
-            url: this.elasticSearchUrl + this.indexName + "_doc/visualization:" + plotModel.id,
+            url: this.elasticSearchUrl + this.indexName + "_doc/visualization:" + plotModel._id,
             data: {
                 visualization: {
                     title: plotModel.explorerTitle,
@@ -172,7 +172,7 @@ export class VisualizationBuilder {
         };
     }
 
-    public getVegaCluster(clusterModel: ICluster) {
+    public getVegaCluster(clusterModel: IESCluster) {
         let sourceArray = "";
         if (clusterModel.identifier === clusterModel.xAxis || clusterModel.identifier === clusterModel.yAxis) {
             sourceArray = '\\n \\\"'+ clusterModel.xAxis +'\\\",\\n \\\"'+ clusterModel.yAxis +'\\\",\\n \\\"cluster\\\"\\n ';
@@ -182,7 +182,7 @@ export class VisualizationBuilder {
         
         return {
             method: "PUT",
-            url: this.elasticSearchUrl + this.indexName + "_doc/visualization:" + clusterModel.id,
+            url: this.elasticSearchUrl + this.indexName + "_doc/visualization:" + clusterModel._id,
             data: {
                 visualization: {
                     title: clusterModel.explorerTitle,
@@ -220,7 +220,7 @@ export class VisualizationBuilder {
         return bucketsArray.substring(1, bucketsArray.length);
     }
 
-    private getDataTableAggs(dataTableModel: IDataTable) {
+    private getDataTableAggs(dataTableModel: IESDataTable) {
         let currentId = 1;
         let aggsArray = "";
 

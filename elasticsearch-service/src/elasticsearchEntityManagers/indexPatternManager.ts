@@ -1,6 +1,6 @@
 import { Inject } from "typescript-ioc";
 import { IndexPatternBuilder } from "../elasticsearchEntityJsonBuilders/indexPatternBuilder";
-import { IIndexPattern } from "../elasticsearchModels/indexPatternModel";
+import { IESIndexPattern } from "../elasticsearchModels/indexPatternModel";
 import { KibanaService } from "../services/kibana-service";
 
 export class IndexPatternManager {
@@ -11,8 +11,8 @@ export class IndexPatternManager {
     }
 
     public createIndexPattern(aggregationId: string, aggregations: Array<string>, featureColumns: Array<string>) {
-        const indexPatternSeed: IIndexPattern = {
-            id: aggregationId,
+        const indexPatternSeed: IESIndexPattern = {
+            _id: aggregationId,
             index: aggregationId,
             featureColumns: featureColumns,
             aggs: aggregations.map((e) => e.toLowerCase())

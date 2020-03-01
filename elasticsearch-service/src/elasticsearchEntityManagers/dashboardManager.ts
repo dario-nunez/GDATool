@@ -1,7 +1,7 @@
 import { Inject } from "typescript-ioc";
 import { DashboardBuilder } from "../elasticsearchEntityJsonBuilders/dashboardBuilder";
-import { IDashboard } from "../elasticsearchModels/dashboardModel";
-import { IVisualization } from "../elasticsearchModels/visualizationModel";
+import { IESDashboard } from "../elasticsearchModels/dashboardModel";
+import { IESVisualization } from "../elasticsearchModels/visualizationModel";
 import { KibanaService } from "../services/kibana-service";
 
 export class DashboardManager {
@@ -11,9 +11,9 @@ export class DashboardManager {
         this.dashboardBuilder = new DashboardBuilder();
     }
 
-    public  createDashboard(jobId: string, visualizations: Array<Array<IVisualization>>) {
-        const dashboardSeed: IDashboard = {
-            id: jobId,
+    public  createDashboard(jobId: string, visualizations: Array<Array<IESVisualization>>) {
+        const dashboardSeed: IESDashboard = {
+            _id: jobId,
             title: jobId,
             visualizations: visualizations,
             description: "This is a dashboard description"

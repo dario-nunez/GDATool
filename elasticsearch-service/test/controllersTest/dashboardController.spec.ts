@@ -29,14 +29,14 @@ let dashboardBuilderController: DashboardBuilderController;
 let kibanaServiceMock: KibanaService;
 let mongodbService: MongodbService;
 
-const testUser = {
+const testUser: IUserModel = {
     _id: "111111111111111111111111",
     password: "user_test_password",
     email: "user_test_email_jobController",
     name: "user_test_user"
-} as IUserModel;
+};
 
-const testJob1 = {
+const testJob1: IJobModel = {
     _id: "222222222222222222222222",
     name: "job1_test_name",
     description: "job1_test_description",
@@ -45,9 +45,9 @@ const testJob1 = {
     userId: "",
     generateESIndices: true,
     jobStatus: 0
-} as IJobModel;
+};
 
-const testPlot1 = {
+const testPlot1: IPlotModel = {
     _id: "777777777777777777777777",
     jobId: "",
     identifier: "plot1_test_identifier",
@@ -56,9 +56,9 @@ const testPlot1 = {
     xType: "plot1_test_xType",
     yAxis: "plot1_test_yAxis",
     yType: "plot1_test_yType"
-} as IPlotModel;
+};
 
-const testPlot2 = {
+const testPlot2: IPlotModel = {
     _id: "888888888888888888888888",
     jobId: "",
     identifier: "plot1_test_identifier",
@@ -67,9 +67,9 @@ const testPlot2 = {
     xType: "plot1_test_xType",
     yAxis: "plot1_test_yAxis",
     yType: "plot1_test_yType"
-} as IPlotModel;
+};
 
-const testAggregation1 = {
+const testAggregation1: IAggregationModel = {
     _id: "555555555555555555555555",
     jobId: "",
     aggs: ["agg1", "agg2"],
@@ -77,9 +77,9 @@ const testAggregation1 = {
     metricColumn: "aggregation1_test_metricColumn",
     name: "aggregation1_test_name",
     sortColumnName: "aggregation1_test_sortColumnName"
-} as IAggregationModel;
+};
 
-const testAggregation2 = {
+const testAggregation2: IAggregationModel = {
     _id: "666666666666666666666666",
     jobId: "",
     aggs: ["agg1", "agg2"],
@@ -87,29 +87,31 @@ const testAggregation2 = {
     metricColumn: "aggregation2_test_metricColumn",
     name: "aggregation2_test_name",
     sortColumnName: "aggregation1_test_sortColumnName"
-} as IAggregationModel;
+};
 
-const testcluster1 = {
+const testcluster1: IClusterModel = {
     _id: "121212121212121212121212",
     aggId: "",
+    aggName: "",
     identifier: "cluster1_test_identifier",
     identifierType: "cluster1_test_identifierType",
     xAxis: "cluster1_test_xAxis",
     xType: "cluster1_test_xType",
     yAxis: "cluster1_test_yAxis",
     yType: "cluster1_test_yType"
-} as IClusterModel;
+};
 
-const testcluster2 = {
+const testcluster2:IClusterModel = {
     _id: "131313131313131313131313",
     aggId: "",
+    aggName: "",
     identifier: "cluster2_test_identifier",
     identifierType: "cluster2_test_identifierType",
     xAxis: "cluster2_test_xAxis",
     xType: "cluster2_test_xType",
     yAxis: "cluster2_test_yAxis",
     yType: "cluster2_test_yType"
-} as IClusterModel;
+};
 
 before(async () => {
     mongodbService = new MongodbService();
@@ -149,6 +151,8 @@ before(async () => {
     await aggregationRepository.create(testAggregation2);
     testcluster1.aggId = testAggregation1._id;
     testcluster2.aggId = testAggregation2._id;
+    testcluster1.aggName = testAggregation1.name;
+    testcluster2.aggName = testAggregation2.name;
     await clusterRerpository.create(testcluster1);
     await clusterRerpository.create(testcluster2);
 });

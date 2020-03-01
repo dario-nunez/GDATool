@@ -1,6 +1,6 @@
-import { IVisualization } from "./visualizationModel";
+import { IESVisualization } from "./visualizationModel";
 
-export interface IMetric extends IVisualization {
+export interface IESMetric extends IESVisualization {
     explorerTitle: string;
     aggregationName: string;
     index: string;

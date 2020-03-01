@@ -1,6 +1,6 @@
-import { IVisualization } from "./visualizationModel";
+import { IESVisualization } from "./visualizationModel";
 
-export interface IDataTable extends IVisualization {
+export interface IESDataTable extends IESVisualization {
     explorerTitle: string;
     operations: Array<string>;
     featureColumns: Array<string>;
