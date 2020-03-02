@@ -28,9 +28,4 @@ public class PlotModel {
                 Objects.equals(yAxis, plotModel.yAxis) &&
                 Objects.equals(yType, plotModel.yType);
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(_id, __v, jobId, identifier, identifierType, xAxis, xType, yAxis, yType);
-    }
 }

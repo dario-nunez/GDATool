@@ -128,7 +128,7 @@ public class DataAnalysisJob extends Job {
         List<Column> catColumns = aggregationModel.featureColumns.stream().map(functions::col).collect(Collectors.toList());
 
         // Aggregation columns
-        List<String> aggs = aggregationModel.aggs.stream().map(agg -> agg.toString().toLowerCase()).collect(Collectors.toList());
+        List<String> aggs = aggregationModel.operations.stream().map(agg -> agg.toString().toLowerCase()).collect(Collectors.toList());
 
         // Creates a Column with the name of the metric column in the AggregationModel
         Column metricColumn = col(aggregationModel.metricColumn);

@@ -6,6 +6,7 @@ public class FilterModel {
     public String _id;
     public String __v;
     public String aggId;
+    public String aggName;
     public String query;
 
     @Override
@@ -16,11 +17,7 @@ public class FilterModel {
         return Objects.equals(_id, that._id) &&
                 Objects.equals(__v, that.__v) &&
                 Objects.equals(aggId, that.aggId) &&
+                Objects.equals(aggName, that.aggName) &&
                 Objects.equals(query, that.query);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(_id, __v, aggId, query);
     }
 }

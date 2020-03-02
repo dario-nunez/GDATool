@@ -1,7 +1,7 @@
 package com.mycompany.jobs;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mycompany.models.AggregationEnum;
+import com.mycompany.models.OperationEnum;
 import com.mycompany.models.AggregationModel;
 import com.mycompany.models.ConfigModel;
 import org.apache.spark.sql.Column;
@@ -77,18 +77,18 @@ public abstract class Job {
      */
     List<Column> getAggregationColumns(AggregationModel aggregationModel) {
         String metricColumn = aggregationModel.metricColumn;
-        return aggregationModel.aggs.stream().map(aggEnum -> {
+        return aggregationModel.operations.stream().map(aggEnum -> {
             switch (aggEnum) {
                 case AVG:
-                    return avg(metricColumn).alias(AggregationEnum.AVG.toString().toLowerCase());
+                    return avg(metricColumn).alias(OperationEnum.AVG.toString().toLowerCase());
                 case SUM:
-                    return sum(metricColumn).alias(AggregationEnum.SUM.toString().toLowerCase());
+                    return sum(metricColumn).alias(OperationEnum.SUM.toString().toLowerCase());
                 case COUNT:
-                    return count(metricColumn).alias(AggregationEnum.COUNT.toString().toLowerCase());
+                    return count(metricColumn).alias(OperationEnum.COUNT.toString().toLowerCase());
                 case MIN:
-                    return min(metricColumn).alias(AggregationEnum.MIN.toString().toLowerCase());
+                    return min(metricColumn).alias(OperationEnum.MIN.toString().toLowerCase());
                 case MAX:
-                    return max(metricColumn).alias(AggregationEnum.MAX.toString().toLowerCase());
+                    return max(metricColumn).alias(OperationEnum.MAX.toString().toLowerCase());
                 default:
                     throw new RuntimeException("Unsupported Aggregations");
 

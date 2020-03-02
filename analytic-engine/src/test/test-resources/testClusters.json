@@ -7,7 +7,6 @@
     "xType":"quantitative",
     "yAxis":"MIN",
     "yType":"quantitative",
-    "cluster":0,
     "aggId":"5e543cd426e4ff5245342d4f"
   },
   {
@@ -18,7 +17,6 @@
     "xType":"quantitative",
     "yAxis":"SUM",
     "yType":"quantitative",
-    "cluster":0,
     "aggId":"5e543cd426e4ff5245342d4f"
   },
   {
@@ -29,7 +27,6 @@
     "xType":"quantitative",
     "yAxis":"COUNT",
     "yType":"quantitative",
-    "cluster":0,
     "aggId":"5e543cd426e4ff5245342d50"
   }
 ]
