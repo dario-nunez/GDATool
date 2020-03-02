@@ -41,7 +41,7 @@ export function tokenGetter(): string {
     return localStorage.getItem("auth_token");
 }
 
-export const MOCK_FILTER:IFilterModel = {
+export const MOCK_FILTER: IFilterModel = {
     _id: "mock_id",
     aggName: "mock_aggName",
     query: "mock_query"
@@ -51,7 +51,13 @@ export const MOCK_QUERY_SERVICE = {
     aggregations: [],
     generalPlots: [],
     aggregationFilters: [],
-    aggregationClusters: []
+    aggregationClusters: [],
+
+    removeAggregation(aggregation: IAggregationModel) {
+        this.aggregations = this.aggregations.filter(obj => obj !== aggregation);
+        this.aggregationFilters = this.aggregationFilters.filter(obj => obj.aggName !== aggregation.name);
+        this.aggregationClusters = this.aggregationClusters.filter(obj => obj.aggName !== aggregation.name);
+    }
 }
 
 export const MOCK_COLUMN: IColumn = {
@@ -111,7 +117,7 @@ export const MOCK_PLOT: IPlotModel = {
     xType: "mock_xType",
     yAxis: "mock_yAxis",
     yType: "mock_yType"
-  }
+}
 
 export const MOCK_JOBS: Array<IJobModel> = [
     {

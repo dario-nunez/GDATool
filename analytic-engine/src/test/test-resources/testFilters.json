@@ -1,16 +1,16 @@
 [
   {
-    "_id":"5e558695e62f5b8372c56b70",
+    "_id":"777777777777777777777777",
     "query":"city != 'WORKSOP'",
     "aggName": "Aggregation of price by city",
-    "aggId":"5e543cd426e4ff5245342d4f",
+    "aggId":"333333333333333333333333",
     "__v":"0"
   },
   {
-    "_id":"5e558695e62f5b8372c56b71",
+    "_id":"888888888888888888888888",
     "query":"price > 90000",
     "aggName":"Aggregation of price by county",
-    "aggId":"5e543cd426e4ff5245342d50",
+    "aggId":"444444444444444444444444",
     "__v":"0"
   }
 ]

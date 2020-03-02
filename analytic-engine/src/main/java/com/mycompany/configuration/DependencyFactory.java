@@ -73,7 +73,8 @@ public class DependencyFactory {
      */
     private HttpService getHttpService() {
         if (httpService == null) {
-            this.httpService = new HttpService(configModel, jobId);
+//            this.httpService = new HttpService(configModel, jobId);
+            this.httpService = new HttpService();
         }
         return httpService;
     }

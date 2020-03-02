@@ -292,9 +292,9 @@ public class DataAnalysisJob extends Job {
     private void saveToStaging(Dataset<Row> dataset, String filename) {
         // Writing to parquet
         String ext = "parquet";
-        String fullFilename = configModel.bucketRoot() + filename + "." + ext;
+        String fullFilename = configModel.stagingFolder() + filename + "." + ext;
         logger.info("Writing to {}", fullFilename);
-//        dataset.write().mode(SaveMode.Overwrite).format(ext).save(fullFilename);
+        dataset.write().mode(SaveMode.Overwrite).format(ext).save(fullFilename);
     }
 
     /**
