@@ -40,7 +40,7 @@ const testcluster2: IClusterModel = {
 const testAggregation: IAggregationModel = {
     _id: "141414141414141414141414",
     jobId: "151515151515151515151515",
-    aggs: [],
+    operations: [],
     featureColumns: [],
     metricColumn: "aggregation_test_metricColumn",
     name: "aggregation_test_name",

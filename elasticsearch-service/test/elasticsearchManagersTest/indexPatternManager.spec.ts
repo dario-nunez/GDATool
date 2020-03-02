@@ -24,7 +24,7 @@ describe("Index pattern manager tests", () => {
                 _id: "aggregationId",
                 index: "aggregationId",
                 featureColumns: ["featureColumn1", "featureColumn2"],
-                aggs: ["agg1, agg2"].map((e) => e.toLowerCase())
+                operations: ["agg1, agg2"].map((op) => op.toLowerCase())
             };
 
             const json = indexPatternManager.createIndexPattern("aggregationId", ["agg1, agg2"], ["featureColumn1", "featureColumn2"]);

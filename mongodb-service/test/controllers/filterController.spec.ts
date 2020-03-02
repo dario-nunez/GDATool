@@ -29,7 +29,7 @@ const testfilter2: IFilterModel = {
 const testAggregation: IAggregationModel = {
     _id: "181818181818181818181818",
     jobId: "191919191919191919191919",
-    aggs: [],
+    operations: [],
     featureColumns: [],
     metricColumn: "aggregation_test_metricColumn",
     name: "aggregation_test_name",

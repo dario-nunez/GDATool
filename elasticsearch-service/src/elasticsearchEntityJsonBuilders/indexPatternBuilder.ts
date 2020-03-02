@@ -17,7 +17,7 @@ export class IndexPatternBuilder {
             "{\"name\":\"_type\",\"type\":\"string\",\"esTypes\":[\"_type\"],\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false}";
 
         const featureColumnsJSONLines = this.getFeatureColumnJSONLines(indexPatternModel);
-        const aggsJSONLines = this.getAggregationJSONLines(indexPatternModel);
+        const aggsJSONLines = this.getOperationJSONLines(indexPatternModel);
 
         return {
             method: "PUT",
@@ -36,14 +36,14 @@ export class IndexPatternBuilder {
         };
     }
 
-    private getAggregationJSONLines(indexPatternModel: IESIndexPattern) {
-        let aggsJSONLines = "";
+    private getOperationJSONLines(indexPatternModel: IESIndexPattern) {
+        let operationJSONLines = "";
 
-        for (const agg of indexPatternModel.aggs) {
-            aggsJSONLines = aggsJSONLines + ',{\"name\":\"' + agg + '\",\"type\":\"number\",\"esTypes\":[\"long\"],\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true}';
+        for (const operation of indexPatternModel.operations) {
+            operationJSONLines = operationJSONLines + ',{\"name\":\"' + operation + '\",\"type\":\"number\",\"esTypes\":[\"long\"],\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":true}';
         }
 
-        return aggsJSONLines;
+        return operationJSONLines;
     }
 
     private getFeatureColumnJSONLines(indexPatternModel: IESIndexPattern) {

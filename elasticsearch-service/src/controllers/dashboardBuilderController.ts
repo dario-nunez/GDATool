@@ -53,24 +53,24 @@ export class DashboardBuilderController {
         // Aggregation section
         for (const aggregation of aggregations) {
             const aggSection = [];
-            this.indexPatterManager.createIndexPattern(aggregation._id, aggregation.aggs, aggregation.featureColumns);
+            this.indexPatterManager.createIndexPattern(aggregation._id, aggregation.operations, aggregation.featureColumns);
             const visualizationIdPrefix = aggregation.jobId + "_" + aggregation._id;
 
             // Title
             aggSection.push(this.visualizationManager.createVisMarkup(visualizationIdPrefix, aggregation.name));
 
             // Metrics
-            for (const agg of aggregation.aggs) {
-                aggSection.push(this.visualizationManager.createMetric(visualizationIdPrefix + agg.toLowerCase(), agg.toLowerCase(), aggregation._id));
+            for (const operation of aggregation.operations) {
+                aggSection.push(this.visualizationManager.createMetric(visualizationIdPrefix + operation.toLowerCase(), operation.toLowerCase(), aggregation._id));
             }
 
             // Bar charts
-            for (const agg of aggregation.aggs) {                
-                aggSection.push(this.visualizationManager.createVisBarChart(visualizationIdPrefix + "_" + agg.toLowerCase(), agg.toLowerCase(), aggregation.metricColumn, aggregation.featureColumns[0], aggregation._id));
+            for (const operation of aggregation.operations) {                
+                aggSection.push(this.visualizationManager.createVisBarChart(visualizationIdPrefix + "_" + operation.toLowerCase(), operation.toLowerCase(), aggregation.metricColumn, aggregation.featureColumns[0], aggregation._id));
             }
 
             // Data tables
-            aggSection.push(this.visualizationManager.createDataTable(visualizationIdPrefix, aggregation.name , aggregation.aggs, aggregation.featureColumns, aggregation._id));
+            aggSection.push(this.visualizationManager.createDataTable(visualizationIdPrefix, aggregation.name , aggregation.operations, aggregation.featureColumns, aggregation._id));
 
             // Clusters
             const clusters = await this.mongodbService.getClustersByAgg(aggregation._id);

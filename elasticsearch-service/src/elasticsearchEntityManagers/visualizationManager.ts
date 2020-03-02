@@ -37,12 +37,12 @@ export class VisualizationManager {
         }
     }
 
-    public createVisBarChart(id: string, aggregationName: string, metricColumn: string, featureColumn: string, indexPatternId: string) {
+    public createVisBarChart(id: string, operationName: string, metricColumn: string, featureColumn: string, indexPatternId: string) {
         const barChartSeed: IESBarChart = {
             _id: id + "_bar",
             type: "bar",
-            explorerTitle: featureColumn + " by " + metricColumn + " by " + aggregationName,
-            aggregationName: aggregationName,
+            explorerTitle: featureColumn + " by " + metricColumn + " by " + operationName,
+            operationName: operationName,
             featureColumn: featureColumn,
             metricColumn: metricColumn,
             index: indexPatternId

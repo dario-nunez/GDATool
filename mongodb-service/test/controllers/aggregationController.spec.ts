@@ -37,7 +37,7 @@ const testJob: IJobModel = {
 const testAggregation1: IAggregationModel = {
     _id: "555555555555555555555555",
     jobId: "",
-    aggs: [],
+    operations: [],
     featureColumns: [],
     metricColumn: "aggregation1_test_metricColumn",
     name: "aggregation1_test_name",
@@ -47,7 +47,7 @@ const testAggregation1: IAggregationModel = {
 const testAggregation2: IAggregationModel = {
     _id: "666666666666666666666666",
     jobId: "",
-    aggs: [],
+    operations: [],
     featureColumns: [],
     metricColumn: "aggregation2_test_metricColumn",
     name: "aggregation2_test_name",

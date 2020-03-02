@@ -5,7 +5,7 @@ type AggregationType = IAggregation & mongoose.Document;
 
 export interface IAggregationModel {
     _id?: string;
-    aggs: Array<string>;
+    operations: Array<string>;
     featureColumns: Array<string>;
     jobId: string;
     metricColumn: string;
@@ -18,7 +18,7 @@ export interface IAggregation extends IAggregationModel, mongoose.Document {
 }
 
 export const AggregationSchema = new mongoose.Schema({
-    aggs: {
+    operations: {
         required: true,
         type: Array
     },

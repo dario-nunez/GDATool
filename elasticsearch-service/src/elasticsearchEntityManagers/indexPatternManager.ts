@@ -10,12 +10,12 @@ export class IndexPatternManager {
         this.indexPatternBuilder = new IndexPatternBuilder();
     }
 
-    public createIndexPattern(aggregationId: string, aggregations: Array<string>, featureColumns: Array<string>) {
+    public createIndexPattern(aggregationId: string, operations: Array<string>, featureColumns: Array<string>) {
         const indexPatternSeed: IESIndexPattern = {
             _id: aggregationId,
             index: aggregationId,
             featureColumns: featureColumns,
-            aggs: aggregations.map((e) => e.toLowerCase())
+            operations: operations.map((op) => op.toLowerCase())
         };
 
         try {

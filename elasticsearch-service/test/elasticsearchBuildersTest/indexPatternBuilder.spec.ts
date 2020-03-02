@@ -18,7 +18,7 @@ describe("Index pattern builder tests", () => {
                 _id: "test_id",
                 index: "test_index",
                 featureColumns: ["test_featureColumn1", "test_featureColumn2"],
-                aggs: ["test_agg1", "test_agg2"]
+                operations: ["test_agg1", "test_agg2"]
             };
 
             const json = indexPatternBuilder.getIndexPattern(testIndexPatternSeed);

@@ -72,7 +72,7 @@ const testPlot2: IPlotModel = {
 const testAggregation1: IAggregationModel = {
     _id: "555555555555555555555555",
     jobId: "",
-    aggs: ["agg1", "agg2"],
+    operations: ["agg1", "agg2"],
     featureColumns: ["featCol1", "featCol2"],
     metricColumn: "aggregation1_test_metricColumn",
     name: "aggregation1_test_name",
@@ -82,7 +82,7 @@ const testAggregation1: IAggregationModel = {
 const testAggregation2: IAggregationModel = {
     _id: "666666666666666666666666",
     jobId: "",
-    aggs: ["agg1", "agg2"],
+    operations: ["agg1", "agg2"],
     featureColumns: ["featCol1", "featCol2"],
     metricColumn: "aggregation2_test_metricColumn",
     name: "aggregation2_test_name",

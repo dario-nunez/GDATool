@@ -38,7 +38,7 @@ describe("Visualization builder tests", () => {
                 _id: "test_id",
                 type: "test_type",
                 explorerTitle: "test_explorerTitle",
-                aggregationName: "test_aggregationName",
+                operationName: "test_aggregationName",
                 featureColumn: "test_featureColumn",
                 metricColumn: "test_metricColumn",
                 index: "test_index"
