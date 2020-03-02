@@ -13,7 +13,7 @@ export class JobDetailsPageComponent implements OnInit {
   job: IJobModel;
   public jobId: string;
 
-  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) { }
+  constructor(public mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     this.job = {

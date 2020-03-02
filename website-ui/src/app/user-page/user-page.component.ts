@@ -14,7 +14,7 @@ export class UserPageComponent implements OnInit {
   private emailExists: boolean;
   private repeatedPassword: string;
 
-  constructor(private router: Router, private mongodbService: MongodbService) { }
+  constructor(private router: Router, public mongodbService: MongodbService) { }
 
   ngOnInit() {
     // Initialise the user before the page is displayed to avoid an error while the data arrives
@@ -35,10 +35,6 @@ export class UserPageComponent implements OnInit {
     this.mongodbService.getUserByEmail(loggedInUser).subscribe(user => {
       this.user = user
     });
-
-    // this.mongodbService.getUserByEmail(JSON.parse(localStorage.getItem("user")).email).subscribe(user => {
-    //   this.user = user
-    // });
   }
 
   updateAccount() {

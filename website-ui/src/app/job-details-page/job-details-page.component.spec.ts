@@ -9,8 +9,10 @@ describe('JobDetailsPageComponent', () => {
   let component: JobDetailsPageComponent;
   let fixture: ComponentFixture<JobDetailsPageComponent>;
 
-  const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobById"])
+  const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobById", "updateJob", "deleteJobRecusrive"])
   mockMongodbService.getJobById.and.returnValue(of(MOCK_JOB));
+  mockMongodbService.deleteJobRecusrive.and.returnValue(of(MOCK_JOB));
+  mockMongodbService.updateJob.and.returnValue(of(MOCK_JOB));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -50,5 +52,21 @@ describe('JobDetailsPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('get job', () => {
+    component.getJob();
+    expect(component.mongodbService.getJobById).toHaveBeenCalled();
+  });
+
+  it('update job', () => {
+    component.updateJob();
+    expect(component.mongodbService.updateJob).toHaveBeenCalled();
+  });
+
+  it('delete job', () => {
+    spyOn(window, 'confirm').and.returnValue(true);
+    component.deleteJob();
+    expect(component.mongodbService.deleteJobRecusrive).toHaveBeenCalled();
   });
 });

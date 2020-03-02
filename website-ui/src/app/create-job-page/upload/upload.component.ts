@@ -15,7 +15,7 @@ export class UploadComponent implements OnInit {
   ioDisabled: boolean = true;
   uploader: FileUploader;
 
-  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) {
+  constructor(public mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) {
     this.jobId = this.route.snapshot.paramMap.get("job._id");
     this.job = {} as IJobModel;
     this.uploader = new FileUploader({

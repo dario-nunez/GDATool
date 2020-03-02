@@ -1,12 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { of as observableOf, of, Observable } from 'rxjs';
 import { GeneralPlotsComponent } from './general-plots.component';
-import { COMMON_DECLARATIONS, COMMON_IMPORTS, MOCK_SCHEMA_SERVICE, MOCK_QUERY_SERVICE, MOCK_JOB } from 'src/app/testResources';
+import { COMMON_DECLARATIONS, COMMON_IMPORTS, MOCK_SCHEMA_SERVICE, MOCK_QUERY_SERVICE, MOCK_JOB, MOCK_JOBS, MOCK_PLOT } from 'src/app/testResources';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { ActivatedRoute } from '@angular/router';
-import { IJobModel } from '../../../../../../mongodb-service/src/models/jobModel';
 import { QueryService } from 'src/services/query/query.service';
 import { SchemaService } from 'src/services/schema/schema.service';
+import { IPlotModel } from '../../../../../../mongodb-service/src/models/plotModel';
 
 describe('GeneralPlotsComponent', () => {
   let component: GeneralPlotsComponent;
@@ -60,5 +60,56 @@ describe('GeneralPlotsComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect(component.queryService.generalPlots.length).toEqual(0);
+    expect(component.chosenXColumn).toEqual("");
+    expect(component.chosenYColumn).toEqual("");
+    expect(component.chosenIdentifierColumn).toEqual("");
+    expect(component.xAvailableColumns).toEqual([]);
+    expect(component.yAvailableColumns).toEqual([]);
+  });
+
+  it('selectXColumn', () => {
+    component.COLUMNS = ["a", "b", "c"]
+    component.selectXColumn(event, "a");
+    expect(component.yAvailableColumns).toEqual(["b", "c"]);
+  });
+
+  it('selectYColumn', () => {
+    component.COLUMNS = ["a", "b", "c"]
+    component.selectYColumn(event, "a");
+    expect(component.xAvailableColumns).toEqual(["b", "c"]);
+  });
+
+  it('create plot', () => {
+    component.COLUMNS = ["a", "b", "c"]
+    component.chosenIdentifierColumn = "a"
+    component.typeList = [["a", "double"], ["b", "double"], ["c", "string"]]
+    component.chosenXColumn = "b"
+    component.chosenYColumn = "c"
+
+    const expectedPlot: IPlotModel = {
+      jobId: MOCK_JOB._id,
+      identifier: "a",
+      identifierType: "quantitative",
+      xAxis: "b",
+      xType: "quantitative",
+      yAxis: "c",
+      yType: "nominal"
+    }
+
+    component.createPlot();
+
+    expect(component.queryService.generalPlots[0]).toEqual(expectedPlot);
+    expect(component.yAvailableColumns).toEqual(["a", "b", "c"]);
+    expect(component.xAvailableColumns).toEqual(["a", "b", "c"]);
+    expect(component.chosenXColumn).toEqual("");
+    expect(component.chosenYColumn).toEqual("");
+    expect(component.chosenIdentifierColumn).toEqual("");
+  });
+
+  it('delete plot', () => {
+    component.queryService.generalPlots = [MOCK_PLOT];
+    component.deletePlot(event, MOCK_PLOT);
+    expect(component.queryService.generalPlots.length).toEqual(0);
   });
 });

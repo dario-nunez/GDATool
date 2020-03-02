@@ -33,5 +33,6 @@ describe('JobsPageComponent', () => {
 
   it('should create', async () => {
     expect(component).toBeTruthy();
+    expect(component.mongodbService.getJobsByUserId).toHaveBeenCalled();
   });
 });

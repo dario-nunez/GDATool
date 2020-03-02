@@ -23,7 +23,7 @@ export class GeneralPlotsComponent implements OnInit {
   chosenYColumn: string;
   chosenIdentifierColumn: string;
 
-  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, private queryService: QueryService, private router: Router) { }
+  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, public queryService: QueryService) { }
 
   ngOnInit() {
     this.queryService.generalPlots = [];
@@ -63,7 +63,6 @@ export class GeneralPlotsComponent implements OnInit {
 
   selectXColumn(event, column) {
     this.yAvailableColumns = this.COLUMNS.filter(obj => obj !== column)
-
   }
 
   selectYColumn(event, column) {

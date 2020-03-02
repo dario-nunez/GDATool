@@ -10,9 +10,11 @@ describe('QueryComponent', () => {
   let component: QueryComponent;
   let fixture: ComponentFixture<QueryComponent>;
 
-  const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobById", "createMultipleAggregations"])
+  const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobById", "createMultipleAggregations", "deleteJobRecusrive", "updateJob"])
   mockMongodbService.getJobById.and.returnValue(of(MOCK_JOB));
   mockMongodbService.createMultipleAggregations.and.returnValue(of(MOCK_AGGREGATIONS));
+  mockMongodbService.deleteJobRecusrive.and.returnValue(of(MOCK_JOB));
+  mockMongodbService.updateJob.and.returnValue(of(MOCK_JOB));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -55,5 +57,21 @@ describe('QueryComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('next button', () => {
+    component.next()
+    expect(component.mongodbService.updateJob).toHaveBeenCalled();
+  });
+
+  it('get agg id', () => {
+    component.queryService.aggregations = MOCK_AGGREGATIONS;
+    expect(component.getAggId(MOCK_AGGREGATIONS[0].name)).toEqual(MOCK_AGGREGATIONS[0]._id);
+  });
+
+  it('delete job', () => {
+    spyOn(window, 'confirm').and.returnValue(true);
+    component.deleteJob();
+    expect(component.mongodbService.deleteJobRecusrive).toHaveBeenCalled();
   });
 });

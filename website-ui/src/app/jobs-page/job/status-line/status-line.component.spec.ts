@@ -28,4 +28,12 @@ describe('StatusLineComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('Success Done', () => {
+    component.statusLine.jobStatus = 1;
+    component.statusLine.lineTriggerStatus = 1;
+    component.ngOnInit();
+    expect(component.badgeColour).toEqual("success")
+    expect(component.badgeText).toEqual("Done")
+  });
 });

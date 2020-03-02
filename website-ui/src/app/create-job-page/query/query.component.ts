@@ -18,7 +18,7 @@ export class QueryComponent implements OnInit {
   job: IJobModel;
   paramJob: IJobModel[] = [];
 
-  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, private queryService: QueryService, private router: Router) { }
+  constructor(public mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, public queryService: QueryService, private router: Router) { }
 
   ngOnInit() {
     // Should probably reset the query service every time this page is reached or inside the components

@@ -12,7 +12,7 @@ export class LogInPageComponent implements OnInit {
   private userEmail: string;
   private userPassword: string;
 
-  constructor(private router: Router, private authenticationService: AuthenticationService) { }
+  constructor(private router: Router, public authenticationService: AuthenticationService) { }
 
   ngOnInit() {
     this.incorrectPassword = false;
@@ -25,8 +25,6 @@ export class LogInPageComponent implements OnInit {
   }
 
   login() {
-    console.log("Log in button pressed");
-
     this.authenticationService.authenticate(this.userEmail, this.userPassword).subscribe(user => {
       if (user._id != null) {
         localStorage.setItem("user", JSON.stringify(user));

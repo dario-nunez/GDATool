@@ -35,6 +35,7 @@ import { IClusterModel } from '../../../mongodb-service/src/models/clusterModel'
 import { ISchema } from 'src/models/schema.model';
 import { IColumn } from 'src/models/column.model';
 import { IFilterModel } from '../../../mongodb-service/src/models/filterModel';
+import { IPlotModel } from '../../../mongodb-service/src/models/plotModel';
 
 export function tokenGetter(): string {
     return localStorage.getItem("auth_token");
@@ -101,6 +102,16 @@ export const MOCK_CLUSTER: IClusterModel = {
     yAxis: "mock_y",
     yType: "quantitative"
 }
+
+export const MOCK_PLOT: IPlotModel = {
+    jobId: MOCK_JOB._id,
+    identifier: "mock_identifier",
+    identifierType: "mock_identifier_type",
+    xAxis: "mock_xAxis",
+    xType: "mock_xType",
+    yAxis: "mock_yAxis",
+    yType: "mock_yType"
+  }
 
 export const MOCK_JOBS: Array<IJobModel> = [
     {

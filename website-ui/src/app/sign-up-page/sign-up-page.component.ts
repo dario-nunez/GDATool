@@ -11,10 +11,10 @@ import { MongodbService } from '../../services/mongodb/mongodb.service';
 export class SignUpPageComponent implements OnInit {
 
   private user: IUserModel;
-  private repeatedPassword: string;
-  private emailExists: boolean;
+  repeatedPassword: string;
+  emailExists: boolean;
 
-  constructor(private router: Router, private mongodbService: MongodbService) { }
+  constructor(private router: Router, public mongodbService: MongodbService) { }
 
   ngOnInit() {
     this.user = {

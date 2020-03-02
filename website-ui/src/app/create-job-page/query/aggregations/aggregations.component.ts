@@ -31,7 +31,7 @@ export class AggregationsComponent implements OnInit {
   selectedFeatureColumns: Array<string> = [];
   selectedAggregations: Array<string> = [];
 
-  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, private queryService: QueryService, private router: Router) { }
+  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, public queryService: QueryService, private router: Router) { }
 
   ngOnInit() {
     // Load feature columns
@@ -107,7 +107,7 @@ export class AggregationsComponent implements OnInit {
     }
   }
 
-  deleteAggregation(event, agg: any) {
+  deleteAggregation(event, agg: IAggregationModel) {
     this.queryService.aggregations = this.queryService.aggregations.filter(obj => obj !== agg);
   }
 

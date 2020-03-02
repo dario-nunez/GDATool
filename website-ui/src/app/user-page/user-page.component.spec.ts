@@ -15,8 +15,10 @@ describe('UserPageComponent', () => {
   let component: UserPageComponent;
   let fixture: ComponentFixture<UserPageComponent>;
 
-  const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getUserByEmail"])
+  const mockMongodbService = jasmine.createSpyObj("MongodbService", ["updateUser", "getUserByEmail", "deleteUserRecursive"]);
   mockMongodbService.getUserByEmail.and.returnValue(of(MOCK_USER));
+  mockMongodbService.deleteUserRecursive.and.returnValue(of(MOCK_USER));
+  mockMongodbService.updateUser.and.returnValue(of(MOCK_USER));
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -56,5 +58,17 @@ describe('UserPageComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect(component.mongodbService.getUserByEmail).toHaveBeenCalled();
+  });
+
+  it('update account', () => {
+    component.updateAccount();
+    expect(component.mongodbService.updateUser).toHaveBeenCalled();
+  });
+
+  it('delete account', () => {
+    spyOn(window, 'confirm').and.returnValue(true);
+    component.deleteAccount();
+    expect(component.mongodbService.deleteUserRecursive).toHaveBeenCalled();
   });
 });

@@ -22,7 +22,7 @@ export class SchemaComponent implements OnInit {
   // This variable holds the whole schema file
   schema: ISchema;
 
-  constructor(private mongodbService: MongodbService, private schemaService: SchemaService, private route: ActivatedRoute, private router: Router) { }
+  constructor(public mongodbService: MongodbService, private schemaService: SchemaService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     this.job = {
@@ -34,7 +34,7 @@ export class SchemaComponent implements OnInit {
       generateESIndices: true,
       jobStatus: 0
     }
-    
+
     this.route.params.subscribe(params => {
       this.jobId = params["job._id"];
       this.mongodbService.getJobById(this.jobId).subscribe(job => {

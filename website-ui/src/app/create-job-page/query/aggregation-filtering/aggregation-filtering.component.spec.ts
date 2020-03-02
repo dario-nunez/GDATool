@@ -3,7 +3,6 @@ import { AggregationFilteringComponent } from './aggregation-filtering.component
 import { COMMON_IMPORTS, COMMON_DECLARATIONS, MOCK_QUERY_SERVICE, MOCK_SCHEMA_SERVICE, MOCK_AGGREGATIONS, MOCK_SCHEMA, MOCK_FILTER } from 'src/app/testResources';
 import { QueryService } from 'src/services/query/query.service';
 import { SchemaService } from 'src/services/schema/schema.service';
-import { IAggregationModel } from '../../../../../../mongodb-service/src/models/aggregationModel';
 
 describe('AggregationFilteringComponent', () => {
   let component: AggregationFilteringComponent;

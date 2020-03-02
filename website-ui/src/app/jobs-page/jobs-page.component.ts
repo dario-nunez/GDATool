@@ -11,15 +11,11 @@ export class JobsPageComponent implements OnInit {
 
   jobs: IJobModel[] = [];
 
-  constructor(private mongodbService: MongodbService) { }
+  constructor(public mongodbService: MongodbService) { }
 
   ngOnInit() {
-    this.getJobsByUser();
-  }
-
-  getJobsByUser() {
     this.mongodbService.getJobsByUserId(JSON.parse(localStorage.getItem("user"))._id).subscribe(retJobs => {
-        this.jobs = retJobs;
-      });
+      this.jobs = retJobs;
+    });
   }
 }
