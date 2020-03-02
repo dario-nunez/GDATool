@@ -57,6 +57,10 @@ public class SchemaInferenceJob extends Job {
     }
 
     public String getJsonSchema(Dataset<Row> dataset, JobModel jobModel) throws JsonProcessingException {
+        if (dataset.isEmpty()) {
+            return "";
+        }
+
         List<ColumnModel> columns = new ArrayList<>();
 
         // For every column create a ColumnModel
