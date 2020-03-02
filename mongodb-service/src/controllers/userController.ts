@@ -1,6 +1,5 @@
 import { Inject } from "typescript-ioc";
-import { Context, DELETE, Errors, GET, Path, PathParam, POST, PreProcessor, PUT, ServiceContext } from "typescript-rest";
-import logger from "../logger/loggerFactory";
+import { Context, DELETE, GET, Path, PathParam, POST, PreProcessor, PUT, ServiceContext } from "typescript-rest";
 import { IUser, IUserModel } from "../models/userModel";
 import { UserRepository } from "../repositories/userRepository";
 import { uniqueEmailValidator } from "../validators/validators";
@@ -19,12 +18,7 @@ export class UserController extends Controller<IUser> {
     @Path("/authenticate")
     @POST
     public async authenticateUser(userAndPass: any): Promise<IUserModel> {
-        try {
-            return await this.userRepository.authenticateUser(userAndPass.email, userAndPass.password);
-        } catch (error) {
-            logger.error(error.message);
-            throw new Errors.InternalServerError(error.message);
-        }
+        return await this.userRepository.authenticateUser(userAndPass.email, userAndPass.password);
     }
 
     @Path("/byEmail/:email")

@@ -14,6 +14,7 @@ export class UploadComponent implements OnInit {
   job: IJobModel;
   ioDisabled: boolean = true;
   uploader: FileUploader;
+  itemSize: number;
 
   constructor(public mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) {
     this.jobId = this.route.snapshot.paramMap.get("job._id");
@@ -29,6 +30,7 @@ export class UploadComponent implements OnInit {
     });
 
     this.uploader.onAfterAddingFile = (item => {
+      this.itemSize = item._file.size;
       if (this.uploader.queue.length > 0) {
         this.uploader.queue = [item];
       }
@@ -52,7 +54,7 @@ export class UploadComponent implements OnInit {
 
   next() {
     this.mongodbService.updateJob(this.job).subscribe(retJob => {
-      this.router.navigate(['/schema', this.jobId]);
+      this.router.navigate(['/schema', retJob._id]);
     });
   }
 

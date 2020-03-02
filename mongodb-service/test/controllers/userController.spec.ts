@@ -116,14 +116,14 @@ describe("User controller tests", () => {
                 });
         });
 
-        it("using incorrect name and password fails", (done) => {
+        it("using incorrect name and password returns empty user", (done) => {
             chai.request("http://localhost:5000")
                 .post("/ms/user/authenticate")
                 .send({email: testUser.email, password: "wrong password"})
                 .end(function (err, res) {        
                     const returnUser: IUserModel = res.body;
-                    expect(returnUser).to.be.an('Object');
-                    expect(res).to.have.status(500);
+                    expect(returnUser._id).to.equal("");
+                    expect(res).to.have.status(200);
                     done();
                 });
         });

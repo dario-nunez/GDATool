@@ -48,6 +48,10 @@ export class AggregationClusteringComponent implements OnInit {
   selectAggregation(event, agg) {
     let chosenAgg: IAggregationModel = this.queryService.aggregations.filter(obj => obj.name === agg)[0];
     
+    this.chosenXColumn = "";
+    this.chosenYColumn = "";
+    this.chosenIdentifierColumn = "";
+
     this.OPERATIONS = chosenAgg.operations;
     this.xAvailableColumns = chosenAgg.operations;
     this.yAvailableColumns = chosenAgg.operations;

@@ -15,4 +15,10 @@ export class QueryService {
   aggregationClusters: IClusterModel[];
 
   constructor() { }
+
+  public removeAggregation(aggregation:IAggregationModel) {
+    this.aggregations = this.aggregations.filter(obj => obj !== aggregation);
+    this.aggregationFilters = this.aggregationFilters.filter(obj => obj.aggName !== aggregation.name);
+    this.aggregationClusters = this.aggregationClusters.filter(obj => obj.aggName !== aggregation.name);
+  }
 }

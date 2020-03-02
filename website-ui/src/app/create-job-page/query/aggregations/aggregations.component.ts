@@ -108,7 +108,8 @@ export class AggregationsComponent implements OnInit {
   }
 
   deleteAggregation(event, agg: IAggregationModel) {
-    this.queryService.aggregations = this.queryService.aggregations.filter(obj => obj !== agg);
+    // this.queryService.aggregations = this.queryService.aggregations.filter(obj => obj !== agg);
+    this.queryService.removeAggregation(agg);
   }
 
   addElement(event, element: string, type: string) {

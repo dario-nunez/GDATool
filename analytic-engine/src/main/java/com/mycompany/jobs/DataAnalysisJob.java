@@ -51,8 +51,8 @@ public class DataAnalysisJob extends Job {
         JobModel job = mongodbRepository.getJobById(jobId);
         List<PlotModel> plots = mongodbRepository.loadPlots(jobId);
         List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
-//        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
-        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "uk-properties-mid.csv"));
+        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
+//        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "uk-properties-mid.csv"));
 //        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "zikaVirusReportedCases-lite.csv"));
         dataset = HelperFunctions.getValidDataset(dataset);
         dataset = HelperFunctions.simplifyTypes(dataset);
@@ -294,7 +294,7 @@ public class DataAnalysisJob extends Job {
         String ext = "parquet";
         String fullFilename = configModel.bucketRoot() + filename + "." + ext;
         logger.info("Writing to {}", fullFilename);
-        //dataset.write().mode(SaveMode.Overwrite).format(ext).save(fullFilename);
+//        dataset.write().mode(SaveMode.Overwrite).format(ext).save(fullFilename);
     }
 
     /**

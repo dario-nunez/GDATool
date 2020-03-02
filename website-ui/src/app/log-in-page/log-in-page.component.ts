@@ -26,7 +26,8 @@ export class LogInPageComponent implements OnInit {
 
   login() {
     this.authenticationService.authenticate(this.userEmail, this.userPassword).subscribe(user => {
-      if (user._id != null) {
+      console.log(user);
+      if (user._id.length > 0) {
         localStorage.setItem("user", JSON.stringify(user));
         this.router.navigate(["/jobsPage"]);
       } else {

@@ -52,6 +52,14 @@ export class AggregationFilteringComponent implements OnInit {
     let chosenAgg: IAggregationModel = this.queryService.aggregations.filter(obj => obj.name === agg)[0];
 
     this.aggregationSelected = true;
+
+    this.chosenIdentifierColumn = "";
+    this.chosenOperator = "";
+    this.chosenStringValue = "";
+    this.chosenNumericValue = undefined;
+    this.numericMin = undefined;
+    this.numericMax = undefined;
+    this.stringColumnChosen = false;
   }
 
   selectColumn($event, column) {
