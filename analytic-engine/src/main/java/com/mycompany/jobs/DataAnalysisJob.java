@@ -177,6 +177,10 @@ public class DataAnalysisJob extends Job {
 
     public Dataset<Row> removeOutliers(Dataset<Row> dataset, List<String> featureColumns) {
         // Eliminate outliers by taking only 1 SD from the mean
+        if (dataset.isEmpty()) {
+            return dataset;
+        }
+
         for (String column : featureColumns) {
             Double mean = (Double) dataset.agg(mean(col(column))).cache().first().get(0);
             Double std = (Double) dataset.agg(stddev(col(column))).cache().first().get(0);
@@ -194,6 +198,10 @@ public class DataAnalysisJob extends Job {
     }
 
     public Dataset<Row> cluster(Dataset<Row> dataset, ClusterModel clusterModel) {
+        if (dataset.isEmpty()) {
+            return dataset.withColumn("cluster", lit(0)).cache();
+        }
+
         // Select columns necessary for clustering
         List<String> featureColumns = new ArrayList<>();
         featureColumns.add(clusterModel.xAxis.toLowerCase());

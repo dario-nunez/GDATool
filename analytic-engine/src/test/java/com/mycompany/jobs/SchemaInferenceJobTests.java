@@ -52,7 +52,7 @@ public class SchemaInferenceJobTests {
         SparkSession sparkSession = dependencyFactory.getSparkSession();
         schemaInferenceJob = new SchemaInferenceJob(sparkSession, configModel, mongodbRepositoryMock,
                 elasticsearchRepositoryMock);
-        inputDataset = schemaInferenceJob.read(String.format("%s/%s", configModel.bucketRoot(), "schemaInferenceJobDS.csv"));
+        inputDataset = schemaInferenceJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/schemaInferenceJobDS.csv"));
     }
 
     /**
@@ -62,7 +62,7 @@ public class SchemaInferenceJobTests {
     public void getJsonSchema() throws IOException, UnirestException {
         String actualSchema = schemaInferenceJob.getJsonSchema(inputDataset, jobModel);
 
-        File schemaFile = new File(Objects.requireNonNull(classLoader.getResource("schemaInferenceJobJSONSchema.json")).getFile());
+        File schemaFile = new File(Objects.requireNonNull(classLoader.getResource("ukPropertiesDs/schemaInferenceJobJSONSchema.json")).getFile());
         String expectedSchema = FileUtils.readFileToString(schemaFile, StandardCharsets.UTF_8);
 
         assertEquals(expectedSchema, actualSchema);
