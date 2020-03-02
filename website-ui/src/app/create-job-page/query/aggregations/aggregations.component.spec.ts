@@ -6,6 +6,7 @@ import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { ActivatedRoute } from '@angular/router';
 import { QueryService } from 'src/services/query/query.service';
 import { SchemaService } from 'src/services/schema/schema.service';
+import { IAggregationModel } from '../../../../../../mongodb-service/src/models/aggregationModel';
 
 describe('AggregationsComponent', () => {
   let component: AggregationsComponent;
@@ -64,9 +65,9 @@ describe('AggregationsComponent', () => {
   it('add default aggregations', () => {
     component.METRIC_COLUMNS = ["price"];
     component.FEATURE_COLUMNS = ["city", "county", "price"];
-    const expectedAggregations = [
+    const expectedAggregations:IAggregationModel[] = [
       {
-        aggs: ["COUNT", "SUM", "MAX", "MIN", "AVG"],
+        operations: ["COUNT", "SUM", "MAX", "MIN", "AVG"],
         featureColumns: ["city"],
         jobId: MOCK_JOB._id,
         metricColumn: "price",
@@ -74,7 +75,7 @@ describe('AggregationsComponent', () => {
         sortColumnName: "city"
       },
       {
-        aggs: ["COUNT", "SUM", "MAX", "MIN", "AVG"],
+        operations: ["COUNT", "SUM", "MAX", "MIN", "AVG"],
         featureColumns: ["county"],
         jobId: MOCK_JOB._id,
         metricColumn: "price",
@@ -89,8 +90,8 @@ describe('AggregationsComponent', () => {
   });
 
   it('crete aggregation unique name', () => {
-    const expectedAggregation = {
-      aggs: ["COUNT", "SUM", "MAX", "MIN", "AVG"],
+    const expectedAggregation:IAggregationModel = {
+      operations: ["COUNT", "SUM", "MAX", "MIN", "AVG"],
       featureColumns: ["city"],
       jobId: MOCK_JOB._id,
       metricColumn: "price",
@@ -98,7 +99,7 @@ describe('AggregationsComponent', () => {
       sortColumnName: "city"
     }
 
-    component.selectedAggregations = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
+    component.selectedOperations = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
     component.selectedFeatureColumns =  ["city"];
     component.jobId = MOCK_JOB._id;
     component.currentAggregationMetricColumn = "price";
@@ -110,15 +111,15 @@ describe('AggregationsComponent', () => {
     expect(component.queryService.aggregations[0]).toEqual(expectedAggregation);
     expect(component.currentAggregationMetricColumn).toEqual("Choose one")
     expect(component.currentAggregationName).toEqual("")
-    expect(component.possibleAggs).toEqual(["COUNT", "SUM", "MAX", "MIN", "AVG"])
+    expect(component.possibleOperations).toEqual(["COUNT", "SUM", "MAX", "MIN", "AVG"])
     expect(component.possibleFeatureColumns).toEqual([])
     expect(component.possibleMetricColumns).toEqual([])
     expect(component.selectedFeatureColumns).toEqual([])
-    expect(component.selectedAggregations).toEqual([])
+    expect(component.selectedOperations).toEqual([])
   });
 
   it('crete aggregation existing name', () => {
-    component.selectedAggregations = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
+    component.selectedOperations = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
     component.selectedFeatureColumns =  ["city"];
     component.jobId = MOCK_JOB._id;
     component.currentAggregationMetricColumn = "price";
@@ -131,19 +132,19 @@ describe('AggregationsComponent', () => {
   });
 
   it('add element aggregation new aggregation', () => {
-    component.selectedAggregations = ["a", "b"];
-    component.possibleAggs = ["a", "b", "c"];
+    component.selectedOperations = ["a", "b"];
+    component.possibleOperations = ["a", "b", "c"];
     component.addElement(event, "c", "aggregation");
-    expect(component.possibleAggs).toEqual(["a", "b"]);
-    expect(component.selectedAggregations).toEqual(["a", "b", "c"]);
+    expect(component.possibleOperations).toEqual(["a", "b"]);
+    expect(component.selectedOperations).toEqual(["a", "b", "c"]);
   });
 
   it('add element aggregation existing aggregation', () => {
-    component.selectedAggregations = ["a", "b"];
-    component.possibleAggs = ["a", "b", "c"];
+    component.selectedOperations = ["a", "b"];
+    component.possibleOperations = ["a", "b", "c"];
     component.addElement(event, "a", "aggregation");
-    expect(component.possibleAggs).toEqual(["b", "c"]);
-    expect(component.selectedAggregations).toEqual(["a", "b"]);
+    expect(component.possibleOperations).toEqual(["b", "c"]);
+    expect(component.selectedOperations).toEqual(["a", "b"]);
   });
 
   it('add element feature new feature', () => {
@@ -163,19 +164,19 @@ describe('AggregationsComponent', () => {
   });
   
   it('remove element aggregation existing aggregation', () => {
-    component.selectedAggregations = ["a", "b", "c"];
-    component.possibleAggs = ["a", "b"];
+    component.selectedOperations = ["a", "b", "c"];
+    component.possibleOperations = ["a", "b"];
     component.removeElement(event, "c", "aggregation");
-    expect(component.possibleAggs).toEqual(["a", "b", "c"]);
-    expect(component.selectedAggregations).toEqual(["a", "b"]);
+    expect(component.possibleOperations).toEqual(["a", "b", "c"]);
+    expect(component.selectedOperations).toEqual(["a", "b"]);
   });
 
   it('remove element aggregation non existing aggregation', () => {
-    component.selectedAggregations = ["a", "b", "c"];
-    component.possibleAggs = ["a", "b"];
+    component.selectedOperations = ["a", "b", "c"];
+    component.possibleOperations = ["a", "b"];
     component.removeElement(event, "b", "aggregation");
-    expect(component.possibleAggs).toEqual(["a", "b"]);
-    expect(component.selectedAggregations).toEqual(["a", "c"]);
+    expect(component.possibleOperations).toEqual(["a", "b"]);
+    expect(component.selectedOperations).toEqual(["a", "c"]);
   });
 
   it('remove element feature existing feature', () => {

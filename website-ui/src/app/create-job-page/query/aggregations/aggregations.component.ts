@@ -25,11 +25,11 @@ export class AggregationsComponent implements OnInit {
   currentAggregationMetricColumn: string;
 
   possibleFeatureColumns: Array<string> = [];
-  possibleAggs: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
+  possibleOperations: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
   possibleMetricColumns: Array<string> = [];
 
   selectedFeatureColumns: Array<string> = [];
-  selectedAggregations: Array<string> = [];
+  selectedOperations: Array<string> = [];
 
   constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, public queryService: QueryService, private router: Router) { }
 
@@ -65,7 +65,7 @@ export class AggregationsComponent implements OnInit {
     for (let mc of this.METRIC_COLUMNS) {
       for (let fc of this.FEATURE_COLUMNS.filter(obj => obj !== mc)) {
         let agg: IAggregationModel = {
-          aggs: this.OPERATIONS,
+          operations: this.OPERATIONS,
           featureColumns: [fc],
           jobId: this.job._id,
           metricColumn: mc,
@@ -85,7 +85,7 @@ export class AggregationsComponent implements OnInit {
       this.currentAggregationName = "";
     } else {
       const newAgg: IAggregationModel = {
-        aggs: this.selectedAggregations,
+        operations: this.selectedOperations,
         featureColumns: this.selectedFeatureColumns,
         jobId: this.jobId,
         metricColumn: this.currentAggregationMetricColumn,
@@ -97,11 +97,11 @@ export class AggregationsComponent implements OnInit {
 
       this.currentAggregationMetricColumn = "Choose one";
       this.currentAggregationName = "";
-      this.possibleAggs = this.OPERATIONS;
+      this.possibleOperations = this.OPERATIONS;
       this.possibleFeatureColumns = this.FEATURE_COLUMNS;
       this.possibleMetricColumns = this.METRIC_COLUMNS;
       this.selectedFeatureColumns = [];
-      this.selectedAggregations = [];
+      this.selectedOperations = [];
 
       this.metricSelected = false;
     }
@@ -113,10 +113,10 @@ export class AggregationsComponent implements OnInit {
 
   addElement(event, element: string, type: string) {
     if (type == "aggregation") {
-      if (!this.selectedAggregations.includes(element)) {
-        this.selectedAggregations.push(element);
+      if (!this.selectedOperations.includes(element)) {
+        this.selectedOperations.push(element);
       }
-      this.possibleAggs = this.possibleAggs.filter(obj => obj !== element);
+      this.possibleOperations = this.possibleOperations.filter(obj => obj !== element);
     } else {
       if (!this.selectedFeatureColumns.includes(element)) {
         this.selectedFeatureColumns.push(element);
@@ -128,9 +128,9 @@ export class AggregationsComponent implements OnInit {
 
   removeElement(event, element: string, type: string) {
     if (type == "aggregation") {
-      this.selectedAggregations = this.selectedAggregations.filter(obj => obj !== element);
-      if (!this.possibleAggs.includes(element)) {
-        this.possibleAggs.push(element);
+      this.selectedOperations = this.selectedOperations.filter(obj => obj !== element);
+      if (!this.possibleOperations.includes(element)) {
+        this.possibleOperations.push(element);
       }
     } else {
       this.selectedFeatureColumns = this.selectedFeatureColumns.filter(obj => obj !== element);

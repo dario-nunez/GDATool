@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SchemaService } from 'src/services/schema/schema.service';
 import { QueryService } from 'src/services/query/query.service';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { IJobModel } from '../../../../../../mongodb-service/src/models/jobModel';
 import { IPlotModel } from '../../../../../../mongodb-service/src/models/plotModel';
 

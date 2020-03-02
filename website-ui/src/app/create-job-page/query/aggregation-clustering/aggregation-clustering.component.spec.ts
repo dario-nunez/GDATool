@@ -53,9 +53,9 @@ describe('AggregationClusteringComponent', () => {
     component.queryService.aggregations = MOCK_AGGREGATIONS;
     const expected = MOCK_AGGREGATIONS[0];
     component.selectAggregation(event, "mock_name1");
-    expect(component.OPERATIONS).toEqual(expected.aggs);
-    expect(component.xAvailableColumns).toEqual(expected.aggs);
-    expect(component.yAvailableColumns).toEqual(expected.aggs);
+    expect(component.OPERATIONS).toEqual(expected.operations);
+    expect(component.xAvailableColumns).toEqual(expected.operations);
+    expect(component.yAvailableColumns).toEqual(expected.operations);
     expect(component.FEATURE_COLUMNS).toEqual(expected.featureColumns);
     expect(component.aggregationSelected).toEqual(true);
   });

@@ -62,14 +62,14 @@
                     <select #AggregationDevice (change)="addElement($event, AggregationDevice.value, 'aggregation')"
                         id="aggregationCols" class="form-control">
                         <option selected>Choose one</option>
-                        <option *ngFor="let sCol of possibleAggs">{{sCol}}</option>
+                        <option *ngFor="let sCol of OperationsAggs">{{sCol}}</option>
                     </select>
                     <hr>
-                    <button class="btn btn-light m-1" *ngIf="selectedAggregations.length == 0" disabled>
+                    <button class="btn btn-light m-1" *ngIf="selectedOperations.length == 0" disabled>
                         No aggregations selected
                     </button>
                     <button (click)="removeElement($event, sCol, 'aggregation')" class="btn btn-light m-1"
-                        *ngFor="let sCol of selectedAggregations">{{sCol}}
+                        *ngFor="let sCol of selectedOperations">{{sCol}}
                         <span class="badge badge-danger">X</span>
                     </button>
                 </div>
@@ -78,11 +78,11 @@
             <div class="row">
                 <div class="col col text-left">
                     <button
-                        [disabled]="currentAggregationName == '' || currentAggregationMetricColumn == 'Choose one' || selectedAggregations.length == 0 || selectedFeatureColumns.length == 0"
+                        [disabled]="currentAggregationName == '' || currentAggregationMetricColumn == 'Choose one' || selectedOperations.length == 0 || selectedFeatureColumns.length == 0"
                         type="submit" class="btn btn-primary">Add Aggregation</button> </div>
                 <div class="col text-right">
                     <label class="text-danger"
-                        *ngIf="currentAggregationName == '' || currentAggregationMetricColumn == 'Choose one' || selectedAggregations.length == 0 || selectedFeatureColumns.length == 0">Incomplete
+                        *ngIf="currentAggregationName == '' || currentAggregationMetricColumn == 'Choose one' || selectedOperations.length == 0 || selectedFeatureColumns.length == 0">Incomplete
                         form</label>
                 </div>
             </div>

@@ -97,7 +97,7 @@ export class SchemaComponent implements OnInit {
       this.schemaService.setFeatureColumns(this.SELECTED_FEATURES);
       this.schemaService.setMetricColumns(this.SELECTED_METRICS);
       this.schemaService.schema = this.schema;
-      this.router.navigate(['/query', this.jobId]);
+      this.router.navigate(['/query', retJob._id]);
     });
   }
 

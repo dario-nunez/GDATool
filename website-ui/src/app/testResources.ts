@@ -139,7 +139,7 @@ export const MOCK_JOBS: Array<IJobModel> = [
 export const MOCK_AGGREGATIONS: IAggregationModel[] = [
     {
         _id: "mock_id1",
-        aggs: [],
+        operations: [],
         featureColumns: [],
         jobId: "mock_jobId1",
         metricColumn: "mock_metricColumn1",
@@ -148,7 +148,7 @@ export const MOCK_AGGREGATIONS: IAggregationModel[] = [
     },
     {
         _id: "mock_id2",
-        aggs: [],
+        operations: [],
         featureColumns: [],
         jobId: "mock_jobId2",
         metricColumn: "mock_metricColumn2",
