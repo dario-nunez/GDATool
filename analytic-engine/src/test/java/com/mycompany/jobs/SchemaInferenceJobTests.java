@@ -61,7 +61,7 @@ public class SchemaInferenceJobTests {
         SparkSession sparkSession = dependencyFactory.getSparkSession();
         schemaInferenceJob = new SchemaInferenceJob(sparkSession, configModel, mongodbRepositoryMock,
                 elasticsearchRepositoryMock);
-        inputDataset = schemaInferenceJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/schemaInferenceJobDS.csv"));
+        inputDataset = schemaInferenceJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/schemaInferenceJobDS.csv"));
     }
 
     /**
@@ -71,7 +71,7 @@ public class SchemaInferenceJobTests {
     @Test
     public void getJsonSchema_populatedDataset_returnExpectedSchemaJsonString() throws IOException {
         String actualSchema = schemaInferenceJob.getJsonSchema(inputDataset, jobModel);
-        File schemaFile = new File(Objects.requireNonNull(classLoader.getResource("ukPropertiesDs/schemaInferenceJobJSONSchema.json")).getFile());
+        File schemaFile = new File(Objects.requireNonNull(classLoader.getResource("testDatasets/schemaInferenceJobJSONSchema.json")).getFile());
         String expectedSchema = FileUtils.readFileToString(schemaFile, StandardCharsets.UTF_8);
         assertEquals(expectedSchema, actualSchema);
     }
@@ -82,7 +82,7 @@ public class SchemaInferenceJobTests {
      */
     @Test
     public void getJsonSchema_emptyDataset_returnEmptyString() throws IOException {
-        Dataset<Row> emptyDataset = schemaInferenceJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSEmpty.csv"));
+        Dataset<Row> emptyDataset = schemaInferenceJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSEmpty.csv"));
         String actualSchema = schemaInferenceJob.getJsonSchema(emptyDataset, jobModel);
         String expectedSchema = "";
         assertEquals(expectedSchema, actualSchema);

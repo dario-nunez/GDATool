@@ -55,7 +55,7 @@ public class DataAnalysisJobTests {
         SparkSession sparkSession = dependencyFactory.getSparkSession();
         dataAnalysisJob = new DataAnalysisJob(sparkSession, configModel, mongodbRepositoryMock,
                 elasticsearchRepositoryMock, restHighLevelClientMock);
-        inputDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDS.csv"));
+        inputDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDS.csv"));
     }
 
     /**
@@ -70,7 +70,7 @@ public class DataAnalysisJobTests {
         PlotModel plotModel = plots.get(0);
 
         Dataset<Row> actualDataset = dataAnalysisJob.plotSelect(inputDataset, plotModel).cache();
-        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSSelectedPlot.csv"));
+        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSSelectedPlot.csv"));
 
         assertEquals(expectedDataset.collectAsList(), actualDataset.collectAsList());
     }
@@ -86,9 +86,9 @@ public class DataAnalysisJobTests {
         List<PlotModel> plots = objectMapper.readValue(plotsFileContents, new TypeReference<List<PlotModel>>(){});
         PlotModel plotModel = plots.get(0);
 
-        Dataset<Row> emptyDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSEmpty.csv"));
+        Dataset<Row> emptyDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSEmpty.csv"));
         Dataset<Row> actualDataset = dataAnalysisJob.plotSelect(emptyDataset, plotModel).cache();
-        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSEmptyPlotSelected.csv"));
+        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSEmptyPlotSelected.csv"));
 
         assertEquals(expectedDataset.collectAsList(), actualDataset.collectAsList());
     }
@@ -104,7 +104,7 @@ public class DataAnalysisJobTests {
         List<FilterModel> filters = objectMapper.readValue(filterFileContents, new TypeReference<List<FilterModel>>(){});
 
         Dataset<Row> actualDataset = dataAnalysisJob.filter(inputDataset, filters).cache();
-        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSFiltered.csv"));
+        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSFiltered.csv"));
 
         assertEquals(expectedDataset.collectAsList(), actualDataset.collectAsList());
     }
@@ -119,9 +119,9 @@ public class DataAnalysisJobTests {
         String filterFileContents = FileUtils.readFileToString(filterFile, StandardCharsets.UTF_8);
         List<FilterModel> filters = objectMapper.readValue(filterFileContents, new TypeReference<List<FilterModel>>(){});
 
-        Dataset<Row> emptyDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSEmpty.csv"));
+        Dataset<Row> emptyDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSEmpty.csv"));
         Dataset<Row> actualDataset = dataAnalysisJob.filter(emptyDataset, filters).cache();
-        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSEmpty.csv"));
+        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSEmpty.csv"));
 
         assertEquals(expectedDataset.collectAsList(), actualDataset.collectAsList());
     }
@@ -138,9 +138,9 @@ public class DataAnalysisJobTests {
         List<AggregationModel> aggregations = objectMapper.readValue(aggregationFileContents, new TypeReference<List<AggregationModel>>(){});
         AggregationModel aggregationModel = aggregations.get(0);
 
-        Dataset<Row> emptyDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSEmpty.csv"));
+        Dataset<Row> emptyDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSEmpty.csv"));
         Dataset<Row> actualDataset = dataAnalysisJob.groupBy(emptyDataset, aggregationModel).cache();
-        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSEmptyGroupedBy.csv"));
+        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSEmptyGroupedBy.csv"));
 
         assertEquals(expectedDataset.collectAsList(), actualDataset.collectAsList());
     }
@@ -157,7 +157,7 @@ public class DataAnalysisJobTests {
         AggregationModel aggregationModel = aggregations.get(0);
 
         Dataset<Row> actualDataset = dataAnalysisJob.groupBy(inputDataset, aggregationModel).cache();
-        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSAppliedGroupBy.csv"));
+        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSAppliedGroupBy.csv"));
 
         assertEquals(expectedDataset.collectAsList(), actualDataset.collectAsList());
     }
@@ -169,7 +169,7 @@ public class DataAnalysisJobTests {
      */
     @Test
     public void removeOutliers_populatedDataset_returnDatasetWithoutOutliers() throws IOException {
-        Dataset<Row> groupedByDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSExtendedGroupBy.csv"));
+        Dataset<Row> groupedByDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSExtendedGroupBy.csv"));
         File clusterFile = new File(Objects.requireNonNull(classLoader.getResource("testClusters.json")).getFile());
         String clusterFileContents = FileUtils.readFileToString(clusterFile, StandardCharsets.UTF_8);
         List<ClusterModel> clusters = objectMapper.readValue(clusterFileContents, new TypeReference<List<ClusterModel>>(){});
@@ -183,7 +183,7 @@ public class DataAnalysisJobTests {
         };
 
         Dataset<Row> actualDataset = dataAnalysisJob.removeOutliers(groupedByDataset, featureColumns).cache();
-        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSRemovedOutliers.csv"));
+        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSRemovedOutliers.csv"));
 
         assertEquals(expectedDataset.collectAsList(), actualDataset.collectAsList());
     }
@@ -194,7 +194,7 @@ public class DataAnalysisJobTests {
      */
     @Test
     public void removeOutliers_emptyDataset_returnEmptyDataset() throws IOException {
-        Dataset<Row> emptyGroupedByDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSEmptyGroupedBy.csv"));
+        Dataset<Row> emptyGroupedByDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSEmptyGroupedBy.csv"));
         File clusterFile = new File(Objects.requireNonNull(classLoader.getResource("testClusters.json")).getFile());
         String clusterFileContents = FileUtils.readFileToString(clusterFile, StandardCharsets.UTF_8);
         List<ClusterModel> clusters = objectMapper.readValue(clusterFileContents, new TypeReference<List<ClusterModel>>(){});
@@ -208,7 +208,7 @@ public class DataAnalysisJobTests {
         };
 
         Dataset<Row> actualDataset = dataAnalysisJob.removeOutliers(emptyGroupedByDataset, featureColumns).cache();
-        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSEmptyGroupedBy.csv"));
+        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSEmptyGroupedBy.csv"));
 
         assertEquals(expectedDataset.collectAsList(), actualDataset.collectAsList());
     }
@@ -221,14 +221,14 @@ public class DataAnalysisJobTests {
      */
     @Test
     public void cluster_populatedDataset_returnDatasetWithAdditionalClusterColumn() throws IOException {
-        Dataset<Row> groupedByDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSAppliedGroupBy.csv"));
+        Dataset<Row> groupedByDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSAppliedGroupBy.csv"));
         File clusterFile = new File(Objects.requireNonNull(classLoader.getResource("testClusters.json")).getFile());
         String clusterFileContents = FileUtils.readFileToString(clusterFile, StandardCharsets.UTF_8);
         List<ClusterModel> clusters = objectMapper.readValue(clusterFileContents, new TypeReference<List<ClusterModel>>(){});
         ClusterModel clusterModel = clusters.get(0);
 
         Dataset<Row> actualDataset = dataAnalysisJob.cluster(groupedByDataset, clusterModel).cache();
-        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSClustered.csv"));
+        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSClustered.csv"));
 
         assertEquals(expectedDataset.collectAsList(), actualDataset.collectAsList());
     }
@@ -240,14 +240,14 @@ public class DataAnalysisJobTests {
      */
     @Test
     public void cluster_emptyDataset_returnEmptyDatasetWithAdditionalClusterColumn() throws IOException {
-        Dataset<Row> emptyGroupedByDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSEmptyGroupedBy.csv"));
+        Dataset<Row> emptyGroupedByDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSEmptyGroupedBy.csv"));
         File clusterFile = new File(Objects.requireNonNull(classLoader.getResource("testClusters.json")).getFile());
         String clusterFileContents = FileUtils.readFileToString(clusterFile, StandardCharsets.UTF_8);
         List<ClusterModel> clusters = objectMapper.readValue(clusterFileContents, new TypeReference<List<ClusterModel>>(){});
         ClusterModel clusterModel = clusters.get(0);
 
         Dataset<Row> actualDataset = dataAnalysisJob.cluster(emptyGroupedByDataset, clusterModel).cache();
-        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSClusteredEmpty.csv"));
+        Dataset<Row> expectedDataset = dataAnalysisJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSClusteredEmpty.csv"));
 
         assertEquals(expectedDataset.collectAsList(), actualDataset.collectAsList());
     }
