@@ -112,7 +112,7 @@ public class MongodbRepositoryTest {
 
     @Test
     public void getJobById() throws IOException, UnirestException {
-        File jobFile = new File(Objects.requireNonNull(classLoader.getResource("testJob.json")).getFile());
+        File jobFile = new File(Objects.requireNonNull(classLoader.getResource("testJobs.json")).getFile());
         String jobFileContents = FileUtils.readFileToString(jobFile, StandardCharsets.UTF_8);
 
         when(httpServiceMock.get(anyString(), anyMapOf(String.class, String.class)))
@@ -130,7 +130,7 @@ public class MongodbRepositoryTest {
      */
     @Test
     public void markJobAsComplete() throws IOException, UnirestException {
-        File jobFile = new File(Objects.requireNonNull(classLoader.getResource("testJob.json")).getFile());
+        File jobFile = new File(Objects.requireNonNull(classLoader.getResource("testJobs.json")).getFile());
         String jobFileContents = FileUtils.readFileToString(jobFile, StandardCharsets.UTF_8);
 
         when(httpServiceMock.put(anyString(), anyMapOf(String.class, String.class), anyString()))

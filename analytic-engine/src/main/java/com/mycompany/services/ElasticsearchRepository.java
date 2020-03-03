@@ -1,11 +1,11 @@
 package com.mycompany.services;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mycompany.configuration.Log;
 import com.mycompany.models.ConfigModel;
 import com.mycompany.models.JobModel;
 
-import java.io.IOException;
+import com.mashape.unirest.http.exceptions.UnirestException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,7 +23,7 @@ public class ElasticsearchRepository implements Log {
         this.httpService = httpService;
     }
 
-    public void generateBasicDashboard(JobModel job) throws IOException, UnirestException {
+    public void generateBasicDashboard(JobModel job) throws UnirestException {
         httpService.get(String.format("%sdashboardBuilder/basic/%s", configModel.elasticsearchServiceUrl(), job._id), defaultHeaders);
     }
 }

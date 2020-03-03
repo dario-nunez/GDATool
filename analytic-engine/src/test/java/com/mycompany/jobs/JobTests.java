@@ -76,7 +76,7 @@ public class JobTests {
      */
     @Test
     public void getAggregationColumns() throws IOException {
-        List<Column> actualColumns = job.getAggregationColumns(aggregationModel);
+        List<Column> actualColumns = job.getOperationColumns(aggregationModel);
         List<Column> expectedColumns = new ArrayList<Column>() {
             {
                 add(count(aggregationModel.metricColumn).alias(OperationEnum.COUNT.toString().toLowerCase()));

@@ -1,10 +1,10 @@
 package com.mycompany.services;
 
+import com.mycompany.configuration.Log;
+
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mycompany.configuration.Log;
-import com.mycompany.models.ConfigModel;
 
 import java.util.Map;
 

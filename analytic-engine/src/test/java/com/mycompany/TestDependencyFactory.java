@@ -15,7 +15,7 @@ public class TestDependencyFactory extends DependencyFactory {
      * @throws IOException
      */
     public TestDependencyFactory() throws IOException {
-        super(Environment.LOCDEV, "jobId");
+        super(Environment.LOCDEV);
     }
 
     @Override

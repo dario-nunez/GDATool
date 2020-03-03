@@ -48,7 +48,7 @@ public class ElasticsearchRepositoryTest {
 
     @Test
     public void generateDashboard_callTheRightEndpoint() throws UnirestException, IOException {
-        File jobFile = new File(Objects.requireNonNull(classLoader.getResource("testJob.json")).getFile());
+        File jobFile = new File(Objects.requireNonNull(classLoader.getResource("testJobs.json")).getFile());
         String jobFileContents = FileUtils.readFileToString(jobFile, StandardCharsets.UTF_8);
         JobModel jobModel = objectMapper.readValue(jobFileContents, new TypeReference<JobModel>(){});
 

@@ -42,7 +42,7 @@ public class SchemaInferenceJobTests {
         ObjectMapper objectMapper = new ObjectMapper();
         classLoader = getClass().getClassLoader();
 
-        File jobFile = new File(Objects.requireNonNull(classLoader.getResource("testJob.json")).getFile());
+        File jobFile = new File(Objects.requireNonNull(classLoader.getResource("testJobs.json")).getFile());
         String jobFileContents = FileUtils.readFileToString(jobFile, StandardCharsets.UTF_8);
         jobModel = objectMapper.readValue(jobFileContents, new TypeReference<JobModel>(){});
 

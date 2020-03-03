@@ -53,7 +53,7 @@ public class EndToEndTest {
         tearDown();
 
         createTestRecord("testUsers.json", "user", false);
-        createTestRecord("testJob.json", "job/noAws", false);
+        createTestRecord("testJobs.json", "job/noAws", false);
         createTestRecord("testAggregations.json", "aggregation", true);
         createTestRecord("testPlots.json", "plot", true);
         createTestRecord("testClusters.json", "cluster", true);

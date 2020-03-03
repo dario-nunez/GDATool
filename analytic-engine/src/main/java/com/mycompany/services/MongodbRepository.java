@@ -1,12 +1,13 @@
 package com.mycompany.services;
 
+import com.mycompany.configuration.Log;
+import com.mycompany.models.*;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mycompany.configuration.Log;
-import com.mycompany.models.*;
 
 import java.io.IOException;
 import java.util.HashMap;
