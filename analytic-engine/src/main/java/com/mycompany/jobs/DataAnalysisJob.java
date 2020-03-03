@@ -68,6 +68,8 @@ public class DataAnalysisJob extends Job {
      * use of the Elasticsearch indexes in visualizing the data.
      * @param userId: owner of the job.
      * @param jobId: the job being executed.
+     * @throws IOException
+     * @throws UnirestException
      */
     @Override
     public void run(String userId, String jobId) throws IOException, UnirestException {
@@ -370,6 +372,7 @@ public class DataAnalysisJob extends Job {
      * @param entityId: the ID of the index the dataset will be saved in.
      * @param hlClient: the client used to interface with the Elasticsearch cluster.
      * @param dateEpoch: the current timestamp.
+     * @throws IOException
      */
     private void saveToES(Dataset<Row> dataset, String entityId, RestHighLevelClient hlClient, long dateEpoch) throws IOException {
         String alias = getElasticIndexNamePrefix(entityId);
@@ -403,6 +406,7 @@ public class DataAnalysisJob extends Job {
      * Get all indices currently stored in the Elasticsearch cluster under an alias.
      * @param prefix: the alias of the indices being queried for.
      * @return a list of all indices that have that alias as a prefix.
+     * @throws IOException
      */
     private List<String> listIndices(String prefix) throws IOException {
         org.elasticsearch.client.indices.GetIndexRequest getIndexRequest = new org.elasticsearch.client.indices.GetIndexRequest("*");
@@ -414,6 +418,7 @@ public class DataAnalysisJob extends Job {
      * Delete an Elasticsearch alias from an index.
      * @param alias: the alias to be removed from index.
      * @param oldIndex: the index to have its alias removed.
+     * @throws IOException
      */
     private void deleteAlias(String alias, String oldIndex) throws IOException {
         if (aliasExists(alias)) {
@@ -429,6 +434,7 @@ public class DataAnalysisJob extends Job {
      * Add an Elasticsearch alias to an index.
      * @param alias: the alias to be added.
      * @param newIndex: the index to have an alias added.
+     * @throws IOException
      */
     private void addAlias(String alias, String newIndex) throws IOException {
         IndicesAliasesRequest request = new IndicesAliasesRequest();
@@ -442,6 +448,7 @@ public class DataAnalysisJob extends Job {
      * Check if an alias exists in the Elasticsearch cluster.
      * @param alias: alias to be checked for.
      * @return whether the alias exists or not.
+     * @throws IOException
      */
     private boolean aliasExists(String alias) throws IOException {
         GetAliasesRequest request = new GetAliasesRequest();
@@ -453,6 +460,8 @@ public class DataAnalysisJob extends Job {
      * Update the job status of a job to indicate that a Data Analysis job has been successfully ran on it. The value
      * used for this being 5.
      * @param job: the job to be updated.
+     * @throws IOException
+     * @throws UnirestException
      */
     private void markJobAsComplete(JobModel job) throws IOException, UnirestException {
         job.jobStatus = 5;

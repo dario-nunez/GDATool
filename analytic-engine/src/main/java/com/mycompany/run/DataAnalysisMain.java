@@ -9,9 +9,8 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import java.io.IOException;
 
 /**
- * Data analysis job.
- * Performs aggregations on a given dataset found in the /raw directory of the given job. Stores the results in the
- * /staging folder and also in Elasticsearch.
+ * Data Analysis Main is the triggering class for the Data Analysis job. Main parses command line arguments, creates a
+ * dependency factory and calls the run method of a DataAnalysisJob instance.
  */
 public class DataAnalysisMain {
     public static void main(String[] args) throws IOException, UnirestException {

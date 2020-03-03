@@ -2,6 +2,9 @@ package com.mycompany.models;
 
 import org.immutables.value.Value;
 
+/**
+ * Represents an immutable Configuration object. It contains information about the application and its dependencies.
+ */
 @Value.Immutable
 public interface ConfigModel {
     String awsAccessKeyIdEnvVariable();

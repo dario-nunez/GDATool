@@ -2,6 +2,9 @@ package com.mycompany.models;
 
 import java.util.Objects;
 
+/**
+ * Represents a Job object. Corresponds to the IJobModel type in the mongodb-service.
+ */
 public class JobModel {
     public String _id;
     public String __v;

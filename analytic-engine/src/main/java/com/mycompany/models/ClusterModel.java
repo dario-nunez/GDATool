@@ -2,6 +2,9 @@ package com.mycompany.models;
 
 import java.util.Objects;
 
+/**
+ * Represents a Cluster object. Corresponds to the IClusterModel type in the mongodb-service.
+ */
 public class ClusterModel {
     public String _id;
     public String __v;

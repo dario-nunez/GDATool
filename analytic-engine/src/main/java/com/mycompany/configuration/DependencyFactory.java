@@ -29,6 +29,7 @@ public class DependencyFactory {
     /**
      * Instantiate the environment and a Config Model.
      * @param env Environment created by main using console arguments.
+     * @throws IOException
      */
     public DependencyFactory(Environment env) throws IOException {
         this.env = env;
@@ -39,6 +40,7 @@ public class DependencyFactory {
      * Build a ConfigModel immutable object by using the values from the Properties Manager.
      * The Config Model holds all the parameters for the dependencies used by the jobs.
      * @return The built Config Model object.
+     * @throws IOException
      */
     public ConfigModel buildConfigModel() throws IOException {
         PropertiesManager propertiesManager = new PropertiesManager();

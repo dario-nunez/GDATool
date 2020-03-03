@@ -2,6 +2,9 @@ package com.mycompany.models;
 
 import java.util.Objects;
 
+/**
+ * Represents a Plot object. Corresponds to the IPlotModel type in the mongodb-service.
+ */
 public class PlotModel {
     public String _id;
     public String __v;

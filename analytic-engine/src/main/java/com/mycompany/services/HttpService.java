@@ -8,7 +8,11 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.util.Map;
 
-public class HttpService<S> implements Log {
+/**
+ * A basic Http Service that contains methods for making general CRUD requests. It is used by the Elasticsearch and
+ * Mongodb Repositories to make http requests.
+ */
+public class HttpService implements Log {
     public HttpResponse<String> get(String url, Map<String, String> headers) throws UnirestException {
         logger().info("Http get to {}", url);
         return Unirest.get(url)

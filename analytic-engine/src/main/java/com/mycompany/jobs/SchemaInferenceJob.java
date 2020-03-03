@@ -50,6 +50,8 @@ public class SchemaInferenceJob extends Job {
      * in the user's S3 bucket in AWS.
      * @param userId: ID of the user the job belongs to.
      * @param jobId: ID of the job triggered.
+     * @throws IOException
+     * @throws UnirestException
      */
     @Override
     public void run(String userId, String jobId) throws IOException, UnirestException {
@@ -76,6 +78,7 @@ public class SchemaInferenceJob extends Job {
      * @param dataset: the raw dataset.
      * @param jobModel: the job which the dataset corresponds to.
      * @return a String representation of a SchemaModel object.
+     * @throws JsonProcessingException
      */
     public String getJsonSchema(Dataset<Row> dataset, JobModel jobModel) throws JsonProcessingException {
         // Return an empty String if the dataset contains no data rows.

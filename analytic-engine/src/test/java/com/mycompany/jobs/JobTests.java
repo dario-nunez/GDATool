@@ -29,6 +29,9 @@ import java.util.Objects;
 import static org.apache.spark.sql.functions.*;
 import static org.junit.Assert.assertEquals;
 
+/**
+ * This file tests the Job job methods.
+ */
 public class JobTests {
     @Mock
     SparkSession sparkSessionMock;
@@ -40,8 +43,11 @@ public class JobTests {
     private Job job;
     private AggregationModel aggregationModel;
 
-    @Before
-    public void setup() throws IOException {
+    /**
+     * Initialize the test class, set up the environment and create mock objects.
+     * @throws IOException
+     */
+    public JobTests() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         ClassLoader classLoader = getClass().getClassLoader();
         MockitoAnnotations.initMocks(this);
@@ -54,28 +60,32 @@ public class JobTests {
         aggregationModel = aggregationModels.get(0);
     }
 
+    /**
+     * Should return the expected string given an AggregationModel ID and a date epoch.
+     */
     @Test
-    public void getElasticIndexName() throws IOException {
+    public void getElasticIndexName_returnAppropriateString() {
         long dateEpoch = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
         String esIndexName = job.getElasticIndexName(aggregationModel._id, dateEpoch);
-
         assertEquals(String.format("%s_%d", aggregationModel._id, dateEpoch), esIndexName);
     }
 
+    /**
+     * Should return the expected string given an AggregationModel ID.
+     */
     @Test
-    public void getElasticIndexNamePrefix() throws IOException {
+    public void getElasticIndexNamePrefix_returnAppropriateString() {
         String esIndexName = job.getElasticIndexNamePrefix(aggregationModel._id);
-
         assertEquals(String.format("%s", aggregationModel._id), esIndexName);
     }
 
     /**
-     * The .toString() method of the lists is used to compare them because the actual objects have a subtle
-     * package mismatch which changes their type and fails the test, even though the contents of the lists
-     * are the same.
+     * Should return a list of columns matching the values of the list of operations in the input AggregationModel.
+     * NOTE: The .toString() method of the lists is used to compare them because the actual objects have a subtle
+     * package mismatch which changes their type and fails the test, even though the contents of the lists are the same.
      */
     @Test
-    public void getAggregationColumns() throws IOException {
+    public void getOperationColumns_returnExpectedListOfColumns() {
         List<Column> actualColumns = job.getOperationColumns(aggregationModel);
         List<Column> expectedColumns = new ArrayList<Column>() {
             {
@@ -90,6 +100,9 @@ public class JobTests {
         assertEquals(expectedColumns.toString(), actualColumns.toString());
     }
 
+    /**
+     * A simple Mock Job class used for reading test datasets.
+     */
     static class TestJob extends Job {
         TestJob(SparkSession sparkSession, ConfigModel configModel, MongodbRepository mongodbRepository, ElasticsearchRepository elasticsearchRepository) {
             super(sparkSession, configModel, mongodbRepository, elasticsearchRepository);

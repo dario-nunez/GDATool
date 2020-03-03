@@ -8,7 +8,6 @@ import com.mycompany.configuration.DependencyFactory;
 import com.mycompany.models.ConfigModel;
 import com.mycompany.models.JobModel;
 import org.apache.commons.io.FileUtils;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -24,6 +23,9 @@ import java.util.Objects;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 
+/**
+ * This file tests the ElasticsearchRepository methods.
+ */
 public class ElasticsearchRepositoryTest {
     @Mock
     HttpService httpServiceMock;
@@ -37,8 +39,7 @@ public class ElasticsearchRepositoryTest {
         put("cache-control", "no-cache");
     }};
 
-    @Before
-    public void setup() throws IOException {
+    public ElasticsearchRepositoryTest() throws IOException {
         MockitoAnnotations.initMocks(this);
         DependencyFactory dependencyFactory = new TestDependencyFactory();
         configModel = dependencyFactory.getConfigModel();
@@ -46,8 +47,13 @@ public class ElasticsearchRepositoryTest {
         this.objectMapper = new ObjectMapper();
     }
 
+    /**
+     * Should call the dashboard generating endpoint exactly one time.
+     * @throws UnirestException
+     * @throws IOException
+     */
     @Test
-    public void generateDashboard_callTheRightEndpoint() throws UnirestException, IOException {
+    public void generateDashboard_callTheExpectedEndpointOnce() throws UnirestException, IOException {
         File jobFile = new File(Objects.requireNonNull(classLoader.getResource("testJobs.json")).getFile());
         String jobFileContents = FileUtils.readFileToString(jobFile, StandardCharsets.UTF_8);
         JobModel jobModel = objectMapper.readValue(jobFileContents, new TypeReference<JobModel>(){});
