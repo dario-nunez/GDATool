@@ -1,12 +1,12 @@
 import { Inject } from "typescript-ioc";
 import { VisualizationBuilder } from "../elasticsearchEntityJsonBuilders/visualizationBuilder";
-import { ICluster } from "../elasticsearchModels/clusterModel";
-import { IDataTable } from "../elasticsearchModels/dataTableModel";
-import { IMetric } from "../elasticsearchModels/metricModel";
-import { IPlot } from "../elasticsearchModels/plotModel";
-import { IVisBarCHart } from "../elasticsearchModels/visBarChartModel";
-import { IVisMarkup } from "../elasticsearchModels/visMarkupModel";
-import { IVisualization } from "../elasticsearchModels/visualizationModel";
+import { IESCluster } from "../elasticsearchModels/clusterModel";
+import { IESDataTable } from "../elasticsearchModels/dataTableModel";
+import { IESMetric } from "../elasticsearchModels/metricModel";
+import { IESPlot } from "../elasticsearchModels/plotModel";
+import { IESBarChart } from "../elasticsearchModels/visBarChartModel";
+import { IESMarkup } from "../elasticsearchModels/visMarkupModel";
+import { IESVisualization } from "../elasticsearchModels/visualizationModel";
 import { KibanaService } from "../services/kibana-service";
 
 export class VisualizationManager {
@@ -17,15 +17,15 @@ export class VisualizationManager {
     }
 
     public createVisMarkup(id: string, name: string) {
-        const markupSeed: IVisMarkup = {
-            id: id + "_markdown",
+        const markupSeed: IESMarkup = {
+            _id: id + "_markdown",
             type: "markdown",
             explorerTitle: name,
             displayText: name
         };
 
-        const visualization: IVisualization = {
-            id: markupSeed.id,
+        const visualization: IESVisualization = {
+            _id: markupSeed._id,
             type: markupSeed.type
         };
 
@@ -37,19 +37,19 @@ export class VisualizationManager {
         }
     }
 
-    public createVisBarChart(id: string, aggregationName: string, metricColumn: string, featureColumn: string, indexPatternId: string) {
-        const barChartSeed: IVisBarCHart = {
-            id: id + "_bar",
+    public createVisBarChart(id: string, operationName: string, metricColumn: string, featureColumn: string, indexPatternId: string) {
+        const barChartSeed: IESBarChart = {
+            _id: id + "_bar",
             type: "bar",
-            explorerTitle: featureColumn + " by " + metricColumn + " by " + aggregationName,
-            aggregationName: aggregationName,
+            explorerTitle: featureColumn + " by " + metricColumn + " by " + operationName,
+            operationName: operationName,
             featureColumn: featureColumn,
             metricColumn: metricColumn,
             index: indexPatternId
         };
 
-        const visualization: IVisualization = {
-            id: barChartSeed.id,
+        const visualization: IESVisualization = {
+            _id: barChartSeed._id,
             type: barChartSeed.type
         };
 
@@ -62,16 +62,16 @@ export class VisualizationManager {
     }
 
     public createMetric(id: string, aggregationName: string, indexPatternId: string) {
-        const metricSeed: IMetric = {
-            id: id + "_metric",
+        const metricSeed: IESMetric = {
+            _id: id + "_metric",
             type: "metric",
             explorerTitle: aggregationName,
             aggregationName: aggregationName,
             index: indexPatternId
         };
 
-        const visualization: IVisualization = {
-            id: metricSeed.id,
+        const visualization: IESVisualization = {
+            _id: metricSeed._id,
             type: metricSeed.type
         };
 
@@ -84,8 +84,8 @@ export class VisualizationManager {
     }
 
     public createDataTable(id: string, aggregationName: string, operations: Array<string>, featureColumns: Array<string>, indexPatternId: string) {
-        const dataTableSeed: IDataTable = {
-            id: id + "_table",
+        const dataTableSeed: IESDataTable = {
+            _id: id + "_table",
             type: "table",
             explorerTitle: aggregationName + " table",
             operations: operations,
@@ -93,8 +93,8 @@ export class VisualizationManager {
             index: indexPatternId
         };
 
-        const visualization: IVisualization = {
-            id: dataTableSeed.id,
+        const visualization: IESVisualization = {
+            _id: dataTableSeed._id,
             type: dataTableSeed.type
         };
 
@@ -107,8 +107,8 @@ export class VisualizationManager {
     }
 
     public createPlot(id: string, index: string, identifier: string, identifierType: string, xAxis: string, xType: string, yAxis: string, yType: string) {
-        const plotSeed: IPlot = {
-            id: id + "_plot",
+        const plotSeed: IESPlot = {
+            _id: id + "_plot",
             type: "plot",
             index: index,
             explorerTitle: xAxis + " by " + yAxis + " plot",
@@ -120,8 +120,8 @@ export class VisualizationManager {
             yType: yType
         };
 
-        const visualization: IVisualization = {
-            id: plotSeed.id,
+        const visualization: IESVisualization = {
+            _id: plotSeed._id,
             type: plotSeed.type
         };
 
@@ -134,8 +134,8 @@ export class VisualizationManager {
     }
 
     public createCluster(id: string, index: string, identifier: string, identifierType: string, xAxis: string, xType: string, yAxis: string, yType: string) {
-        const clusterSeed: ICluster = {
-            id: id + "_cluster",
+        const clusterSeed: IESCluster = {
+            _id: id + "_cluster",
             type: "cluster",
             index: index,
             explorerTitle: xAxis + " by " + yAxis + " cluster plot",
@@ -147,8 +147,8 @@ export class VisualizationManager {
             yType: yType
         };
 
-        const visualization: IVisualization = {
-            id: clusterSeed.id,
+        const visualization: IESVisualization = {
+            _id: clusterSeed._id,
             type: clusterSeed.type
         };
 

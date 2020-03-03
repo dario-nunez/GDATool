@@ -3,8 +3,8 @@ import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SchemaService } from 'src/services/schema/schema.service';
 import { QueryService } from 'src/services/query/query.service';
-import { IJob } from 'src/models/job.model';
-import { IAggregation } from 'src/models/aggregation.model';
+import { IJobModel } from '../../../../../../mongodb-service/src/models/jobModel';
+import { IAggregationModel } from '../../../../../../mongodb-service/src/models/aggregationModel';
 
 @Component({
   selector: 'app-aggregations',
@@ -14,24 +14,24 @@ import { IAggregation } from 'src/models/aggregation.model';
 export class AggregationsComponent implements OnInit {
   metricSelected: boolean = false;
   jobId: string;
-  public job: IJob;
+  public job: IJobModel;
 
   FEATURE_COLUMNS: Array<string> = [];
   OPERATIONS: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
   METRIC_COLUMNS: Array<string> = [];
 
-  aggregations: IAggregation[];
+  aggregations: IAggregationModel[];
   currentAggregationName: string;
   currentAggregationMetricColumn: string;
 
   possibleFeatureColumns: Array<string> = [];
-  possibleAggs: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
+  possibleOperations: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
   possibleMetricColumns: Array<string> = [];
 
   selectedFeatureColumns: Array<string> = [];
-  selectedAggregations: Array<string> = [];
+  selectedOperations: Array<string> = [];
 
-  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, private queryService: QueryService, private router: Router) { }
+  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, public queryService: QueryService, private router: Router) { }
 
   ngOnInit() {
     // Load feature columns
@@ -64,8 +64,8 @@ export class AggregationsComponent implements OnInit {
   addDefaultAggregations() {
     for (let mc of this.METRIC_COLUMNS) {
       for (let fc of this.FEATURE_COLUMNS.filter(obj => obj !== mc)) {
-        let agg: IAggregation = {
-          aggs: this.OPERATIONS,
+        let agg: IAggregationModel = {
+          operations: this.OPERATIONS,
           featureColumns: [fc],
           jobId: this.job._id,
           metricColumn: mc,
@@ -84,8 +84,8 @@ export class AggregationsComponent implements OnInit {
     if (this.queryService.aggregations.find(obj => obj.name === this.currentAggregationName) != null) {
       this.currentAggregationName = "";
     } else {
-      const newAgg: IAggregation = {
-        aggs: this.selectedAggregations,
+      const newAgg: IAggregationModel = {
+        operations: this.selectedOperations,
         featureColumns: this.selectedFeatureColumns,
         jobId: this.jobId,
         metricColumn: this.currentAggregationMetricColumn,
@@ -93,32 +93,31 @@ export class AggregationsComponent implements OnInit {
         sortColumnName: this.selectedFeatureColumns[0]
       }
 
-      console.log("Agg created");
       this.queryService.aggregations.push(newAgg);
-      console.log(this.queryService.aggregations);
 
       this.currentAggregationMetricColumn = "Choose one";
       this.currentAggregationName = "";
-      this.possibleAggs = this.OPERATIONS;
+      this.possibleOperations = this.OPERATIONS;
       this.possibleFeatureColumns = this.FEATURE_COLUMNS;
       this.possibleMetricColumns = this.METRIC_COLUMNS;
       this.selectedFeatureColumns = [];
-      this.selectedAggregations = [];
+      this.selectedOperations = [];
 
       this.metricSelected = false;
     }
   }
 
-  deleteAggregation(event, agg: any) {
-    this.queryService.aggregations = this.queryService.aggregations.filter(obj => obj !== agg);
+  deleteAggregation(event, agg: IAggregationModel) {
+    // this.queryService.aggregations = this.queryService.aggregations.filter(obj => obj !== agg);
+    this.queryService.removeAggregation(agg);
   }
 
   addElement(event, element: string, type: string) {
     if (type == "aggregation") {
-      if (!this.selectedAggregations.includes(element)) {
-        this.selectedAggregations.push(element);
+      if (!this.selectedOperations.includes(element)) {
+        this.selectedOperations.push(element);
       }
-      this.possibleAggs = this.possibleAggs.filter(obj => obj !== element);
+      this.possibleOperations = this.possibleOperations.filter(obj => obj !== element);
     } else {
       if (!this.selectedFeatureColumns.includes(element)) {
         this.selectedFeatureColumns.push(element);
@@ -130,9 +129,9 @@ export class AggregationsComponent implements OnInit {
 
   removeElement(event, element: string, type: string) {
     if (type == "aggregation") {
-      this.selectedAggregations = this.selectedAggregations.filter(obj => obj !== element);
-      if (!this.possibleAggs.includes(element)) {
-        this.possibleAggs.push(element);
+      this.selectedOperations = this.selectedOperations.filter(obj => obj !== element);
+      if (!this.possibleOperations.includes(element)) {
+        this.possibleOperations.push(element);
       }
     } else {
       this.selectedFeatureColumns = this.selectedFeatureColumns.filter(obj => obj !== element);
@@ -143,7 +142,6 @@ export class AggregationsComponent implements OnInit {
   }
 
   selectMetricColumn(event, element) {
-    console.log("metric column: " + element);
     this.selectedFeatureColumns = []
     this.possibleFeatureColumns = this.FEATURE_COLUMNS.filter(obj => obj !== element);
     this.metricSelected = true;

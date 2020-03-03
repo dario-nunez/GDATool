@@ -1,10 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SchemaService } from 'src/services/schema/schema.service';
-import { IJob } from 'src/models/job.model';
-import { IPlot } from 'src/models/plot.model';
 import { QueryService } from 'src/services/query/query.service';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { IJobModel } from '../../../../../../mongodb-service/src/models/jobModel';
+import { IPlotModel } from '../../../../../../mongodb-service/src/models/plotModel';
 
 @Component({
   selector: 'app-general-plots',
@@ -12,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./general-plots.component.css']
 })
 export class GeneralPlotsComponent implements OnInit {
-  public job: IJob;
+  public job: IJobModel;
 
   typeList: Array<[string, string]> = [];
   COLUMNS: Array<string> = [];
@@ -23,7 +23,7 @@ export class GeneralPlotsComponent implements OnInit {
   chosenYColumn: string;
   chosenIdentifierColumn: string;
 
-  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, private queryService: QueryService, private router: Router) { }
+  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, public queryService: QueryService) { }
 
   ngOnInit() {
     this.queryService.generalPlots = [];
@@ -63,7 +63,6 @@ export class GeneralPlotsComponent implements OnInit {
 
   selectXColumn(event, column) {
     this.yAvailableColumns = this.COLUMNS.filter(obj => obj !== column)
-
   }
 
   selectYColumn(event, column) {
@@ -71,7 +70,7 @@ export class GeneralPlotsComponent implements OnInit {
   }
 
   createPlot() {
-    const newPlot: IPlot = {
+    const newPlot: IPlotModel = {
       jobId: this.job._id,
       identifier: this.chosenIdentifierColumn,
       identifierType: this.getVegaColumnType(this.chosenIdentifierColumn),
@@ -88,9 +87,6 @@ export class GeneralPlotsComponent implements OnInit {
     this.chosenIdentifierColumn = "";
 
     this.queryService.generalPlots.push(newPlot);
-
-    console.log("Query Service object")
-    console.log(this.queryService)
   }
 
   private getVegaColumnType(columnName) {
@@ -104,7 +100,6 @@ export class GeneralPlotsComponent implements OnInit {
   }
 
   deletePlot(event, plot) {
-    console.log(plot)
     this.queryService.generalPlots = this.queryService.generalPlots.filter(obj => obj !== plot);
   }
 } 

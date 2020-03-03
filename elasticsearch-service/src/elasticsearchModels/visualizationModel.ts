@@ -1,4 +1,4 @@
-export interface IVisualization {
-    id: string;
+export interface IESVisualization {
+    _id: string;
     type: string;
 }

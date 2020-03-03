@@ -4,8 +4,9 @@ import { Model } from "mongoose";
 type ClusterType = ICluster & mongoose.Document;
 
 export interface IClusterModel {
-    _id: string;
-    aggId: string;
+    _id?: string;
+    aggId?: string;
+    aggName: string;
     identifier: string;
     identifierType: string;
     xAxis: string;
@@ -20,6 +21,10 @@ export interface ICluster extends IClusterModel, mongoose.Document {
 
 export const ClusterSchema = new mongoose.Schema({
     aggId: {
+        required: true,
+        type: String
+    },
+    aggName: {
         required: true,
         type: String
     },

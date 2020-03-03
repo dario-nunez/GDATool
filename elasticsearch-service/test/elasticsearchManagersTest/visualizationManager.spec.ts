@@ -1,7 +1,7 @@
 import * as chai from "chai";
 import { before, describe, it } from "mocha";
 import { VisualizationManager } from "../../src/elasticsearchEntityManagers/visualizationManager";
-import { IVisualization } from "../../src/elasticsearchModels/visualizationModel";
+import { IESVisualization } from "../../src/elasticsearchModels/visualizationModel";
 import { KibanaService } from "../../src/services/kibana-service";
 
 const assert = chai.assert;
@@ -20,8 +20,8 @@ before(async () => {
 describe("Visualization manager tests", () => {
     describe("create markup visualizations", () => {
         it("create succeeds", (done) => {
-            const visualization: IVisualization = {
-                id: "test_id_markdown",
+            const visualization: IESVisualization = {
+                _id: "test_id_markdown",
                 type: "markdown"
             };
 
@@ -33,8 +33,8 @@ describe("Visualization manager tests", () => {
 
     describe("create bar chart visualizations", () => {
         it("create succeeds", (done) => {
-            const visualization: IVisualization = {
-                id: "test_id_bar",
+            const visualization: IESVisualization = {
+                _id: "test_id_bar",
                 type: "bar"
             };
 
@@ -46,8 +46,8 @@ describe("Visualization manager tests", () => {
 
     describe("create metric visualizations", () => {
         it("create succeeds", (done) => {
-            const visualization: IVisualization = {
-                id: "test_id_metric",
+            const visualization: IESVisualization = {
+                _id: "test_id_metric",
                 type: "metric"
             };
 
@@ -59,8 +59,8 @@ describe("Visualization manager tests", () => {
 
     describe("create data table visualizations", () => {
         it("create succeeds", (done) => {
-            const visualization: IVisualization = {
-                id: "test_id_table",
+            const visualization: IESVisualization = {
+                _id: "test_id_table",
                 type: "table"
             };
 
@@ -72,8 +72,8 @@ describe("Visualization manager tests", () => {
 
     describe("create plot visualizations", () => {
         it("create succeeds", (done) => {
-            const visualization: IVisualization = {
-                id: "test_id_plot",
+            const visualization: IESVisualization = {
+                _id: "test_id_plot",
                 type: "plot"
             };
 
@@ -85,8 +85,8 @@ describe("Visualization manager tests", () => {
 
     describe("create cluster visualizations", () => {
         it("create succeeds", (done) => {
-            const visualization: IVisualization = {
-                id: "test_id_cluster",
+            const visualization: IESVisualization = {
+                _id: "test_id_cluster",
                 type: "cluster"
             };
 

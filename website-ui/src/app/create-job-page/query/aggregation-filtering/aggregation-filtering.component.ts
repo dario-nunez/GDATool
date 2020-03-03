@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { QueryService } from 'src/services/query/query.service';
 import { SchemaService } from 'src/services/schema/schema.service';
-import { IAggregation } from 'src/models/aggregation.model';
 import { IColumn } from 'src/models/column.model';
-import { IFilter } from 'src/models/filter.model';
+import { IAggregationModel } from '../../../../../../mongodb-service/src/models/aggregationModel';
+import { IFilterModel } from '../../../../../../mongodb-service/src/models/filterModel';
 
 @Component({
   selector: 'app-aggregation-filtering',
@@ -30,7 +30,7 @@ export class AggregationFilteringComponent implements OnInit {
   chosenStringValue: string;
   chosenNumericValue: number;
 
-  constructor(private queryService: QueryService, private schemaService: SchemaService) { }
+  constructor(public queryService: QueryService, public schemaService: SchemaService) { }
 
   ngOnInit() {
     this.queryService.aggregationFilters = [];
@@ -39,11 +39,7 @@ export class AggregationFilteringComponent implements OnInit {
 
     this.FEATURE_COLUMNS = this.schemaService.featureColumns;
     this.METRIC_COLUMNS = this.schemaService.metricColumns;
-
     this.availableColumns = this.FEATURE_COLUMNS;
-
-    console.log(this.METRIC_COLUMNS);
-    console.log(this.availableColumns);
 
     this.METRIC_COLUMNS.forEach(element => {
       if (this.availableColumns.find(obj => obj[0] == element[0]) == undefined) {
@@ -53,9 +49,17 @@ export class AggregationFilteringComponent implements OnInit {
   }
 
   selectAggregation($event, agg) {
-    let chosenAgg: IAggregation = this.queryService.aggregations.filter(obj => obj.name === agg)[0];
+    let chosenAgg: IAggregationModel = this.queryService.aggregations.filter(obj => obj.name === agg)[0];
 
     this.aggregationSelected = true;
+
+    this.chosenIdentifierColumn = "";
+    this.chosenOperator = "";
+    this.chosenStringValue = "";
+    this.chosenNumericValue = undefined;
+    this.numericMin = undefined;
+    this.numericMax = undefined;
+    this.stringColumnChosen = false;
   }
 
   selectColumn($event, column) {
@@ -84,7 +88,7 @@ export class AggregationFilteringComponent implements OnInit {
   }
 
   addFilter() {
-    let chosenAgg: IAggregation = this.queryService.aggregations.filter(obj => obj.name === this.selectedAggregation)[0];
+    let chosenAgg: IAggregationModel = this.queryService.aggregations.filter(obj => obj.name === this.selectedAggregation)[0];
     let sqlString;
     let columnType = this.availableColumns.filter(obj => obj[0] == this.chosenIdentifierColumn)[0][1];
 
@@ -100,7 +104,7 @@ export class AggregationFilteringComponent implements OnInit {
       sqlString = this.chosenIdentifierColumn + " " + this.chosenOperator + " " + this.chosenNumericValue;
     }
 
-    const newFilter: IFilter = {
+    const newFilter: IFilterModel = {
       aggName: this.selectedAggregation,
       query: sqlString
     }

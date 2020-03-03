@@ -1,8 +1,7 @@
 import { OnInit, Component, Input } from "@angular/core";
-import { IJob } from '../../../models/job.model';
-import { IRun } from '../../../models/run.model';
 import { Router } from '@angular/router';
 import { IStatusLine } from 'src/models/statusLine.model';
+import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
 
 @Component({
     selector: "app-job",
@@ -10,22 +9,16 @@ import { IStatusLine } from 'src/models/statusLine.model';
     styleUrls: ["./job.component.css"]
 })
 export class JobComponent implements OnInit {
-
     constructor(private router: Router) { }
 
     @Input()
-    public job: IJob;
+    public job: IJobModel;
 
     cardColor;
-    jobRuns: IRun[];
     pending = false;
     statusLines: IStatusLine[];
 
     ngOnInit(): void {
-        this.jobRuns = this.job.runs;
-
-        console.log(this.job)
-
         this.createStatusLines();
 
         if (this.job.jobStatus < 5) {

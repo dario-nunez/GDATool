@@ -39,6 +39,9 @@ public class SchemaInferenceJob extends Job {
     public void run(String userId, String jobId) throws IOException, UnirestException {
         JobModel jobModel = mongodbRepository.getJobById(jobId);
 
+        // No AWS version
+        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "zikaVirusReportedCases.csv"));
+
         // AWS version
         Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), jobModel.rawInputDirectory));
 
@@ -47,9 +50,6 @@ public class SchemaInferenceJob extends Job {
         // Cast all numeric columns to doubles
         dataset = HelperFunctions.simplifyTypes(dataset);
 
-        // No AWS version
-        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "zikaVirusReportedCases.csv"));
-
         String jsonSchema = getJsonSchema(dataset, jobModel);
 
         // Save the SchemaModel to the user's s3 bucket
@@ -57,6 +57,10 @@ public class SchemaInferenceJob extends Job {
     }
 
     public String getJsonSchema(Dataset<Row> dataset, JobModel jobModel) throws JsonProcessingException {
+        if (dataset.isEmpty()) {
+            return "";
+        }
+
         List<ColumnModel> columns = new ArrayList<>();
 
         // For every column create a ColumnModel

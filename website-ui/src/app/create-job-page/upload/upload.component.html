@@ -62,20 +62,6 @@
                             <span *ngIf="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
                             <span *ngIf="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
                         </td>
-                        <!-- <td nowrap>
-                            <button type="button" class="btn btn-outline-success btn-sm upload-file-btn"
-                                (click)="item.upload()" [disabled]="item.isReady || item.isUploading || item.isSuccess">
-                                <span class="glyphicon glyphicon-upload"></span> Upload
-                            </button>
-                            <button type="button" class="btn btn-outline-warning btn-sm upload-file-btn"
-                                (click)="item.cancel()" [disabled]="!item.isUploading">
-                                <span class="glyphicon glyphicon-ban-circle"></span> Cancel
-                            </button>
-                            <button type="button" class="btn btn-outline-danger btn-sm upload-file-btn"
-                                (click)="item.remove()">
-                                <span class="glyphicon glyphicon-trash"></span> Remove
-                            </button>
-                        </td> -->
                     </tr>
                 </tbody>
             </table>
@@ -90,7 +76,7 @@
                 <div class="row">
                     <div class="col">
                         <button type="button" class="m-1 btn btn-success btn-sm upload-file-btn"
-                            (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length">
+                            (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || itemSize <= 0">
                             <span class="glyphicon glyphicon-upload"></span> Upload
                         </button>
                         <button type="button" class="m-1 btn btn-warning btn-sm upload-file-btn"

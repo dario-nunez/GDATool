@@ -1,35 +1,35 @@
 [
   {
-    "_id":"5e543cd526e4ff5245342d53",
+    "_id":"999999999999999999999999",
     "identifier":"city",
     "identifierType":"nominal",
     "xAxis":"MAX",
     "xType":"quantitative",
     "yAxis":"MIN",
     "yType":"quantitative",
-    "cluster":0,
-    "aggId":"5e543cd426e4ff5245342d4f"
+    "aggId":"333333333333333333333333",
+    "aggName": "Aggregation of price by city"
   },
   {
-    "_id":"5e543cd526e4ff5245342d54",
+    "_id":"112211221122112211221122",
     "identifier":"city",
     "identifierType":"nominal",
     "xAxis":"COUNT",
     "xType":"quantitative",
     "yAxis":"SUM",
     "yType":"quantitative",
-    "cluster":0,
-    "aggId":"5e543cd426e4ff5245342d4f"
+    "aggId":"333333333333333333333333",
+    "aggName": "Aggregation of price by city"
   },
   {
-    "_id":"5e543cd526e4ff5245342d55",
+    "_id":"113311331133113311331133",
     "identifier":"county",
     "identifierType":"nominal",
     "xAxis":"AVG",
     "xType":"quantitative",
     "yAxis":"COUNT",
     "yType":"quantitative",
-    "cluster":0,
-    "aggId":"5e543cd426e4ff5245342d50"
+    "aggId":"444444444444444444444444",
+    "aggName": "Aggregation of price by county"
   }
 ]

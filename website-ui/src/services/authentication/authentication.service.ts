@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
-import { IUser } from 'src/models/user.model';
-import { Observable } from 'rxjs';
 import { MongodbService } from '../mongodb/mongodb.service';
+import { IUserModel } from '../../../../mongodb-service/src/models/userModel';
+import { catchError } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class AuthenticationService {
    * @param email 
    * @param password 
    */
-  authenticate(email: string, password: string): Observable<any> {
+  authenticate(email: string, password: string): Observable<IUserModel> {
     console.log("At auth: -- Email: " + email + " Password: " + password);
 
     const userAndPass = {
@@ -24,6 +25,8 @@ export class AuthenticationService {
       password: password
     }
 
-    return this.http.post("http://localhost:5000/ms/user/authenticate", userAndPass) as Observable<any>;
+    return this.http.post<IUserModel>("http://localhost:5000/ms/user/authenticate", userAndPass).pipe(
+      catchError(err => of(null))
+    );
   }
 }

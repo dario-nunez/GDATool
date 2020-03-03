@@ -32,9 +32,4 @@ public class JobModel {
                 Objects.equals(createdAt, jobModel.createdAt) &&
                 Objects.equals(updatedAt, jobModel.updatedAt);
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(_id, __v, name, jobStatus, description, userId, rawInputDirectory, stagingFileName, createdAt, updatedAt, generateESIndices);
-    }
 }

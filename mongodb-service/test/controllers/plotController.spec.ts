@@ -12,7 +12,7 @@ const expect = chai.expect;
 let jobRepository: JobRepository;
 let plotRepository: PlotRepository;
 
-const testPlot1 = {
+const testPlot1: IPlotModel = {
     _id: "777777777777777777777777",
     jobId: "",
     identifier: "plot1_test_identifier",
@@ -21,9 +21,9 @@ const testPlot1 = {
     xType: "plot1_test_xType",
     yAxis: "plot1_test_yAxis",
     yType: "plot1_test_yType"
-} as IPlotModel;
+};
 
-const testPlot2 = {
+const testPlot2: IPlotModel = {
     _id: "888888888888888888888888",
     jobId: "",
     identifier: "plot1_test_identifier",
@@ -32,10 +32,10 @@ const testPlot2 = {
     xType: "plot1_test_xType",
     yAxis: "plot1_test_yAxis",
     yType: "plot1_test_yType"
-} as IPlotModel;
+};
 
 
-const testJob = {
+const testJob: IJobModel = {
     _id: "999999999999999999999999",
     name: "job_test_name",
     description: "job_test_description",
@@ -44,7 +44,7 @@ const testJob = {
     userId: "101010101010101010101010",
     generateESIndices: true,
     jobStatus: 0
-} as IJobModel;
+};
 
 before(async () => {
     jobRepository = new JobRepository();

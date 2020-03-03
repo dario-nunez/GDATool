@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mycompany.TestDependencyFactory;
 import com.mycompany.configuration.DependencyFactory;
-import com.mycompany.models.AggregationEnum;
+import com.mycompany.models.OperationEnum;
 import com.mycompany.models.AggregationModel;
 import com.mycompany.models.ConfigModel;
 import com.mycompany.services.ElasticsearchRepository;
@@ -79,11 +79,11 @@ public class JobTests {
         List<Column> actualColumns = job.getAggregationColumns(aggregationModel);
         List<Column> expectedColumns = new ArrayList<Column>() {
             {
-                add(count(aggregationModel.metricColumn).alias(AggregationEnum.COUNT.toString().toLowerCase()));
-                add(sum(aggregationModel.metricColumn).alias(AggregationEnum.SUM.toString().toLowerCase()));
-                add(max(aggregationModel.metricColumn).alias(AggregationEnum.MAX.toString().toLowerCase()));
-                add(min(aggregationModel.metricColumn).alias(AggregationEnum.MIN.toString().toLowerCase()));
-                add(avg(aggregationModel.metricColumn).alias(AggregationEnum.AVG.toString().toLowerCase()));
+                add(count(aggregationModel.metricColumn).alias(OperationEnum.COUNT.toString().toLowerCase()));
+                add(sum(aggregationModel.metricColumn).alias(OperationEnum.SUM.toString().toLowerCase()));
+                add(max(aggregationModel.metricColumn).alias(OperationEnum.MAX.toString().toLowerCase()));
+                add(min(aggregationModel.metricColumn).alias(OperationEnum.MIN.toString().toLowerCase()));
+                add(avg(aggregationModel.metricColumn).alias(OperationEnum.AVG.toString().toLowerCase()));
             }
         };
 

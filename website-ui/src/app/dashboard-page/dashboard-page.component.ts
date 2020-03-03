@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 
@@ -16,7 +16,6 @@ export class DashboardPageComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       this.jobId = params["job._id"];
-      console.log(this.jobId);
       this.refreshIframeUrl();
     });
   }

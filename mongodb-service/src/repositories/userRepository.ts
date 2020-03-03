@@ -10,13 +10,20 @@ export class UserRepository extends Repository<IUser> {
     }
 
     public async authenticateUser(email: string, password: string): Promise<IUserModel> {
-        const user: IUser = await User.findOne({ email: email }).lean().exec();
+        const user: IUserModel = await User.findOne({ email: email }).lean().exec();
 
         if (user != null && user.password === password) {
             return user;
         }
 
-        return null;
+        const responseUser: IUserModel = {
+            _id: "",
+            name: "",
+            email: "",
+            password: ""
+        };
+
+        return responseUser;
     }
 
     public async getUserByEmail(email: string): Promise<IUserModel> {
@@ -29,7 +36,7 @@ export class UserRepository extends Repository<IUser> {
 
         const jobRepository: JobRepository = new JobRepository();
 
-        for (const job of jobs){
+        for (const job of jobs) {
             await jobRepository.deleteRecursive(job._id);
         }
 

@@ -1,18 +1,18 @@
 [
   {
-    "_id":"5e543cd426e4ff5245342d4f",
-    "aggs":["COUNT","SUM","MAX","MIN","AVG"],
+    "_id":"333333333333333333333333",
+    "operations":["COUNT","SUM","MAX","MIN","AVG"],
     "featureColumns":["city"],
-    "jobId":"5e52fed627d827399fe46014",
+    "jobId":"222222222222222222222222",
     "metricColumn":"price",
     "name":"Aggregation of price by city",
     "sortColumnName":"city"
   },
   {
-    "_id":"5e543cd426e4ff5245342d50",
-    "aggs":["COUNT","SUM","MAX","MIN","AVG"],
+    "_id":"444444444444444444444444",
+    "operations":["COUNT","SUM","MAX","MIN","AVG"],
     "featureColumns":["county"],
-    "jobId":"5e52fed627d827399fe46014",
+    "jobId":"222222222222222222222222",
     "metricColumn":"price",
     "name":"Aggregation of price by county",
     "sortColumnName":"county"

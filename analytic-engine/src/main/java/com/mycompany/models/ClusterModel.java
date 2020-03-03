@@ -30,9 +30,4 @@ public class ClusterModel {
                 Objects.equals(yAxis, that.yAxis) &&
                 Objects.equals(yType, that.yType);
     }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(_id, __v, aggId, aggName, identifier, identifierType, xAxis, xType, yAxis, yType);
-    }
 }

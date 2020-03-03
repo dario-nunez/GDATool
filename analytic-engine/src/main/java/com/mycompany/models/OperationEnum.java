@@ -1,6 +1,6 @@
 package com.mycompany.models;
 
-public enum AggregationEnum {
+public enum OperationEnum {
     AVG,
     SUM,
     COUNT,

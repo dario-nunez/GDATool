@@ -43,7 +43,7 @@ public class HelperFunctionsTests {
          SparkSession sparkSession = dependencyFactory.getSparkSession();
          job = new TestJob(sparkSession, configModel, mongodbRepositoryMock, elasticsearchRepositoryMock);
 
-         inputDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "helperFunctionsDS.csv"));
+         inputDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/helperFunctionsDS.csv"));
      }
 
     @Test
@@ -148,7 +148,17 @@ public class HelperFunctionsTests {
     @Test
     public void getValidDataset() {
         Dataset<Row> actualDataset = HelperFunctions.getValidDataset(inputDataset).cache();
-        Dataset<Row> expectedDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "helperFunctionsDSValidColumnNames.csv"));
+        Dataset<Row> expectedDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/helperFunctionsDSValidColumnNames.csv"));
+
+        assertEquals(expectedDataset.collectAsList(), actualDataset.collectAsList());
+    }
+
+    @Test
+    public void getValidDatasetWithEmptyDataset() {
+        Dataset<Row> emptyDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/helperFunctionsDSEmpty.csv"));
+
+        Dataset<Row> actualDataset = HelperFunctions.getValidDataset(emptyDataset).cache();
+        Dataset<Row> expectedDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/helperFunctionsDSEmptyValidColumnNames.csv"));
 
         assertEquals(expectedDataset.collectAsList(), actualDataset.collectAsList());
     }
@@ -164,7 +174,7 @@ public class HelperFunctionsTests {
         };
 
         Dataset<Row> actualDataset = HelperFunctions.stringifyFeatureColumns(inputDataset, featureColumns).cache();
-        Dataset<Row> expectedDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "helperFunctionsDS.csv"));
+        Dataset<Row> expectedDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/helperFunctionsDS.csv"));
         expectedDataset = expectedDataset.withColumn("Year of Date", col("Year of Date").cast("String"));
 
         assertEquals(expectedDataset.schema(), actualDataset.schema());
@@ -175,7 +185,20 @@ public class HelperFunctionsTests {
         Dataset<Row> actualDataset = HelperFunctions.simplifyTypes(inputDataset).cache();
         String actualSchema = actualDataset.schema().toString();
 
-        File schemaFile = new File(Objects.requireNonNull(classLoader.getResource("helperFunctionsDSSimplifiedTypesSchema.txt")).getFile());
+        File schemaFile = new File(Objects.requireNonNull(classLoader.getResource("ukPropertiesDs/helperFunctionsDSSimplifiedTypesSchema.txt")).getFile());
+        String expectedSchema = FileUtils.readFileToString(schemaFile, StandardCharsets.UTF_8);
+
+        assertEquals(expectedSchema, actualSchema);
+    }
+
+    @Test
+    public void simplifyTypesWothEmptyDataset() throws IOException {
+        Dataset<Row> emptyDataset = job.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/helperFunctionsDSEmpty.csv"));
+
+        Dataset<Row> actualDataset = HelperFunctions.simplifyTypes(emptyDataset).cache();
+
+        String actualSchema = actualDataset.schema().toString();
+        File schemaFile = new File(Objects.requireNonNull(classLoader.getResource("ukPropertiesDs/helperFunctionsDSSimplifiedTypesSchemaEmptyDataset.txt")).getFile());
         String expectedSchema = FileUtils.readFileToString(schemaFile, StandardCharsets.UTF_8);
 
         assertEquals(expectedSchema, actualSchema);

@@ -16,14 +16,14 @@ let userRepository: UserRepository;
 let jobRepository: JobRepository;
 let aggregationRepository: AggregationRepository;
 
-const testUser = {
+const testUser: IUserModel = {
     _id: "333333333333333333333333",
     password: "user_test_password",
     email: "user_test_email_aggregationController",
     name: "user_test_user"
-} as IUserModel;
+};
 
-const testJob = {
+const testJob: IJobModel = {
     _id: "444444444444444444444444",
     userId: "",
     name: "job_test_name",
@@ -32,27 +32,27 @@ const testJob = {
     stagingFileName: "",
     generateESIndices: true,
     jobStatus: 0
-} as IJobModel;
+};
 
-const testAggregation1 = {
+const testAggregation1: IAggregationModel = {
     _id: "555555555555555555555555",
     jobId: "",
-    aggs: [],
+    operations: [],
     featureColumns: [],
     metricColumn: "aggregation1_test_metricColumn",
     name: "aggregation1_test_name",
     sortColumnName: "aggregation1_test_sortColumnName"
-} as IAggregationModel;
+};
 
-const testAggregation2 = {
+const testAggregation2: IAggregationModel = {
     _id: "666666666666666666666666",
     jobId: "",
-    aggs: [],
+    operations: [],
     featureColumns: [],
     metricColumn: "aggregation2_test_metricColumn",
     name: "aggregation2_test_name",
     sortColumnName: "aggregation1_test_sortColumnName"
-} as IAggregationModel;
+};
 
 before(async () => {
     userRepository = new UserRepository();

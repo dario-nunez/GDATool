@@ -13,37 +13,39 @@ const expect = chai.expect;
 let aggregationRepository: AggregationRepository;
 let clusterRepository: ClusterRepository;
 
-const testcluster1 = {
+const testcluster1: IClusterModel = {
     _id: "121212121212121212121212",
     aggId: "",
+    aggName: "",
     identifier: "cluster1_test_identifier",
     identifierType: "cluster1_test_identifierType",
     xAxis: "cluster1_test_xAxis",
     xType: "cluster1_test_xType",
     yAxis: "cluster1_test_yAxis",
     yType: "cluster1_test_yType"
-} as IClusterModel;
+};
 
-const testcluster2 = {
+const testcluster2: IClusterModel = {
     _id: "131313131313131313131313",
     aggId: "",
+    aggName: "",
     identifier: "cluster2_test_identifier",
     identifierType: "cluster2_test_identifierType",
     xAxis: "cluster2_test_xAxis",
     xType: "cluster2_test_xType",
     yAxis: "cluster2_test_yAxis",
     yType: "cluster2_test_yType"
-} as IClusterModel;
+};
 
-const testAggregation = {
+const testAggregation: IAggregationModel = {
     _id: "141414141414141414141414",
     jobId: "151515151515151515151515",
-    aggs: [],
+    operations: [],
     featureColumns: [],
     metricColumn: "aggregation_test_metricColumn",
     name: "aggregation_test_name",
     sortColumnName: "aggregation1_test_sortColumnName"
-} as IAggregationModel;
+};
 
 before(async () => {
     aggregationRepository = new AggregationRepository();
@@ -56,6 +58,8 @@ before(async () => {
     await aggregationRepository.create(testAggregation);
     testcluster1.aggId = testAggregation._id;
     testcluster2.aggId = testAggregation._id;
+    testcluster1.aggName = testAggregation.name;
+    testcluster2.aggName = testAggregation.name;
 });
 
 describe("cluster controller tests", () => {

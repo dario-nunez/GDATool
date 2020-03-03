@@ -12,14 +12,14 @@ const expect = chai.expect;
 let userRepository: UserRepository;
 let jobRepository: JobRepository;
 
-const testUser = {
+const testUser: IUserModel = {
     _id: "111111111111111111111111",
     password: "user_test_password",
     email: "user_test_email_jobController",
     name: "user_test_user"
-} as IUserModel;
+};
 
-const testJob1 = {
+const testJob1: IJobModel = {
     _id: "222222222222222222222222",
     name: "job1_test_name",
     description: "job1_test_description",
@@ -28,9 +28,9 @@ const testJob1 = {
     userId: "",
     generateESIndices: true,
     jobStatus: 0
-} as IJobModel;
+};
 
-const testJob2 = {
+const testJob2: IJobModel = {
     _id: "202020202020202020202020",
     name: "job2_test_name",
     description: "job2_test_description",
@@ -39,7 +39,7 @@ const testJob2 = {
     userId: "",
     generateESIndices: true,
     jobStatus: 0
-} as IJobModel;
+};
 
 before(async () => {
     userRepository = new UserRepository();

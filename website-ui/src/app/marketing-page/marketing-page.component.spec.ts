@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { MarketingPageComponent } from './marketing-page.component';
+import { COMMON_DECLARATIONS, COMMON_IMPORTS } from '../testResources';
 
 describe('MarketingPageComponent', () => {
   let component: MarketingPageComponent;
@@ -8,7 +8,8 @@ describe('MarketingPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MarketingPageComponent ]
+      declarations: COMMON_DECLARATIONS,
+      imports: COMMON_IMPORTS
     })
     .compileComponents();
   }));

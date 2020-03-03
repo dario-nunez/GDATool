@@ -30,6 +30,7 @@ public class SchemaInferenceJobTests {
     private SchemaInferenceJob schemaInferenceJob;
     private ClassLoader classLoader;
     private JobModel jobModel;
+    private ConfigModel configModel;
 
     @Mock
     MongodbRepository mongodbRepositoryMock;
@@ -48,11 +49,11 @@ public class SchemaInferenceJobTests {
         when(mongodbRepositoryMock.getJobById(anyString())).thenReturn(jobModel);
 
         DependencyFactory dependencyFactory = new TestDependencyFactory();
-        ConfigModel configModel = dependencyFactory.getConfigModel();
+        configModel = dependencyFactory.getConfigModel();
         SparkSession sparkSession = dependencyFactory.getSparkSession();
         schemaInferenceJob = new SchemaInferenceJob(sparkSession, configModel, mongodbRepositoryMock,
                 elasticsearchRepositoryMock);
-        inputDataset = schemaInferenceJob.read(String.format("%s/%s", configModel.bucketRoot(), "schemaInferenceJobDS.csv"));
+        inputDataset = schemaInferenceJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/schemaInferenceJobDS.csv"));
     }
 
     /**
@@ -62,9 +63,17 @@ public class SchemaInferenceJobTests {
     public void getJsonSchema() throws IOException, UnirestException {
         String actualSchema = schemaInferenceJob.getJsonSchema(inputDataset, jobModel);
 
-        File schemaFile = new File(Objects.requireNonNull(classLoader.getResource("schemaInferenceJobJSONSchema.json")).getFile());
+        File schemaFile = new File(Objects.requireNonNull(classLoader.getResource("ukPropertiesDs/schemaInferenceJobJSONSchema.json")).getFile());
         String expectedSchema = FileUtils.readFileToString(schemaFile, StandardCharsets.UTF_8);
 
+        assertEquals(expectedSchema, actualSchema);
+    }
+
+    @Test
+    public void getJsonSchemaWIthEmptyDataset() throws IOException, UnirestException {
+        Dataset<Row> emptyDataset = schemaInferenceJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSEmpty.csv"));
+        String actualSchema = schemaInferenceJob.getJsonSchema(emptyDataset, jobModel);
+        String expectedSchema = "";
         assertEquals(expectedSchema, actualSchema);
     }
 }

@@ -51,8 +51,8 @@ public class DataAnalysisJob extends Job {
         JobModel job = mongodbRepository.getJobById(jobId);
         List<PlotModel> plots = mongodbRepository.loadPlots(jobId);
         List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
-//        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
-        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "uk-properties-mid.csv"));
+        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
+//        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "uk-properties-mid.csv"));
 //        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "zikaVirusReportedCases-lite.csv"));
         dataset = HelperFunctions.getValidDataset(dataset);
         dataset = HelperFunctions.simplifyTypes(dataset);
@@ -128,7 +128,7 @@ public class DataAnalysisJob extends Job {
         List<Column> catColumns = aggregationModel.featureColumns.stream().map(functions::col).collect(Collectors.toList());
 
         // Aggregation columns
-        List<String> aggs = aggregationModel.aggs.stream().map(agg -> agg.toString().toLowerCase()).collect(Collectors.toList());
+        List<String> aggs = aggregationModel.operations.stream().map(agg -> agg.toString().toLowerCase()).collect(Collectors.toList());
 
         // Creates a Column with the name of the metric column in the AggregationModel
         Column metricColumn = col(aggregationModel.metricColumn);
@@ -177,6 +177,10 @@ public class DataAnalysisJob extends Job {
 
     public Dataset<Row> removeOutliers(Dataset<Row> dataset, List<String> featureColumns) {
         // Eliminate outliers by taking only 1 SD from the mean
+        if (dataset.isEmpty()) {
+            return dataset;
+        }
+
         for (String column : featureColumns) {
             Double mean = (Double) dataset.agg(mean(col(column))).cache().first().get(0);
             Double std = (Double) dataset.agg(stddev(col(column))).cache().first().get(0);
@@ -194,6 +198,10 @@ public class DataAnalysisJob extends Job {
     }
 
     public Dataset<Row> cluster(Dataset<Row> dataset, ClusterModel clusterModel) {
+        if (dataset.isEmpty()) {
+            return dataset.withColumn("cluster", lit(0)).cache();
+        }
+
         // Select columns necessary for clustering
         List<String> featureColumns = new ArrayList<>();
         featureColumns.add(clusterModel.xAxis.toLowerCase());
@@ -284,9 +292,9 @@ public class DataAnalysisJob extends Job {
     private void saveToStaging(Dataset<Row> dataset, String filename) {
         // Writing to parquet
         String ext = "parquet";
-        String fullFilename = configModel.bucketRoot() + filename + "." + ext;
+        String fullFilename = configModel.stagingFolder() + filename + "." + ext;
         logger.info("Writing to {}", fullFilename);
-        //dataset.write().mode(SaveMode.Overwrite).format(ext).save(fullFilename);
+        dataset.write().mode(SaveMode.Overwrite).format(ext).save(fullFilename);
     }
 
     /**

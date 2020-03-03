@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IJob } from 'src/models/job.model';
 import { FileUploader } from "ng2-file-upload";
+import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
 
 @Component({
   selector: 'app-upload',
@@ -11,33 +11,31 @@ import { FileUploader } from "ng2-file-upload";
 })
 export class UploadComponent implements OnInit {
   jobId: string;
-  job: IJob;
+  job: IJobModel;
   ioDisabled: boolean = true;
   uploader: FileUploader;
+  itemSize: number;
 
-  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) {
+  constructor(public mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) {
     this.jobId = this.route.snapshot.paramMap.get("job._id");
-    console.log(this.jobId)
-    this.job = {} as IJob;
+    this.job = {} as IJobModel;
     this.uploader = new FileUploader({
       method: "PUT",
       disableMultipart: true // 'DisableMultipart' must be 'true' for formatDataFunction to be called.
     });
 
     this.uploader.onCompleteItem = (item => {
-      console.log("File just uploaded:")
-      console.log(item.file.name)
       this.job.rawInputDirectory = this.job.rawInputDirectory + "/" + item.file.name;
       this.ioDisabled = false;
     });
 
     this.uploader.onAfterAddingFile = (item => {
+      this.itemSize = item._file.size;
       if (this.uploader.queue.length > 0) {
         this.uploader.queue = [item];
       }
       this.mongodbService.getUploadFileUrl(item.file.name, this.jobId).subscribe(value => {
         item.url = value;
-        console.log("File has been added")
       },
         error => console.log(error)
       );
@@ -56,15 +54,13 @@ export class UploadComponent implements OnInit {
 
   next() {
     this.mongodbService.updateJob(this.job).subscribe(retJob => {
-      this.router.navigate(['/schema', this.jobId]);
+      this.router.navigate(['/schema', retJob._id]);
     });
   }
 
   deleteJob() {
     if (confirm("This job will be lost forever. Are you sure you want to delete it?")) {
       this.mongodbService.deleteJobRecusrive(this.job._id).subscribe(job => {
-        console.log("Deleted Job: ");
-        console.log(job);
         this.router.navigate(['/jobsPage']);
       });
     }

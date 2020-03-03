@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { Router, ActivatedRoute } from '@angular/router';
-import { IJob } from 'src/models/job.model';
+import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
 
 @Component({
   selector: 'app-execute',
@@ -10,15 +10,14 @@ import { IJob } from 'src/models/job.model';
 })
 export class ExecuteComponent implements OnInit {
   analysisJobExecuted = false;
-  job: IJob;
+  job: IJobModel;
   jobId: string;
   ioDisabled: boolean = true;
 
-  constructor(private mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) { }
+  constructor(public mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit() {
     this.job = {
-      _id: "",
       name: "",
       description: "",
       rawInputDirectory: "",
@@ -26,7 +25,6 @@ export class ExecuteComponent implements OnInit {
       userId: "",
       generateESIndices: true,
       jobStatus: 0,
-      runs: []
     }
 
     this.route.params.subscribe(params => {
@@ -34,7 +32,7 @@ export class ExecuteComponent implements OnInit {
       this.mongodbService.getJobById(this.jobId).subscribe(job => {
         this.job = job;
         if (this.job.jobStatus >= 5) {
-            this.analysisJobExecuted = true;
+          this.analysisJobExecuted = true;
         }
         this.ioDisabled = false;
       });
@@ -43,7 +41,6 @@ export class ExecuteComponent implements OnInit {
 
   submitAndRun() {
     this.mongodbService.updateJob(this.job).subscribe(retJob => {
-      console.log("Trigger Spark job")
       this.router.navigate(['/jobsPage']);
     });
   }
@@ -51,8 +48,6 @@ export class ExecuteComponent implements OnInit {
   deleteJob() {
     if (confirm("This job will be lost forever. Are you sure you want to delete it?")) {
       this.mongodbService.deleteJobRecusrive(this.job._id).subscribe(job => {
-        console.log("Deleted Job: ");
-        console.log(job);
         this.router.navigate(['/jobsPage']);
       });
     }

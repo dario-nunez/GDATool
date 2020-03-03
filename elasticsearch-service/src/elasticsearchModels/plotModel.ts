@@ -1,6 +1,6 @@
-import { IVisualization } from "./visualizationModel";
+import { IESVisualization } from "./visualizationModel";
 
-export interface IPlot extends IVisualization {
+export interface IESPlot extends IESVisualization {
     index: string;
     explorerTitle: string;
     identifier: string;

@@ -3,7 +3,7 @@ import { GET, Path, PathParam } from "typescript-rest";
 import { DashboardManager } from "../elasticsearchEntityManagers/dashboardManager";
 import { IndexPatternManager } from "../elasticsearchEntityManagers/indexPatternManager";
 import { VisualizationManager } from "../elasticsearchEntityManagers/visualizationManager";
-import { IVisualization } from "../elasticsearchModels/visualizationModel";
+import { IESVisualization } from "../elasticsearchModels/visualizationModel";
 import { KibanaService } from "../services/kibana-service";
 import { MongodbService } from "../services/mongodb-service";
 
@@ -35,15 +35,15 @@ export class DashboardBuilderController {
         const job = await this.mongodbService.getJobById(jobId);
 
         const visualizationsForDashboard = new Array();
-        const plotSection: Array<IVisualization> = new Array();
+        const plotSection: Array<IESVisualization> = new Array();
 
         // Plot section title
-        if (plots.data.length > 0) {
-            plotSection.push(this.visualizationManager.createVisMarkup(job.data._id, "General plots"));
+        if (plots.length > 0) {
+            plotSection.push(this.visualizationManager.createVisMarkup(job._id, "General plots"));
         }
 
         // Plots
-        for (const plot of plots.data) {
+        for (const plot of plots) {
             plotSection.push(this.visualizationManager.createPlot(plot._id, plot._id, plot.identifier, plot.identifierType, plot.xAxis, plot.xType, plot.yAxis, plot.yType));
         }
 
@@ -51,30 +51,30 @@ export class DashboardBuilderController {
         visualizationsForDashboard.push(plotSection);
 
         // Aggregation section
-        for (const aggregation of aggregations.data) {
+        for (const aggregation of aggregations) {
             const aggSection = [];
-            this.indexPatterManager.createIndexPattern(aggregation._id, aggregation.aggs, aggregation.featureColumns);
+            this.indexPatterManager.createIndexPattern(aggregation._id, aggregation.operations, aggregation.featureColumns);
             const visualizationIdPrefix = aggregation.jobId + "_" + aggregation._id;
 
             // Title
             aggSection.push(this.visualizationManager.createVisMarkup(visualizationIdPrefix, aggregation.name));
 
             // Metrics
-            for (const agg of aggregation.aggs) {
-                aggSection.push(this.visualizationManager.createMetric(visualizationIdPrefix + agg.toLowerCase(), agg.toLowerCase(), aggregation._id));
+            for (const operation of aggregation.operations) {
+                aggSection.push(this.visualizationManager.createMetric(visualizationIdPrefix + operation.toLowerCase(), operation.toLowerCase(), aggregation._id));
             }
 
             // Bar charts
-            for (const agg of aggregation.aggs) {                
-                aggSection.push(this.visualizationManager.createVisBarChart(visualizationIdPrefix + "_" + agg.toLowerCase(), agg.toLowerCase(), aggregation.metricColumn, aggregation.featureColumns[0], aggregation._id));
+            for (const operation of aggregation.operations) {                
+                aggSection.push(this.visualizationManager.createVisBarChart(visualizationIdPrefix + "_" + operation.toLowerCase(), operation.toLowerCase(), aggregation.metricColumn, aggregation.featureColumns[0], aggregation._id));
             }
 
             // Data tables
-            aggSection.push(this.visualizationManager.createDataTable(visualizationIdPrefix, aggregation.name , aggregation.aggs, aggregation.featureColumns, aggregation._id));
+            aggSection.push(this.visualizationManager.createDataTable(visualizationIdPrefix, aggregation.name , aggregation.operations, aggregation.featureColumns, aggregation._id));
 
             // Clusters
             const clusters = await this.mongodbService.getClustersByAgg(aggregation._id);
-            for (const cluster of clusters.data) {
+            for (const cluster of clusters) {
                 aggSection.push(this.visualizationManager.createCluster(aggregation._id + "_" + cluster._id, cluster._id, cluster.identifier, cluster.identifierType, cluster.xAxis, cluster.xType, cluster.yAxis, cluster.yType));
             }
 
@@ -82,7 +82,7 @@ export class DashboardBuilderController {
             visualizationsForDashboard.push(aggSection);
         }
 
-        const returnDash = this.dashboardManager.createDashboard(job.data._id, visualizationsForDashboard);
+        const returnDash = this.dashboardManager.createDashboard(job._id, visualizationsForDashboard);
         return returnDash;
     }
 }

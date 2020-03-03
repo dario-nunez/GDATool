@@ -1,9 +1,9 @@
-import { IVisualization } from "./visualizationModel";
+import { IESVisualization } from "./visualizationModel";
 
-export interface IVisBarCHart extends IVisualization {
+export interface IESBarChart extends IESVisualization {
     explorerTitle: string;
     featureColumn: string;
-    aggregationName: string;
+    operationName: string;
     metricColumn: string;
     index: string;
 }

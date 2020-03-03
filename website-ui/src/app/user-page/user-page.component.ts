@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { IUser } from 'src/models/user.model';
 import { MongodbService } from "../../services/mongodb/mongodb.service";
 import { Router } from '@angular/router';
+import { IUserModel } from '../../../../mongodb-service/src/models/userModel';
 
 @Component({
   selector: 'app-user-page',
@@ -10,23 +10,29 @@ import { Router } from '@angular/router';
 })
 export class UserPageComponent implements OnInit {
 
-  user: IUser;
+  user: IUserModel;
   private emailExists: boolean;
   private repeatedPassword: string;
 
-  constructor(private router: Router, private mongodbService: MongodbService) { }
+  constructor(private router: Router, public mongodbService: MongodbService) { }
 
   ngOnInit() {
     // Initialise the user before the page is displayed to avoid an error while the data arrives
     this.user = {
-      _id: "",
-      dashboards: [],
       name: "",
       email: "",
       password: ""
     }
 
-    this.mongodbService.getUserByEmail(JSON.parse(localStorage.getItem("user")).email).subscribe(user => {
+    let loggedInUser;
+
+    if (JSON.parse(localStorage.getItem("user"))) {
+      loggedInUser = JSON.parse(localStorage.getItem("user")).email;
+    } else {
+      loggedInUser = "Nope";
+    }
+
+    this.mongodbService.getUserByEmail(loggedInUser).subscribe(user => {
       this.user = user
     });
   }
@@ -37,17 +43,13 @@ export class UserPageComponent implements OnInit {
     this.mongodbService.updateUser(this.user).subscribe(user => {
       if (user != null) {
         const simplifiedUser = {
-          id: this.user._id,
+          _id: this.user._id,
           email: this.user.email
         };
-
-        console.log("Simplified user: ");
-        console.log(simplifiedUser);
 
         localStorage.setItem("user", JSON.stringify(simplifiedUser));
         this.router.navigate(['/jobsPage']);
       } else {
-        console.log("Email already exists");
         this.user.password = "";
         this.repeatedPassword = "";
         this.emailExists = true;
@@ -61,9 +63,7 @@ export class UserPageComponent implements OnInit {
 
   deleteAccount() {
     if (confirm("This account will be lost forever. Are you sure you want to delete it?")) {
-      this.mongodbService.deleteUserRecursive(JSON.parse(localStorage.getItem("user")).id).subscribe(user => {
-        console.log("Deleted User: ");
-        console.log(user);
+      this.mongodbService.deleteUserRecursive(JSON.parse(localStorage.getItem("user"))._id).subscribe(user => {
         localStorage.clear();
         this.router.navigate(['/']);
       });

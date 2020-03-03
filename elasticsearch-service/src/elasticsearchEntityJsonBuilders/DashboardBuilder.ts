@@ -1,4 +1,4 @@
-import { IDashboard } from "../elasticsearchModels/dashboardModel";
+import { IESDashboard } from "../elasticsearchModels/dashboardModel";
 
 export class DashboardBuilder {
     protected elasticSearchUrl: string;
@@ -16,10 +16,10 @@ export class DashboardBuilder {
         this.indexName = ".kibana/";
     }
 
-    public getBasicDashboard(dashboardModel: IDashboard) {
+    public getBasicDashboard(dashboardModel: IESDashboard) {
         const returnJson = {
             method: "PUT",
-            url: this.elasticSearchUrl + this.indexName + "_doc/dashboard:" + dashboardModel.id + "_dashboard",
+            url: this.elasticSearchUrl + this.indexName + "_doc/dashboard:" + dashboardModel._id + "_dashboard",
             data:
             {
                 dashboard:
@@ -45,7 +45,7 @@ export class DashboardBuilder {
         return returnJson;
     }
 
-    private getBasicReferences(dashboardModel: IDashboard) {
+    private getBasicReferences(dashboardModel: IESDashboard) {
         let panelCounter = 0;
         const referenceArray: Array<any> = [];
 
@@ -54,7 +54,7 @@ export class DashboardBuilder {
                 referenceArray.push({
                     name: "panel_" + panelCounter,
                     type: "visualization",
-                    id: vis.id
+                    id: vis._id
                 });
 
                 panelCounter = panelCounter + 1;
@@ -64,7 +64,7 @@ export class DashboardBuilder {
         return referenceArray;
     }
 
-    private getBasicVisualizationMetadata(dashboardModel: IDashboard): string {
+    private getBasicVisualizationMetadata(dashboardModel: IESDashboard): string {
         let panelIndex: number = 0;
         let currentY: number = 0;
         let currentX: number = 0;

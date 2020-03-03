@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { StatusLineComponent } from './status-line.component';
+import { COMMON_IMPORTS, COMMON_DECLARATIONS, MOCK_STATUS_LINE } from 'src/app/testResources';
+import { By } from '@angular/platform-browser';
 
 describe('StatusLineComponent', () => {
   let component: StatusLineComponent;
@@ -8,7 +9,8 @@ describe('StatusLineComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StatusLineComponent ]
+      declarations: COMMON_DECLARATIONS,
+      imports: COMMON_IMPORTS
     })
     .compileComponents();
   }));
@@ -16,10 +18,22 @@ describe('StatusLineComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(StatusLineComponent);
     component = fixture.componentInstance;
+    
+    const inputStatusLine = fixture.debugElement.query(By.css('.statusLine'));
+    
+    component.statusLine = MOCK_STATUS_LINE;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('Success Done', () => {
+    component.statusLine.jobStatus = 1;
+    component.statusLine.lineTriggerStatus = 1;
+    component.ngOnInit();
+    expect(component.badgeColour).toEqual("success")
+    expect(component.badgeText).toEqual("Done")
   });
 });
