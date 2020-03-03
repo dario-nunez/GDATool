@@ -35,7 +35,7 @@ export class SignUpPageComponent implements OnInit {
     this.mongodbService.createUser(this.user.email, this.user.password).subscribe(user => {
         if (user != null) {
           const simplifiedUser = {
-            id: user._id,
+            _id: user._id,
             email: user.email
           };
           localStorage.setItem("user", JSON.stringify(simplifiedUser));
