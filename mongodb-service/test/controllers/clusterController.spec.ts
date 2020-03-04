@@ -1,13 +1,15 @@
 import * as chai from "chai";
 import chaiHttp = require('chai-http');
 import { before, describe, it } from "mocha";
-import logger from "../../src/logger/loggerFactory";
 import { IAggregationModel } from "../../src/models/aggregationModel";
 import { IClusterModel } from "../../src/models/clusterModel";
 import { AggregationRepository } from "../../src/repositories/aggregationRepository";
 import { ClusterRepository } from "../../src/repositories/clusterRerpository";
 import { deleteIfPresent } from "../deleteIfPresent.spec";
 
+/**
+ * Cluster Controller tests.
+ */
 chai.use(chaiHttp);
 const expect = chai.expect;
 let aggregationRepository: AggregationRepository;
@@ -62,9 +64,9 @@ before(async () => {
     testcluster2.aggName = testAggregation.name;
 });
 
-describe("cluster controller tests", () => {
+describe("Cluster Controller tests", () => {
     describe("create cluster", () => {
-        it("create cluster succeeds", (done) => {
+        it("create a single cluster succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .post("/ms/cluster")
                 .send(testcluster1)
@@ -77,7 +79,7 @@ describe("cluster controller tests", () => {
                 });
         });
 
-        it("create a list clusters succeeds", (done) => {
+        it("create multiple clusters succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .post("/ms/cluster/multiple")
                 .send([testcluster2])
@@ -93,7 +95,7 @@ describe("cluster controller tests", () => {
     });
 
     describe("get cluster", () => {
-        it("get clusters with an existing aggregation id", (done) => {
+        it("get clusters with an existing aggregation id succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/cluster/byAgg/" + testAggregation._id)
                 .end(function (err, res) {
@@ -106,7 +108,7 @@ describe("cluster controller tests", () => {
                 });
         });
 
-        it("get clusters with a non existing aggregation id", (done) => {
+        it("get clusters with a non existing aggregation id return empty list and succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/cluster/byAgg/wrongId")
                 .end(function (err, res) {
@@ -118,7 +120,7 @@ describe("cluster controller tests", () => {
                 });
         });
 
-        it("get all clusters returns a list of users", (done) => {
+        it("get all clusters succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/cluster/getAll")
                 .end(function (err, res) {
@@ -133,7 +135,7 @@ describe("cluster controller tests", () => {
     });
 
     describe("delete clusters", () => {
-        it("cluster using non existing id fails", (done) => {
+        it("delete cluster using non existing id fails", (done) => {
             chai.request("http://localhost:5000")
                 .delete("/ms/cluster/wrongId")
                 .end(function (err, res) {
@@ -142,7 +144,7 @@ describe("cluster controller tests", () => {
                 });
         });
 
-        it("cluster using existing id succeeds", (done) => {
+        it("delete cluster using existing id succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .delete("/ms/cluster/" + testcluster1._id)
                 .end(function (err, res) {
@@ -153,11 +155,10 @@ describe("cluster controller tests", () => {
                 });
         });
 
-        it("aggregation using existing id succeeds", (done) => {
+        it("delete aggregation recursively succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .delete("/ms/aggregation/recursive/" + testAggregation._id)
                 .end(function (err, res) {
-                    logger.info(res.body);
                     const returnAggregation: IAggregationModel = res.body;
                     expect(returnAggregation._id).to.equal(testAggregation._id);
                     expect(res).to.have.status(200);

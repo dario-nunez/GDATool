@@ -7,6 +7,9 @@ import { JobRepository } from "../../src/repositories/jobRepository";
 import { PlotRepository } from "../../src/repositories/plotRepository";
 import { deleteIfPresent } from "../deleteIfPresent.spec";
 
+/**
+ * Plot Controller tests.
+ */
 chai.use(chaiHttp);
 const expect = chai.expect;
 let jobRepository: JobRepository;
@@ -34,7 +37,6 @@ const testPlot2: IPlotModel = {
     yType: "plot1_test_yType"
 };
 
-
 const testJob: IJobModel = {
     _id: "999999999999999999999999",
     name: "job_test_name",
@@ -59,7 +61,7 @@ before(async () => {
     testPlot2.jobId = testJob._id;
 });
 
-describe("Plot controller tests", () => {
+describe("Plot Controller tests", () => {
     describe("create plot", () => {
         it("create plot succeeds", (done) => {
             chai.request("http://localhost:5000")
@@ -74,7 +76,7 @@ describe("Plot controller tests", () => {
                 });
         });
 
-        it("create a list plots succeeds", (done) => {
+        it("create multiple plots succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .post("/ms/plot/multiple")
                 .send([testPlot2])
@@ -90,7 +92,7 @@ describe("Plot controller tests", () => {
     });
 
     describe("get plot", () => {
-        it("get plots with an existing job id", (done) => {
+        it("get plots with an existing job id succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/plot/byJob/" + testJob._id)
                 .end(function (err, res) {
@@ -103,7 +105,7 @@ describe("Plot controller tests", () => {
                 });
         });
 
-        it("get plots with a non existing job id", (done) => {
+        it("get plots with a non existing job id fails", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/plot/byJob/wrongId")
                 .end(function (err, res) {
@@ -115,7 +117,7 @@ describe("Plot controller tests", () => {
                 });
         });
 
-        it("get all plots returns a list of users", (done) => {
+        it("get all plots succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/plot/getAll")
                 .end(function (err, res) {
@@ -130,7 +132,7 @@ describe("Plot controller tests", () => {
     });
 
     describe("delete plots", () => {
-        it("plot using non existing id fails", (done) => {
+        it("delete plot with non existing plot id fails", (done) => {
             chai.request("http://localhost:5000")
                 .delete("/ms/plot/wrongId")
                 .end(function (err, res) {
@@ -139,7 +141,7 @@ describe("Plot controller tests", () => {
                 });
         });
 
-        it("plot using existing id succeeds", (done) => {
+        it("delete plot with existing plot id succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .delete("/ms/plot/" + testPlot1._id)
                 .end(function (err, res) {
@@ -150,7 +152,7 @@ describe("Plot controller tests", () => {
                 });
         });
 
-        it("plot2 using existing id succeeds", (done) => {
+        it("delete plot2 with existing plot id succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .delete("/ms/plot/" + testPlot2._id)
                 .end(function (err, res) {
@@ -161,7 +163,7 @@ describe("Plot controller tests", () => {
                 });
         });
 
-        it("job deletion succeeds", (done) => {
+        it("delete job succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .delete("/ms/job/" + testJob._id)
                 .end(function (err, res) {

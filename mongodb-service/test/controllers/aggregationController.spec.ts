@@ -1,7 +1,6 @@
 import * as chai from "chai";
 import chaiHttp = require('chai-http');
 import { before, describe, it } from "mocha";
-import logger from "../../src/logger/loggerFactory";
 import { IAggregationModel } from "../../src/models/aggregationModel";
 import { IJobModel } from "../../src/models/jobModel";
 import { IUserModel } from "../../src/models/userModel";
@@ -10,6 +9,9 @@ import { JobRepository } from "../../src/repositories/jobRepository";
 import { UserRepository } from "../../src/repositories/userRepository";
 import { deleteIfPresent } from "../deleteIfPresent.spec";
 
+/**
+ * Aggregation Controller tests
+ */
 chai.use(chaiHttp);
 const expect = chai.expect;
 let userRepository: UserRepository;
@@ -71,9 +73,9 @@ before(async () => {
     testAggregation2.jobId = testJob._id;
 });
 
-describe("Aggregation controller tests", () => {
+describe("Aggregation Controller tests", () => {
     describe("create aggregation", () => {
-        it("create aggregation succeeds", (done) => {
+        it("create a single aggregation succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .post("/ms/aggregation")
                 .send(testAggregation1)
@@ -86,7 +88,7 @@ describe("Aggregation controller tests", () => {
                 });
         });
 
-        it("create a list aggregation succeeds", (done) => {
+        it("create a list of aggregations succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .post("/ms/aggregation/multiple")
                 .send([testAggregation2])
@@ -102,7 +104,7 @@ describe("Aggregation controller tests", () => {
     });
 
     describe("get aggregation", () => {
-        it("get an aggregation by id with existing id succeeds", (done) => {
+        it("get an aggregation by id with an existing id succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/aggregation/" + testAggregation1._id)
                 .end(function (err, res) {
@@ -122,11 +124,10 @@ describe("Aggregation controller tests", () => {
                 });
         });
 
-        it("get aggregations with an existing user id", (done) => {
+        it("get multiple aggregations with an existing user id succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/aggregation/byUser/" + testUser._id)
                 .end(function (err, res) {
-                    logger.info(res.body);
                     const returnAggregations: Array<IAggregationModel> = res.body;
                     expect(returnAggregations).to.be.an('array');
                     expect(returnAggregations).to.not.have.lengthOf(0);
@@ -136,7 +137,7 @@ describe("Aggregation controller tests", () => {
                 });
         });
 
-        it("get aggregations with a non existing user id", (done) => {
+        it("get multiple aggregations with a non existing user id fails", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/aggregation/byUser/wrongId")
                 .end(function (err, res) {
@@ -148,7 +149,7 @@ describe("Aggregation controller tests", () => {
                 });
         });
 
-        it("get aggregations with an existing job id", (done) => {
+        it("get multiple aggregations with an existing job id succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/aggregation/byJob/" + testJob._id)
                 .end(function (err, res) {
@@ -161,7 +162,7 @@ describe("Aggregation controller tests", () => {
                 });
         });
 
-        it("get aggregations with a non existing job id", (done) => {
+        it("get multiple aggregations with a non existing job id fails", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/aggregation/byJob/wrongId")
                 .end(function (err, res) {
@@ -173,7 +174,7 @@ describe("Aggregation controller tests", () => {
                 });
         });
 
-        it("get all users returns a list of users", (done) => {
+        it("get all aggregations succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/aggregation/getAll")
                 .end(function (err, res) {
@@ -188,7 +189,7 @@ describe("Aggregation controller tests", () => {
     });
 
     describe("update aggregation", () => {
-        it("using correct id updates the user", (done) => {
+        it("update using correct aggregation id succeeds", (done) => {
             const updatedAggregation = Object.assign({}, testAggregation1);
             updatedAggregation.name = updatedAggregation.name + "_updated";
 
@@ -203,7 +204,7 @@ describe("Aggregation controller tests", () => {
                 });
         });
 
-        it("using incorrect id does not update the user", (done) => {
+        it("update using incoddecr aggregation id fails", (done) => {
             chai.request("http://localhost:5000")
                 .put("/ms/aggregation/wrongId")
                 .send({ name: testAggregation1.name })
@@ -215,7 +216,7 @@ describe("Aggregation controller tests", () => {
     });
 
     describe("delete aggregaton", () => {
-        it("aggregation using non existing id fails", (done) => {
+        it("delete aggregation using non existing id fails", (done) => {
             chai.request("http://localhost:5000")
                 .delete("/ms/aggregation/wrongId")
                 .end(function (err, res) {
@@ -224,7 +225,7 @@ describe("Aggregation controller tests", () => {
                 });
         });
 
-        it("aggregation using existing id succeeds", (done) => {
+        it("delete aggregation using existing id succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .delete("/ms/aggregation/" + testAggregation1._id)
                 .end(function (err, res) {
@@ -235,7 +236,7 @@ describe("Aggregation controller tests", () => {
                 });
         });
 
-        it("job deletion succeeds", (done) => {
+        it("delete job recursively succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .delete("/ms/job/recursive/" + testJob._id)
                 .end(function (err, res) {
@@ -246,7 +247,7 @@ describe("Aggregation controller tests", () => {
                 });
         });
 
-        it("user deletion succeeds", (done) => {
+        it("delete user succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .delete("/ms/user/" + testUser._id)
                 .end(function (err, res) {

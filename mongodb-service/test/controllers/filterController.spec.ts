@@ -7,6 +7,9 @@ import { AggregationRepository } from "../../src/repositories/aggregationReposit
 import { FilterRepository } from "../../src/repositories/filterRepository";
 import { deleteIfPresent } from "../deleteIfPresent.spec";
 
+/**
+ * Filter Controller tests.
+ */
 chai.use(chaiHttp);
 const expect = chai.expect;
 let aggregationRepository: AggregationRepository;
@@ -51,9 +54,9 @@ before(async () => {
     testfilter2.aggName = testAggregation.name;
 });
 
-describe("filter controller tests", () => {
+describe("Filter Controller tests", () => {
     describe("create filter", () => {
-        it("create filter succeeds", (done) => {
+        it("create a single filter succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .post("/ms/filter")
                 .send(testfilter1)
@@ -66,7 +69,7 @@ describe("filter controller tests", () => {
                 });
         });
 
-        it("create a list filters succeeds", (done) => {
+        it("create multiple filters succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .post("/ms/filter/multiple")
                 .send([testfilter2])
@@ -82,7 +85,7 @@ describe("filter controller tests", () => {
     });
 
     describe("get filter", () => {
-        it("get filters with an existing aggregation id", (done) => {
+        it("get filters with an existing aggregation id succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/filter/byAgg/" + testAggregation._id)
                 .end(function (err, res) {
@@ -95,7 +98,7 @@ describe("filter controller tests", () => {
                 });
         });
 
-        it("get filters with a non existing aggregation id", (done) => {
+        it("get filters with a non existing aggregation id returns empty list and succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/filter/byAgg/wrongId")
                 .end(function (err, res) {
@@ -107,7 +110,7 @@ describe("filter controller tests", () => {
                 });
         });
 
-        it("get all filters returns a list of users", (done) => {
+        it("get all filters succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/filter/getAll")
                 .end(function (err, res) {
