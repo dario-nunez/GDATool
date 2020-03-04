@@ -1,23 +1,25 @@
-import {config} from "dotenv";
+import { config } from "dotenv";
 import * as mongoose from "mongoose";
-import {Connection, ConnectionOptions} from "mongoose";
+import { Connection, ConnectionOptions } from "mongoose";
 import logger from "./logger/loggerFactory";
 
+/**
+ * Handles the connection with Mongodb.
+ */
 export class MongoConnector {
     private mongoConnection: Connection;
 
+    /**
+     * Load environment variables from .env file, where API keys and passwords are configured.
+     */
     constructor() {
-        /**
-         * Load environment variables from .env file, where API keys and passwords are configured.
-         */
         const envFile: string = process.env.ENVFILE || ".env";
-        config({path: envFile});
-
+        config({ path: envFile });
         (mongoose as any).Promise = global.Promise;
     }
 
     /**
-     * Initiate connection to MongoDB
+     * Initiate connection to MongoDB.
      * @returns {Promise<any>}
      */
     public connect(): Promise<any> {
@@ -39,7 +41,7 @@ export class MongoConnector {
     }
 
     /**
-     * Disconnects from MongoDB
+     * Disconnects from MongoDB.
      * @returns {Promise<any>}
      */
     public disconnect(): Promise<any> {

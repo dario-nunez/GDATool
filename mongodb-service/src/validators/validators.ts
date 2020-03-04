@@ -3,6 +3,10 @@ import {Errors} from "typescript-rest";
 import { IUser } from "../models/userModel";
 import {UserRepository} from "../repositories/userRepository";
 
+/**
+ * Verify that the email of a User in a request is unique within the dataset.
+ * @param req 
+ */
 export async function uniqueEmailValidator(req: express.Request): Promise<express.Request> {
     const user: IUser = req.body;
     const userRepository: UserRepository = new UserRepository();

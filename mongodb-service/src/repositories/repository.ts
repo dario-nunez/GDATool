@@ -2,6 +2,9 @@ import * as mongoose from "mongoose";
 import { Document, Model } from "mongoose";
 import logger from "../logger/loggerFactory";
 
+/**
+ * Define common CRUD method headers.
+ */
 export interface IRepository<T extends Document> {
     create(o: any): Promise<T>;
     update(id: any, o: any): Promise<T>;
@@ -10,8 +13,12 @@ export interface IRepository<T extends Document> {
     getAll(): Promise<Array<T>>;
 }
 
+/**
+ * A typed base Repository class containing implementations for all common CRUD methods and 
+ * some others. T extends Document so this class can be used by any declared Mongooose 
+ * Document type. Mongoose interacts with Mongodb by calling methods from defined models.
+ */
 export class Repository<T extends Document> implements IRepository<T> {
-
     private model: Model<T>;
 
     constructor(model: Model<T>) {

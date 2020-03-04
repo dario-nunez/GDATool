@@ -5,6 +5,9 @@ import { Document } from "mongoose";
 import logger from "../logger/loggerFactory";
 import { IRepository } from "../repositories/repository";
 
+/**
+ * Define method headers for common CRUD methods.
+ */
 export interface IController {
     create(req: Request, res: Response): void;
     update(req: Request, res: Response): void;
@@ -13,6 +16,11 @@ export interface IController {
     getAll(req: Request, res: Response): void;
 }
 
+/**
+ * Base type Controller class containing common CRUD method implementations. These methods
+ * correspond to their equivalents defined in the Repository<T> class. They make the Repository
+ * call and handle the response appropiately before passing it back to the API interface.
+ */
 export class Controller<T extends Document> implements IController {
     public repo: IRepository<T>;
 

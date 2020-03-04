@@ -3,14 +3,16 @@ import * as cors from 'cors';
 import * as express from 'express';
 import * as http from 'http';
 import * as morgan from 'morgan';
-import { ExtractJwt, Strategy, StrategyOptions } from 'passport-jwt';
 import * as path from 'path';
-import { PassportAuthenticator, Server } from 'typescript-rest';
-import { AWSConfig } from "./AWSConfig";
+import { Server } from 'typescript-rest';
+import { AWSConfig } from "./s3/AWSConfig";
 
+/**
+ * Represents the API. It's responsible for defining the server's properties, initialising the
+ * swagger for the microservice, initialising dependencies and managing its starting and stopping. 
+ */
 export class ApiServer {
     public PORT: number = +process.env.PORT || 5000;
-
     private readonly app: express.Application;
     private server: http.Server = null;
 
@@ -18,9 +20,7 @@ export class ApiServer {
         this.initialiseAwsAccessInfo();
         this.app = express();
         this.config();
-
         Server.useIoC();
-
         Server.loadServices(this.app, 'controllers/*', __dirname);
         Server.swagger(this.app, { filePath: './dist/swagger.json', endpoint: "ms/swagger" });
     }
@@ -38,7 +38,6 @@ export class ApiServer {
                 return resolve();
             });
         });
-
     }
 
     /**
@@ -65,33 +64,15 @@ export class ApiServer {
         this.app.use(express.static(path.join(__dirname, 'public'), { maxAge: 31557600000 }));
         this.app.use(cors());
         this.app.use(morgan('combined'));
-        this.configureAuthenticator();
     }
 
-    private configureAuthenticator() {
-        const JWT_SECRET: string = process.env.JWT_SECRET;
-        const jwtConfig: StrategyOptions = {
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: Buffer.from(JWT_SECRET)
-        };
-        const strategy = new Strategy(jwtConfig, (payload: any, done: (err: any, user: any) => void) => {
-            done(null, payload);
-        });
-        const authenticator = new PassportAuthenticator(strategy, {
-            deserializeUser: (user: string) => JSON.parse(user),
-            serializeUser: (user: any) => {
-                return JSON.stringify(user);
-            }
-        });
-        Server.registerAuthenticator(authenticator);
-        Server.registerAuthenticator(authenticator, 'secondAuthenticator');
-    }
-
+    /**
+     * Configure the AWS access properties
+     */
     private initialiseAwsAccessInfo(): void {
         logger.info(process.argv);
 
         //Just for testing purposes, these should be environment variables specified in the docker file
-
         // AWSConfig.awsAccessKeyId = "shh";
         // AWSConfig.awsSecretAccessKey = "shh";
 

@@ -1,8 +1,12 @@
 import * as mongoose from "mongoose";
 import { Model } from "mongoose";
 
+/**
+ * Aggregation type, model mongoose document and schema definition. Models are used by
+ * Controllers so they are picked up by the swagger. Documents and schemas are used by 
+ * Repositories so model defined Mongodb functions can be used.
+ */
 type AggregationType = IAggregation & mongoose.Document;
-
 export interface IAggregationModel {
     _id?: string;
     operations: Array<string>;
