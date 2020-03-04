@@ -12,22 +12,18 @@ import { IAggregationModel } from '../../../../../../mongodb-service/src/models/
   styleUrls: ['./aggregations.component.css']
 })
 export class AggregationsComponent implements OnInit {
-  metricSelected: boolean = false;
+  metricIsSelected: boolean = false;
   jobId: string;
-  public job: IJobModel;
-
+  job: IJobModel;
   FEATURE_COLUMNS: Array<string> = [];
   OPERATIONS: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
   METRIC_COLUMNS: Array<string> = [];
-
   aggregations: IAggregationModel[];
   currentAggregationName: string;
   currentAggregationMetricColumn: string;
-
   possibleFeatureColumns: Array<string> = [];
   possibleOperations: Array<string> = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
   possibleMetricColumns: Array<string> = [];
-
   selectedFeatureColumns: Array<string> = [];
   selectedOperations: Array<string> = [];
 
@@ -72,15 +68,13 @@ export class AggregationsComponent implements OnInit {
           name: "Aggregation of " + mc + " by " + fc,
           sortColumnName: fc
         }
-
         this.queryService.aggregations.push(agg);
       }
     }
   }
 
   createAggregation() {
-    // Simply reset the name field to blank if the name is already taken
-
+    // Reset the name field to blank if the name is already taken
     if (this.queryService.aggregations.find(obj => obj.name === this.currentAggregationName) != null) {
       this.currentAggregationName = "";
     } else {
@@ -102,13 +96,11 @@ export class AggregationsComponent implements OnInit {
       this.possibleMetricColumns = this.METRIC_COLUMNS;
       this.selectedFeatureColumns = [];
       this.selectedOperations = [];
-
-      this.metricSelected = false;
+      this.metricIsSelected = false;
     }
   }
 
   deleteAggregation(event, agg: IAggregationModel) {
-    // this.queryService.aggregations = this.queryService.aggregations.filter(obj => obj !== agg);
     this.queryService.removeAggregation(agg);
   }
 
@@ -144,6 +136,6 @@ export class AggregationsComponent implements OnInit {
   selectMetricColumn(event, element) {
     this.selectedFeatureColumns = []
     this.possibleFeatureColumns = this.FEATURE_COLUMNS.filter(obj => obj !== element);
-    this.metricSelected = true;
+    this.metricIsSelected = true;
   }
 }

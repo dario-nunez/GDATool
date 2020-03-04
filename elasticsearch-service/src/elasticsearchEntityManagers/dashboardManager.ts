@@ -4,6 +4,10 @@ import { IESDashboard } from "../elasticsearchModels/dashboardModel";
 import { IESVisualization } from "../elasticsearchModels/visualizationModel";
 import { KibanaService } from "../services/kibana-service";
 
+/**
+ * A Manager class to control the building of Dashboard JSON objects and their starage
+ * in the Elasticsearch cluster.
+ */
 export class DashboardManager {
     private dashboardBuilder: DashboardBuilder;
 
@@ -11,6 +15,11 @@ export class DashboardManager {
         this.dashboardBuilder = new DashboardBuilder();
     }
 
+    /**
+     * Creates and saves a Dashboard to Elasticsearch 
+     * @param jobId 
+     * @param visualizations 
+     */
     public  createDashboard(jobId: string, visualizations: Array<Array<IESVisualization>>) {
         const dashboardSeed: IESDashboard = {
             _id: jobId,

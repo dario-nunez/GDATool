@@ -7,17 +7,20 @@ import com.mycompany.models.ImmutableConfigModel;
 
 import java.io.IOException;
 
+/**
+ * This class is used for dependency injection of in tests. It allows for mock environment, properties and services to
+ * be defined and used by the test methods.
+ */
 public class TestDependencyFactory extends DependencyFactory {
-
-    /**
-     * Instantiates the environment, jobId variable and builds the Config Model.
-     *
-     * @throws IOException
-     */
     public TestDependencyFactory() throws IOException {
-        super(Environment.LOCDEV, "jobId");
+        super(Environment.LOCDEV);
     }
 
+    /**
+     * Overrides the buildConfigModel method to define a test config model. It ensures all tests are able to run using
+     * local resources only.
+     * @return a test configured ConfigModel immutable object.
+     */
     @Override
     public ConfigModel buildConfigModel() {
         return ImmutableConfigModel.builder()

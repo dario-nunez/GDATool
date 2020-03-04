@@ -3,6 +3,9 @@ package com.mycompany.models;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Represents an Aggregation object. Corresponds to the IAggregationModel type in the mongodb-service.
+ */
 public class AggregationModel {
     public String _id;
     public String __v;

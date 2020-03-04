@@ -37,6 +37,9 @@ import { IColumn } from 'src/models/column.model';
 import { IFilterModel } from '../../../mongodb-service/src/models/filterModel';
 import { IPlotModel } from '../../../mongodb-service/src/models/plotModel';
 
+/**
+ * Declares common test resources to be used by various files.
+ */
 export function tokenGetter(): string {
     return localStorage.getItem("auth_token");
 }

@@ -8,7 +8,6 @@ import { IClusterModel } from '../../../../mongodb-service/src/models/clusterMod
   providedIn: 'root'
 })
 export class QueryService {
-
   aggregations: IAggregationModel[];
   generalPlots: IPlotModel[];
   aggregationFilters: IFilterModel[];

@@ -22,8 +22,7 @@ describe('AggregationFilteringComponent', () => {
           useValue: MOCK_SCHEMA_SERVICE
         }
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -46,30 +45,32 @@ describe('AggregationFilteringComponent', () => {
     expect(component.availableColumns).toEqual([]);
   });
 
-  it('select aggregtaion', () => {
-    expect(component.aggregationSelected).toEqual(false);
+  it('selectAggregtaion selects an aggregation', () => {
+    expect(component.aggregationIsSelected).toEqual(false);
+
     component.queryService.aggregations = MOCK_AGGREGATIONS;
-    const expected = MOCK_AGGREGATIONS[0];
     component.selectAggregation(event, "mock_name1");
-    expect(component.aggregationSelected).toEqual(true);
+
+    expect(component.aggregationIsSelected).toEqual(true);
   });
 
-  it('select column string', () => {
+  it('selectColumn (string) selects the given column', () => {
     component.availableColumns = [["mock_name", "string"]]
     component.selectColumn(event, "mock_name")
-    expect(component.stringColumnChosen).toEqual(true);
+
+    expect(component.stringColumnIsChosen).toEqual(true);
     expect(component.availableOperators).toEqual(["exclude", "include"]);
     expect(component.availableStringValues).toEqual(MOCK_SCHEMA.schema[0].range);
-
     expect(component.chosenOperator).toEqual("");
     expect(component.chosenStringValue).toEqual("");
     expect(component.chosenNumericValue).toEqual(undefined);
   });
 
-  it('select column double', () => {
+  it('selectColumn (double) selects the given column', () => {
     component.availableColumns = [["mock_name", "double"]]
     component.selectColumn(event, "mock_name")
-    expect(component.stringColumnChosen).toEqual(false);
+
+    expect(component.stringColumnIsChosen).toEqual(false);
     expect(component.availableOperators).toEqual(["<", "<=", ">", ">=", "=", "!="]);
     expect(component.numericMax).toEqual(10);
     expect(component.numericMin).toEqual(0);
@@ -79,7 +80,7 @@ describe('AggregationFilteringComponent', () => {
     expect(component.chosenNumericValue).toEqual(undefined);
   });
 
-  it('add filter string include', () => {
+  it('adFilter (string) (include) adds the correct filter', () => {
     component.availableColumns = [["mock_name", "string"]]
     component.chosenIdentifierColumn = "mock_name"; 
     component.queryService.aggregations = MOCK_AGGREGATIONS;
@@ -96,15 +97,13 @@ describe('AggregationFilteringComponent', () => {
     expect(component.chosenNumericValue).toEqual(undefined);
     expect(component.numericMin).toEqual(undefined);
     expect(component.numericMax).toEqual(undefined);
-    
-    expect(component.aggregationSelected).toEqual(false);
-    expect(component.stringColumnChosen).toEqual(false);
-
+    expect(component.aggregationIsSelected).toEqual(false);
+    expect(component.stringColumnIsChosen).toEqual(false);
     expect(component.queryService.aggregationFilters.length).toEqual(1);
     expect(component.queryService.aggregationFilters[0].query).toEqual("mock_name = 'mock_string_value'");
   });
 
-  it('add filter string exclude', () => {
+  it('addFilter (string) (exclude) adds the correct filter', () => {
     component.availableColumns = [["mock_name", "string"]]
     component.chosenIdentifierColumn = "mock_name"; 
     component.queryService.aggregations = MOCK_AGGREGATIONS;
@@ -121,16 +120,14 @@ describe('AggregationFilteringComponent', () => {
     expect(component.chosenNumericValue).toEqual(undefined);
     expect(component.numericMin).toEqual(undefined);
     expect(component.numericMax).toEqual(undefined);
-
-    expect(component.aggregationSelected).toEqual(false);
-    expect(component.stringColumnChosen).toEqual(false);
-
+    expect(component.aggregationIsSelected).toEqual(false);
+    expect(component.stringColumnIsChosen).toEqual(false);
     expect(component.queryService.aggregationFilters.length).toEqual(1);
     expect(component.queryService.aggregationFilters[0].query).toEqual("mock_name != 'mock_string_value'");
   });
 
 
-  it('add filter double', () => {
+  it('addFilter (double) adds the correct filter', () => {
     component.availableColumns = [["mock_name", "double"]]
     component.chosenIdentifierColumn = "mock_name"; 
     component.queryService.aggregations = MOCK_AGGREGATIONS;
@@ -147,17 +144,16 @@ describe('AggregationFilteringComponent', () => {
     expect(component.chosenNumericValue).toEqual(undefined);
     expect(component.numericMin).toEqual(undefined);
     expect(component.numericMax).toEqual(undefined);
-
-    expect(component.aggregationSelected).toEqual(false);
-    expect(component.stringColumnChosen).toEqual(false);
-
+    expect(component.aggregationIsSelected).toEqual(false);
+    expect(component.stringColumnIsChosen).toEqual(false);
     expect(component.queryService.aggregationFilters.length).toEqual(1);
     expect(component.queryService.aggregationFilters[0].query).toEqual("mock_name = 10");
   });
 
-  it('delete filter', () => {
+  it('deleteFilter button registers mongodb service call', () => {
     component.queryService.aggregationFilters = [MOCK_FILTER];
     component.deleteFilter(event, MOCK_FILTER);
+    
     expect(component.queryService.aggregationFilters.length).toEqual(0);
   });
 });

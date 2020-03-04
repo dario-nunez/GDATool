@@ -7,6 +7,9 @@ import { JobRepository } from "../../src/repositories/jobRepository";
 import { UserRepository } from "../../src/repositories/userRepository";
 import { deleteIfPresent } from "../deleteIfPresent.spec";
 
+/**
+ * Job Controller tests.
+ */
 chai.use(chaiHttp);
 const expect = chai.expect;
 let userRepository: UserRepository;
@@ -50,9 +53,9 @@ before(async () => {
     await deleteIfPresent(testJob2, jobRepository);
 });
 
-describe("User controller tests", () => {
-    describe("create user and job", () => {
-        it("create user with a unique email succeeds", (done) => {
+describe("User Controller tests", () => {
+    describe("create job", () => {
+        it("create a user with a unique email succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .post("/ms/user")
                 .send(testUser)
@@ -106,7 +109,7 @@ describe("User controller tests", () => {
                 });
         });
 
-        it("get a job by id with non existing id fails", (done) => {
+        it("get a job with non existing id fails", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/job/wrongId")
                 .end(function (err, res) {
@@ -115,7 +118,7 @@ describe("User controller tests", () => {
                 });
         });
 
-        it("get jobs by user", (done) => {
+        it("get jobs by user succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/job/byUser/" + testUser._id)
                 .end(function (err, res) {
@@ -128,7 +131,7 @@ describe("User controller tests", () => {
                 });
         });
 
-        it("get all jobs returns a list of jobs", (done) => {
+        it("get all jobs succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .get("/ms/job/getAll")
                 .end(function (err, res) {
@@ -142,7 +145,7 @@ describe("User controller tests", () => {
     });
 
     describe("update job", () => {
-        it("using correct id updates the job", (done) => {
+        it("update using correct job id succeeds", (done) => {
             const updatedJob = Object.assign({}, testJob1);
             updatedJob.name = updatedJob.name + "_updated";
 
@@ -157,7 +160,7 @@ describe("User controller tests", () => {
                 });
         });
 
-        it("using incorrect id does not update the job", (done) => {
+        it("update using incorrect job id fails", (done) => {
             chai.request("http://localhost:5000")
                 .put("/ms/job/wrongId")
                 .send({ name: testJob1.name })
@@ -169,7 +172,7 @@ describe("User controller tests", () => {
     });
 
     describe("delete job", () => {
-        it("using non existing id fails", (done) => {
+        it("delete using non existing job id fails", (done) => {
             chai.request("http://localhost:5000")
                 .delete("/ms/job/wrongId")
                 .end(function (err, res) {
@@ -178,7 +181,7 @@ describe("User controller tests", () => {
                 });
         });
 
-        it("using existing id succeeds", (done) => {
+        it("delete using existing id succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .delete("/ms/job/" + testJob1._id)
                 .end(function (err, res) {
@@ -189,7 +192,7 @@ describe("User controller tests", () => {
                 });
         });
 
-        it("user deletion succeeds", (done) => {
+        it("user recursive deletion succeeds", (done) => {
             chai.request("http://localhost:5000")
                 .delete("/ms/user/recursive/" + testUser._id)
                 .end(function (err, res) {

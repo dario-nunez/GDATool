@@ -4,6 +4,9 @@ import { IndexPatternBuilder } from "../../src/elasticsearchEntityJsonBuilders/i
 import { IESIndexPattern } from "../../src/elasticsearchModels/indexPatternModel";
 import { expectedIndexPatternEntity } from "./elasticsearchBuilderTestResources/indexPatternBuilder.spec.resources";
 
+/**
+ * Index Pattern Builder tests.
+ */
 const assert = chai.assert;
 let indexPatternBuilder: IndexPatternBuilder;
 
@@ -11,9 +14,9 @@ before(async () => {
     indexPatternBuilder = new IndexPatternBuilder();
 });
 
-describe("Index pattern builder tests", () => {
+describe("Index pattern Builder tests", () => {
     describe("create index pattern entity", () => {
-        it("create succeeds", (done) => {
+        it("create populated index pattern succeeds", (done) => {
             const testIndexPatternSeed: IESIndexPattern = {
                 _id: "test_id",
                 index: "test_index",

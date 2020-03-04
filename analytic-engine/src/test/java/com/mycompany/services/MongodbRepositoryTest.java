@@ -15,7 +15,6 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.DefaultHttpResponseFactory;
 import org.apache.http.message.BasicStatusLine;
 import com.mashape.unirest.http.HttpResponse;
-import org.junit.Before;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,6 +32,9 @@ import static org.mockito.Mockito.when;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * This file tests the MongodbRepository methods.
+ */
 public class MongodbRepositoryTest {
     private ObjectMapper objectMapper;
     private ClassLoader classLoader;
@@ -41,8 +43,7 @@ public class MongodbRepositoryTest {
     @Mock
     HttpService httpServiceMock;
 
-    @Before
-    public void setup() throws IOException {
+    public MongodbRepositoryTest() throws IOException {
         this.objectMapper = new ObjectMapper();
         classLoader = getClass().getClassLoader();
         MockitoAnnotations.initMocks(this);
@@ -51,11 +52,10 @@ public class MongodbRepositoryTest {
     }
 
     /**
-     * Tests that MongoRepository.loadAggregations() converts a response body to the appropriate
-     * JSON array of AggregationModel.
+     * Should return the expected JSON array of AggregationModels.
      */
     @Test
-    public void loadAggregations() throws UnirestException, IOException {
+    public void loadAggregations_returnExpectedJsonArrayOfAggregationModels() throws UnirestException, IOException {
         File aggregationsFile = new File(Objects.requireNonNull(classLoader.getResource("testAggregations.json")).getFile());
         String aggregationsFileContent = FileUtils.readFileToString(aggregationsFile, StandardCharsets.UTF_8);
 
@@ -68,8 +68,11 @@ public class MongodbRepositoryTest {
         assertEquals(expectedAggregations, actualAggregations);
     }
 
+    /**
+     * Should return the expected JSON array of PlotModels.
+     */
     @Test
-    public void loadPlots() throws IOException, UnirestException {
+    public void loadPlots_returnExpectedJsonArrayOfPlotModels() throws IOException, UnirestException {
         File plotsFile = new File(Objects.requireNonNull(classLoader.getResource("testPlots.json")).getFile());
         String plotsFileContents = FileUtils.readFileToString(plotsFile, StandardCharsets.UTF_8);
 
@@ -82,8 +85,11 @@ public class MongodbRepositoryTest {
         assertEquals(expectedPlots, actualPlots);
     }
 
+    /**
+     * Should return the expected JSON array of ClusterModels.
+     */
     @Test
-    public void loadClusters() throws IOException, UnirestException {
+    public void loadClusters_returnExpectedJsonArrayOfClusterModels() throws IOException, UnirestException {
         File clustersFile = new File(Objects.requireNonNull(classLoader.getResource("testClusters.json")).getFile());
         String clustersFileContents = FileUtils.readFileToString(clustersFile, StandardCharsets.UTF_8);
 
@@ -96,8 +102,11 @@ public class MongodbRepositoryTest {
         assertEquals(expectedClusters, actualClusters);
     }
 
+    /**
+     * Should return the expected JSON array of FilterModels.
+     */
     @Test
-    public void loadFilters() throws IOException, UnirestException {
+    public void loadFilters_returnExpectedJsonArrayOfFilterModels() throws IOException, UnirestException {
         File filtersFile = new File(Objects.requireNonNull(classLoader.getResource("testFilters.json")).getFile());
         String filtersFileContents = FileUtils.readFileToString(filtersFile, StandardCharsets.UTF_8);
 
@@ -110,9 +119,12 @@ public class MongodbRepositoryTest {
         assertEquals(expectedFilters, actualFilters);
     }
 
+    /**
+     * Should return the expected JSON JobModel.
+     */
     @Test
-    public void getJobById() throws IOException, UnirestException {
-        File jobFile = new File(Objects.requireNonNull(classLoader.getResource("testJob.json")).getFile());
+    public void getJobById_returnExpectedJsonJobModel() throws IOException, UnirestException {
+        File jobFile = new File(Objects.requireNonNull(classLoader.getResource("testJobs.json")).getFile());
         String jobFileContents = FileUtils.readFileToString(jobFile, StandardCharsets.UTF_8);
 
         when(httpServiceMock.get(anyString(), anyMapOf(String.class, String.class)))
@@ -125,12 +137,13 @@ public class MongodbRepositoryTest {
     }
 
     /**
-     * Doesn't test that the job status is increased by one as this is done by the caller. It is just
-     * testing the JSON conversion in that method.
+     * Should return the expected JSON JobModel.
+     * NOTE: Doesn't test that the job status is increased by one as this is done by the caller. It is testing the JSON
+     * conversion in the method.
      */
     @Test
     public void markJobAsComplete() throws IOException, UnirestException {
-        File jobFile = new File(Objects.requireNonNull(classLoader.getResource("testJob.json")).getFile());
+        File jobFile = new File(Objects.requireNonNull(classLoader.getResource("testJobs.json")).getFile());
         String jobFileContents = FileUtils.readFileToString(jobFile, StandardCharsets.UTF_8);
 
         when(httpServiceMock.put(anyString(), anyMapOf(String.class, String.class), anyString()))
@@ -142,6 +155,11 @@ public class MongodbRepositoryTest {
         assertEquals(expectedJob, actualJob);
     }
 
+    /**
+     * Method used to mock http responses in the tests.
+     * @param content: the content of the response
+     * @return an http response containing the contents specified.
+     */
     private HttpResponse<String> getHttpResponse(String content) {
         HttpResponseFactory factory = new DefaultHttpResponseFactory();
         org.apache.http.HttpResponse response = factory.newHttpResponse(

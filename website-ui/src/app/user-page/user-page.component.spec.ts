@@ -45,8 +45,7 @@ describe('UserPageComponent', () => {
           }
         }
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -61,12 +60,12 @@ describe('UserPageComponent', () => {
     expect(component.mongodbService.getUserByEmail).toHaveBeenCalled();
   });
 
-  it('update account', () => {
+  it('updateAccount button registers mongodb service call', () => {
     component.updateAccount();
     expect(component.mongodbService.updateUser).toHaveBeenCalled();
   });
 
-  it('delete account', () => {
+  it('deleteAccount button registers mongodb service call', () => {
     spyOn(window, 'confirm').and.returnValue(true);
     component.deleteAccount();
     expect(component.mongodbService.deleteUserRecursive).toHaveBeenCalled();

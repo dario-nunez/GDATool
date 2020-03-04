@@ -24,7 +24,7 @@
                         <label for="password">Password</label>
                     </div>
                     <div class="col-7">
-                        <label class="h7 text-danger float-right" *ngIf=incorrectPassword>Incorrect password</label>
+                        <label class="h7 text-danger float-right" *ngIf=passwordIsIncorrect>Incorrect password</label>
                     </div>
                 </div>
                 <input type="password" class="form-control" id="password" name="password" [(ngModel)]="userPassword"

@@ -38,9 +38,7 @@ export class DetailsComponent implements OnInit {
   }
 
   createJob() {
-    console.log(this.job);
     this.mongodbService.createJob(this.job).subscribe(retJob => {
-      console.log(retJob);
       this.router.navigate(['/upload', retJob._id]);
     });
   }

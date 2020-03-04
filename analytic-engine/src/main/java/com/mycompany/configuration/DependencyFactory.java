@@ -1,7 +1,11 @@
 package com.mycompany.configuration;
 
+import com.mycompany.services.ElasticsearchRepository;
+import com.mycompany.services.HttpService;
+import com.mycompany.services.MongodbRepository;
 import com.mycompany.models.ConfigModel;
 import com.mycompany.models.ImmutableConfigModel;
+
 import org.apache.http.HttpHost;
 import org.apache.spark.SparkConf;
 import org.apache.spark.sql.SparkSession;
@@ -9,36 +13,33 @@ import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.mycompany.services.ElasticsearchRepository;
-import com.mycompany.services.HttpService;
-import com.mycompany.services.MongodbRepository;
 
 import java.io.IOException;
 import java.util.Properties;
 
+/**
+ * Create all the dependencies necessary to run the jobs. Used for dependency injection in the test environment.
+ */
 public class DependencyFactory {
     private Environment env;
-    private String jobId;
     private final Logger logger = LoggerFactory.getLogger("Data Engine");
     private HttpService httpService;
     private ConfigModel configModel;
 
     /**
-     * Instantiates the environment, jobId variable and builds the Config Model.
+     * Instantiate the environment and a Config Model.
      * @param env Environment created by main using console arguments.
-     * @param jobId Passed as a console argument.
      * @throws IOException
      */
-    public DependencyFactory(Environment env, String jobId) throws IOException {
+    public DependencyFactory(Environment env) throws IOException {
         this.env = env;
-        this.jobId = jobId;
         this.configModel = buildConfigModel();
     }
 
     /**
-     * Builds a ConfigModel immutable object by using the immutable object builder and the values from the Properties
-     * object.
-     * @return The built ConfigModel object.
+     * Build a ConfigModel immutable object by using the values from the Properties Manager.
+     * The Config Model holds all the parameters for the dependencies used by the jobs.
+     * @return The built Config Model object.
      * @throws IOException
      */
     public ConfigModel buildConfigModel() throws IOException {
@@ -68,19 +69,19 @@ public class DependencyFactory {
     }
 
     /**
-     * Creates and returns an instance of HttpService if none exist.
+     * Create and return an instance of HttpService if none exists.
      * @return HttpService object.
      */
     private HttpService getHttpService() {
         if (httpService == null) {
-//            this.httpService = new HttpService(configModel, jobId);
             this.httpService = new HttpService();
         }
         return httpService;
     }
 
     /**
-     * Create and return an Apache Spark session created using the properties in the ConfigModel.
+     * Create and return an Apache Spark session created using the properties in the Config Model.
+     * This current setup is designed to run on the IDE and on a local Docker container.
      * @return The SparkSession object.
      */
     public SparkSession getSparkSession(){
@@ -112,23 +113,24 @@ public class DependencyFactory {
     }
 
     /**
-     * Creates and returns an instance of MongodbRepository.
-     * @return A MongodbRepository object.
+     * Create and return an instance of Mongodb Repository. Used to interact with the mongodb-service
+     * @return A Mongodb Repository object.
      */
     public MongodbRepository getMongodbRepository() {
         return new MongodbRepository(configModel, getHttpService());
     }
 
     /**
-     * Creates and returns an instance of ElasticsearchRepository.
-     * @return A ElasticsearchRepository object.
+     * Create and return an instance of Elasticsearch Repository. Used to interact with the elasticsearch-service
+     * @return A Elasticsearch Repository object.
      */
     public ElasticsearchRepository getElasticsearchRepository() {
         return new ElasticsearchRepository(configModel, getHttpService());
     }
 
     /**
-     * Creates and returns a RestHighLevelClient object using the elasticsearch configuration fields in the ConfigModel.
+     * Create and return a Rest High Level Client object using the elasticsearch configuration in the ConfigModel.
+     * This client is used to interact with Elasticsearch clusters via Spark functions
      * @return RestHighLevelClient object.
      */
     public RestHighLevelClient getRestHighLevelClient() {

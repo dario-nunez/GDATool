@@ -9,17 +9,9 @@ import { Observable, of } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthenticationService {
-
   constructor(private http: HttpClient, private mongodbService: MongodbService) { }
 
-  /**
-   * Return the userId of a user if the email and password match
-   * @param email 
-   * @param password 
-   */
   authenticate(email: string, password: string): Observable<IUserModel> {
-    console.log("At auth: -- Email: " + email + " Password: " + password);
-
     const userAndPass = {
       email: email,
       password: password

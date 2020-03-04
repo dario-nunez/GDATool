@@ -9,21 +9,21 @@ import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
     styleUrls: ["./job.component.css"]
 })
 export class JobComponent implements OnInit {
-    constructor(private router: Router) { }
-
     @Input()
     public job: IJobModel;
 
     cardColor;
-    pending = false;
+    isPending = false;
     statusLines: IStatusLine[];
+
+    constructor(private router: Router) { }
 
     ngOnInit(): void {
         this.createStatusLines();
 
         if (this.job.jobStatus < 5) {
             this.cardColor = "border-warning mb-3";
-            this.pending = true;
+            this.isPending = true;
         } else {
             this.cardColor = "border-success mb-3";
         }

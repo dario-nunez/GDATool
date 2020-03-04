@@ -6,6 +6,9 @@ import { IESVisualization } from '../../src/elasticsearchModels/visualizationMod
 import { dashboardSeed } from "./elasticsearchBuilderTestResources/dashboardBuilder.spec.resources";
 import { expectedDashboard1, expectedDashboard2 } from "./elasticsearchBuilderTestResources/dashboardBuilder.spec.resources";
 
+/**
+ * Dashboard Builder tests.
+ */
 const assert = chai.assert;
 let dashboardBuilder: DashboardBuilder;
 
@@ -13,9 +16,9 @@ before(async () => {
     dashboardBuilder = new DashboardBuilder();
 });
 
-describe("Dashbaord builder tests", () => {
+describe("Dashbaord Builder tests", () => {
     describe("create dashboard entity", () => {
-        it("create succeeds", (done) => {
+        it("create empty dashboard succeeds", (done) => {
             const testVisualization1: IESVisualization = {
                 _id: "test_id1",
                 type: "test_type1"
@@ -40,11 +43,9 @@ describe("Dashbaord builder tests", () => {
         });
     });
 
-    describe("create dashboard entity", () => {
-        it("create succeeds", (done) => {
-            const json = dashboardBuilder.getBasicDashboard(dashboardSeed);
-            assert.deepEqual(json, expectedDashboard2);
-            done();
-        });
+    it("create populated dashboard succeeds", (done) => {
+        const json = dashboardBuilder.getBasicDashboard(dashboardSeed);
+        assert.deepEqual(json, expectedDashboard2);
+        done();
     });
 });

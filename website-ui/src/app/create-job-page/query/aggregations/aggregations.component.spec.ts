@@ -11,7 +11,6 @@ import { IAggregationModel } from '../../../../../../mongodb-service/src/models/
 describe('AggregationsComponent', () => {
   let component: AggregationsComponent;
   let fixture: ComponentFixture<AggregationsComponent>;
-
   const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobById"])
   mockMongodbService.getJobById.and.returnValue(of(MOCK_JOB));
 
@@ -48,8 +47,7 @@ describe('AggregationsComponent', () => {
           }
         }
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -62,7 +60,7 @@ describe('AggregationsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('add default aggregations', () => {
+  it('addDefaultAggregations creates the epected aggregations', () => {
     component.METRIC_COLUMNS = ["price"];
     component.FEATURE_COLUMNS = ["city", "county", "price"];
     const expectedAggregations:IAggregationModel[] = [
@@ -89,7 +87,7 @@ describe('AggregationsComponent', () => {
     expect(component.queryService.aggregations).toEqual(expectedAggregations)
   });
 
-  it('crete aggregation unique name', () => {
+  it('createAggregation with unique name succeeds', () => {
     const expectedAggregation:IAggregationModel = {
       operations: ["COUNT", "SUM", "MAX", "MIN", "AVG"],
       featureColumns: ["city"],
@@ -118,68 +116,73 @@ describe('AggregationsComponent', () => {
     expect(component.selectedOperations).toEqual([])
   });
 
-  it('crete aggregation existing name', () => {
+  it('createAggregation with existing name fails', () => {
     component.selectedOperations = ["COUNT", "SUM", "MAX", "MIN", "AVG"];
     component.selectedFeatureColumns =  ["city"];
     component.jobId = MOCK_JOB._id;
     component.currentAggregationMetricColumn = "price";
     component.currentAggregationName = "nope";
     component.selectedFeatureColumns = ["city"];
-
     component.createAggregation();
 
     expect(component.currentAggregationName).toEqual("")
   });
 
-  it('add element aggregation new aggregation', () => {
+  it('addElement (aggregation) with unique aggregation suceeds', () => {
     component.selectedOperations = ["a", "b"];
     component.possibleOperations = ["a", "b", "c"];
     component.addElement(event, "c", "aggregation");
+
     expect(component.possibleOperations).toEqual(["a", "b"]);
     expect(component.selectedOperations).toEqual(["a", "b", "c"]);
   });
 
-  it('add element aggregation existing aggregation', () => {
+  it('addElement (aggregation) with existing aggregation fails', () => {
     component.selectedOperations = ["a", "b"];
     component.possibleOperations = ["a", "b", "c"];
     component.addElement(event, "a", "aggregation");
+
     expect(component.possibleOperations).toEqual(["b", "c"]);
     expect(component.selectedOperations).toEqual(["a", "b"]);
   });
 
-  it('add element feature new feature', () => {
+  it('addElement (feature) with new feature succeeds', () => {
     component.selectedFeatureColumns = ["a", "b"];
     component.possibleFeatureColumns = ["a", "b", "c"];
     component.addElement(event, "c", "feature");
+    
     expect(component.possibleFeatureColumns).toEqual(["a", "b"]);
     expect(component.selectedFeatureColumns).toEqual(["a", "b", "c"]);
   });
 
-  it('add element feature existing feature', () => {
+  it('addElement (feature) with existing feature fails', () => {
     component.selectedFeatureColumns = ["a", "b"];
     component.possibleFeatureColumns = ["a", "b", "c"];
     component.addElement(event, "a", "feature");
+
     expect(component.possibleFeatureColumns).toEqual(["b", "c"]);
     expect(component.selectedFeatureColumns).toEqual(["a", "b"]);
   });
   
-  it('remove element aggregation existing aggregation', () => {
+  it('removeElement (aggregation) with existing aggregation succeeds', () => {
     component.selectedOperations = ["a", "b", "c"];
     component.possibleOperations = ["a", "b"];
     component.removeElement(event, "c", "aggregation");
+
     expect(component.possibleOperations).toEqual(["a", "b", "c"]);
     expect(component.selectedOperations).toEqual(["a", "b"]);
   });
 
-  it('remove element aggregation non existing aggregation', () => {
+  it('removeElement (aggregation) with non existing aggregation fails', () => {
     component.selectedOperations = ["a", "b", "c"];
     component.possibleOperations = ["a", "b"];
     component.removeElement(event, "b", "aggregation");
+
     expect(component.possibleOperations).toEqual(["a", "b"]);
     expect(component.selectedOperations).toEqual(["a", "c"]);
   });
 
-  it('remove element feature existing feature', () => {
+  it('removeElement (feature) with existing feature succeeds', () => {
     component.selectedFeatureColumns = ["a", "b", "c"];
     component.possibleFeatureColumns = ["a", "b"];
     component.removeElement(event, "c", "feature");
@@ -187,7 +190,7 @@ describe('AggregationsComponent', () => {
     expect(component.selectedFeatureColumns).toEqual(["a", "b"]);
   });
 
-  it('remove element feature non existing feature', () => {
+  it('removeElement (feature) with non existing feature fails', () => {
     component.selectedFeatureColumns = ["a", "b", "c"];
     component.possibleFeatureColumns = ["a", "b"];
     component.removeElement(event, "b", "feature");
@@ -195,15 +198,15 @@ describe('AggregationsComponent', () => {
     expect(component.selectedFeatureColumns).toEqual(["a", "c"]);
   });
 
-  it('select metric column', () => {
+  it('selectMetric column selects the given element', () => {
     component.FEATURE_COLUMNS = ["a", "b", "c"];
     component.selectMetricColumn(event, "a");
 
     expect(component.possibleFeatureColumns).toEqual(["b", "c"]);
-    expect(component.metricSelected).toEqual(true);
+    expect(component.metricIsSelected).toEqual(true);
   });
 
-  it('delete aggregation', () => {
+  it('deleteAggregation button registers mongodb service call', () => {
     component.queryService.aggregations = MOCK_AGGREGATIONS;
     component.deleteAggregation(event, MOCK_AGGREGATIONS[0]);
     expect(component.queryService.aggregations).toEqual([MOCK_AGGREGATIONS[1]]);

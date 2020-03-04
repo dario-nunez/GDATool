@@ -33,7 +33,6 @@
                 <input type="file" class="custom-file-input" id="customFile" ng2FileSelect [uploader]="uploader" />
                 <label class="custom-file-label" for="customFile">Choose file</label>
             </div>
-            <!-- <input type="file" ng2FileSelect [uploader]="uploader"/> -->
         </div>
         <div id="uploadQueue" *ngIf="uploader.queue.length" class="form-group">
             <table class="table .table-sm">
@@ -76,7 +75,8 @@
                 <div class="row">
                     <div class="col">
                         <button type="button" class="m-1 btn btn-success btn-sm upload-file-btn"
-                            (click)="uploader.uploadAll()" [disabled]="!uploader.getNotUploadedItems().length || itemSize <= 0">
+                            (click)="uploader.uploadAll()"
+                            [disabled]="!uploader.getNotUploadedItems().length || itemSize <= 0">
                             <span class="glyphicon glyphicon-upload"></span> Upload
                         </button>
                         <button type="button" class="m-1 btn btn-warning btn-sm upload-file-btn"
@@ -99,7 +99,7 @@
             <button class="btn btn-danger ml-2" (click)="deleteJob()">Delete Job</button>
         </div>
         <div class="col text-right">
-            <button class="btn btn-primary" (click)="next()" [disabled]="ioDisabled">Next</button>
+            <button class="btn btn-primary" (click)="next()" [disabled]="ioIsDisabled">Next</button>
         </div>
     </div>
 </div>

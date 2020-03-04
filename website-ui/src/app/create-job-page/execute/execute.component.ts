@@ -9,10 +9,10 @@ import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
   styleUrls: ['./execute.component.css']
 })
 export class ExecuteComponent implements OnInit {
-  analysisJobExecuted = false;
+  analysisJobIsExecuted = false;
   job: IJobModel;
   jobId: string;
-  ioDisabled: boolean = true;
+  ioIsDisabled: boolean = true;
 
   constructor(public mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) { }
 
@@ -32,9 +32,9 @@ export class ExecuteComponent implements OnInit {
       this.mongodbService.getJobById(this.jobId).subscribe(job => {
         this.job = job;
         if (this.job.jobStatus >= 5) {
-          this.analysisJobExecuted = true;
+          this.analysisJobIsExecuted = true;
         }
-        this.ioDisabled = false;
+        this.ioIsDisabled = false;
       });
     });
   }

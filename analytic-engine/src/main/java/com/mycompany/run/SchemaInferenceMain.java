@@ -1,15 +1,16 @@
 package com.mycompany.run;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mycompany.configuration.DependencyFactory;
 import com.mycompany.configuration.Environment;
 import com.mycompany.jobs.SchemaInferenceJob;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
+
 import java.io.IOException;
 
 /**
- * Schema inference job.
- * Creates a detailed schema file from the data in the /raw directory of the job and saves it in the same location
+ * Schema Inference Main is the triggering class for the Schema Inference job. Main parses command line arguments,
+ * creates a dependency factory and calls the run method of a SchemaInferenceJob instance.
  */
 public class SchemaInferenceMain {
     public static void main(String[] args) throws IOException, UnirestException {
@@ -19,7 +20,7 @@ public class SchemaInferenceMain {
         String jobId = args[2];
 
         // Creates the DependencyFactory containing: ConfigModel, SparkSession, etc...
-        DependencyFactory dependencyFactory = new DependencyFactory(env, jobId);
+        DependencyFactory dependencyFactory = new DependencyFactory(env);
 
         // Create and run the SchemaInferenceJob
         SchemaInferenceJob schemaInferenceJob = new SchemaInferenceJob(dependencyFactory.getSparkSession(),

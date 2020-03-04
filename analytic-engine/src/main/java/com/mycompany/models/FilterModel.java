@@ -2,6 +2,9 @@ package com.mycompany.models;
 
 import java.util.Objects;
 
+/**
+ * Represents a Filter object. Corresponds to the IFilterModel type in the mongodb-service.
+ */
 public class FilterModel {
     public String _id;
     public String __v;

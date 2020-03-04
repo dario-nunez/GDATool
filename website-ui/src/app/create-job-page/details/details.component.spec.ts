@@ -5,7 +5,7 @@ import { of as observableOf, of } from 'rxjs';
 import { MongodbService } from 'src/services/mongodb/mongodb.service';
 import { RouterTestingModule } from '@angular/router/testing';
 
-const mockLocalStorage = {
+const MOCK_LOCAL_STORAGE = {
   getItem: (key: string): string => {
     return JSON.stringify(MOCK_USER);
   },
@@ -14,10 +14,8 @@ const mockLocalStorage = {
 describe('DetailsComponent', () => {
   let component: DetailsComponent;
   let fixture: ComponentFixture<DetailsComponent>;
-
   const mockMongodbService = jasmine.createSpyObj("MongodbService", ["createJob"]);
   mockMongodbService.createJob.and.returnValue(of(MOCK_JOB));
-
   const mockRouter = jasmine.createSpyObj("RouterTestingModule", ["navigate"]);
 
   beforeEach(async(() => {
@@ -34,12 +32,11 @@ describe('DetailsComponent', () => {
           useValue: mockMongodbService
         }
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
-    spyOn(localStorage, "getItem").and.callFake(mockLocalStorage.getItem);
+    spyOn(localStorage, "getItem").and.callFake(MOCK_LOCAL_STORAGE.getItem);
     fixture = TestBed.createComponent(DetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -49,7 +46,7 @@ describe('DetailsComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('createJob button clicked', () => {
+  it('createJob button registers mongodb service call', () => {
     component.createJob();
     expect(component.mongodbService.createJob).toHaveBeenCalled();
   });

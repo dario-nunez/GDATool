@@ -1,8 +1,12 @@
 import * as mongoose from "mongoose";
 import { Model } from "mongoose";
 
+/**
+ * Job type, model mongoose document and schema definition. Models are used by
+ * Controllers so they are picked up by the swagger. Documents and schemas are used by 
+ * Repositories so model defined Mongodb functions can be used.
+ */
 type JobType = IJob & mongoose.Document;
-
 export interface IJobModel {
     _id?: string;
     name: string;

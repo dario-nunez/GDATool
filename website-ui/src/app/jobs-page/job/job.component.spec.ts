@@ -11,16 +11,12 @@ describe('JobComponent', () => {
     TestBed.configureTestingModule({
       declarations: COMMON_DECLARATIONS,
       imports: COMMON_IMPORTS
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(JobComponent);
     component = fixture.componentInstance;
-
-    const inputJob = fixture.debugElement.query(By.css('.job'));
-
     component.job = MOCK_JOB;
     fixture.detectChanges();
   });
@@ -29,7 +25,7 @@ describe('JobComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('create status lines', () => {
+  it('createStatusLines creates expected number of status lines', () => {
     component.createStatusLines();
     expect(component.statusLines.length).toEqual(5);
   });

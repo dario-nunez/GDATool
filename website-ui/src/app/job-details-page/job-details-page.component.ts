@@ -9,9 +9,8 @@ import { IJobModel } from '../../../../mongodb-service/src/models/jobModel';
   styleUrls: ['./job-details-page.component.css']
 })
 export class JobDetailsPageComponent implements OnInit {
-
   job: IJobModel;
-  public jobId: string;
+  jobId: string;
 
   constructor(public mongodbService: MongodbService, private route: ActivatedRoute, private router: Router) { }
 
@@ -43,7 +42,7 @@ export class JobDetailsPageComponent implements OnInit {
       if (job != null) {
         this.router.navigate(['/jobsPage']);
       } else {
-        console.log("Error happenened while updating job");
+        console.log("Error while updating job");
       }
     });
   }

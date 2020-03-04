@@ -8,8 +8,8 @@ import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./dashboard-page.component.css']
 })
 export class DashboardPageComponent implements OnInit {
-  public jobId: string;
-  public dashboardSrc: SafeResourceUrl;
+  jobId: string;
+  dashboardSrc: SafeResourceUrl;
 
   constructor(private route: ActivatedRoute, private sanatizer: DomSanitizer) { }
 

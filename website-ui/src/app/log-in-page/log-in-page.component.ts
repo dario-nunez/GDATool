@@ -8,14 +8,14 @@ import { AuthenticationService } from "../../services/authentication/authenticat
   styleUrls: ['./log-in-page.component.css']
 })
 export class LogInPageComponent implements OnInit {
-  private incorrectPassword: boolean;
+  private passwordIsIncorrect: boolean;
   private userEmail: string;
   private userPassword: string;
 
   constructor(private router: Router, public authenticationService: AuthenticationService) { }
 
   ngOnInit() {
-    this.incorrectPassword = false;
+    this.passwordIsIncorrect = false;
 
     if (localStorage.length > 0) {
       this.userEmail = JSON.parse(localStorage.getItem("user")).email;
@@ -32,7 +32,7 @@ export class LogInPageComponent implements OnInit {
         this.router.navigate(["/jobsPage"]);
       } else {
         this.userPassword = "";
-        this.incorrectPassword = true;
+        this.passwordIsIncorrect = true;
       }
     });
   }

@@ -1,6 +1,9 @@
 import { IESVisualization } from "./visualizationModel";
 
-export interface IESPlot extends IESVisualization {
+/**
+ * Encapsulates the minimum metadata necessary to create a Plot visualization object.
+ */
+export interface IESPlotVis extends IESVisualization {
     index: string;
     explorerTitle: string;
     identifier: string;

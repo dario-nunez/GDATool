@@ -8,7 +8,6 @@ import { MongodbService } from 'src/services/mongodb/mongodb.service';
   styleUrls: ['./jobs-page.component.css']
 })
 export class JobsPageComponent implements OnInit {
-
   jobs: IJobModel[] = [];
 
   constructor(public mongodbService: MongodbService) { }

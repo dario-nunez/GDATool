@@ -12,8 +12,7 @@ import { IPlotModel } from '../../../../../../mongodb-service/src/models/plotMod
   styleUrls: ['./general-plots.component.css']
 })
 export class GeneralPlotsComponent implements OnInit {
-  public job: IJobModel;
-
+  job: IJobModel;
   typeList: Array<[string, string]> = [];
   COLUMNS: Array<string> = [];
   featureColumns: Array<string> = [];

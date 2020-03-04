@@ -21,8 +21,7 @@ describe('SignUpPageComponent', () => {
           useValue: mockMongodbService
         }
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -37,7 +36,7 @@ describe('SignUpPageComponent', () => {
     expect(component.emailExists).toEqual(false);
   });
 
-  it('create user', () => {
+  it('createUser registers mongodb service call', () => {
     component.createUser();
     expect(component.mongodbService.createUser).toHaveBeenCalled();
   });

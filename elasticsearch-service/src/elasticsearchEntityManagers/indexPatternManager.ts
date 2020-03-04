@@ -3,6 +3,10 @@ import { IndexPatternBuilder } from "../elasticsearchEntityJsonBuilders/indexPat
 import { IESIndexPattern } from "../elasticsearchModels/indexPatternModel";
 import { KibanaService } from "../services/kibana-service";
 
+/**
+ * A Manager class to control the building of Index Pattern JSON objects and their starage
+ * in the Elasticsearch cluster.
+ */
 export class IndexPatternManager {
     private indexPatternBuilder: IndexPatternBuilder;
 
@@ -10,6 +14,12 @@ export class IndexPatternManager {
         this.indexPatternBuilder = new IndexPatternBuilder();
     }
 
+    /**
+     * Creates and saves an Index Pattern to Elasticsearch
+     * @param aggregationId 
+     * @param operations 
+     * @param featureColumns 
+     */
     public createIndexPattern(aggregationId: string, operations: Array<string>, featureColumns: Array<string>) {
         const indexPatternSeed: IESIndexPattern = {
             _id: aggregationId,

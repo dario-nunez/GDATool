@@ -7,14 +7,12 @@ import { IStatusLine } from '../../../../models/statusLine.model';
   styleUrls: ['./status-line.component.css']
 })
 export class StatusLineComponent implements OnInit {
-
-  constructor() { }
-
   @Input()
-  public statusLine: IStatusLine;
-
+  statusLine: IStatusLine;
   badgeColour: string;
   badgeText: string;
+
+  constructor() { }
 
   ngOnInit() {
     if (this.statusLine.jobStatus >= this.statusLine.lineTriggerStatus) {

@@ -12,18 +12,14 @@ import { IClusterModel } from '../../../../../../mongodb-service/src/models/clus
 
 export class AggregationClusteringComponent implements OnInit {
   public job: IJobModel;
-  aggregationSelected: boolean = false;
-
+  aggregationIsSelected: boolean = false;
   chosenXColumn: string;
   chosenYColumn: string;
   chosenIdentifierColumn: string;
-
   OPERATIONS: Array<string> = [];
   FEATURE_COLUMNS: Array<string> = [];
-
   xAvailableColumns: Array<string> = [];
   yAvailableColumns: Array<string> = [];
-
   selectedAggregation: string;
 
   constructor(public queryService: QueryService) { }
@@ -31,7 +27,6 @@ export class AggregationClusteringComponent implements OnInit {
   ngOnInit() {
     this.queryService.aggregationClusters = [];    
     this.selectedAggregation = "";
-
     this.chosenXColumn = "";
     this.chosenYColumn = "";
     this.chosenIdentifierColumn = "";
@@ -56,7 +51,7 @@ export class AggregationClusteringComponent implements OnInit {
     this.xAvailableColumns = chosenAgg.operations;
     this.yAvailableColumns = chosenAgg.operations;
     this.FEATURE_COLUMNS = chosenAgg.featureColumns;
-    this.aggregationSelected = true;
+    this.aggregationIsSelected = true;
   }
 
   addCluster() {
@@ -77,8 +72,7 @@ export class AggregationClusteringComponent implements OnInit {
     this.chosenYColumn = "";
     this.chosenIdentifierColumn = "";
     this.selectedAggregation = "";
-
-    this.aggregationSelected = false;
+    this.aggregationIsSelected = false;
 
     this.queryService.aggregationClusters.push(newCluster);
   }

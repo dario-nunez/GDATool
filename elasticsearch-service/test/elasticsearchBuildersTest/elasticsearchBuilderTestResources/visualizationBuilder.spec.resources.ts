@@ -1,3 +1,6 @@
+/**
+ * Visualization Builders Test resources
+ */
 export const expectedMarkupVisualization = {
     method: 'PUT',
     url: 'http://localhost:9200/.kibana/_doc/visualization:test_id',

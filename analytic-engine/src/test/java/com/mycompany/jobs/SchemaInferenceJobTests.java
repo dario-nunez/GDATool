@@ -25,6 +25,10 @@ import static org.mockito.Mockito.when;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * This file tests the SchemaInference job support methods (all public methods found in the class except the run
+ * method).
+ */
 public class SchemaInferenceJobTests {
     private Dataset<Row> inputDataset;
     private SchemaInferenceJob schemaInferenceJob;
@@ -37,12 +41,16 @@ public class SchemaInferenceJobTests {
     @Mock
     ElasticsearchRepository elasticsearchRepositoryMock;
 
+    /**
+     * Initialize the test class, set up the environment, create mock objects and read an input dataset.
+     * @throws IOException
+     */
     public SchemaInferenceJobTests() throws IOException, UnirestException {
         MockitoAnnotations.initMocks(this);
         ObjectMapper objectMapper = new ObjectMapper();
         classLoader = getClass().getClassLoader();
 
-        File jobFile = new File(Objects.requireNonNull(classLoader.getResource("testJob.json")).getFile());
+        File jobFile = new File(Objects.requireNonNull(classLoader.getResource("testJobs.json")).getFile());
         String jobFileContents = FileUtils.readFileToString(jobFile, StandardCharsets.UTF_8);
         jobModel = objectMapper.readValue(jobFileContents, new TypeReference<JobModel>(){});
 
@@ -53,25 +61,28 @@ public class SchemaInferenceJobTests {
         SparkSession sparkSession = dependencyFactory.getSparkSession();
         schemaInferenceJob = new SchemaInferenceJob(sparkSession, configModel, mongodbRepositoryMock,
                 elasticsearchRepositoryMock);
-        inputDataset = schemaInferenceJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/schemaInferenceJobDS.csv"));
+        inputDataset = schemaInferenceJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/schemaInferenceJobDS.csv"));
     }
 
     /**
-     * city and price are selected
+     * Should return an expected schema JSON string given the JobModel provided.
+     * @throws IOException
      */
     @Test
-    public void getJsonSchema() throws IOException, UnirestException {
+    public void getJsonSchema_populatedDataset_returnExpectedSchemaJsonString() throws IOException {
         String actualSchema = schemaInferenceJob.getJsonSchema(inputDataset, jobModel);
-
-        File schemaFile = new File(Objects.requireNonNull(classLoader.getResource("ukPropertiesDs/schemaInferenceJobJSONSchema.json")).getFile());
+        File schemaFile = new File(Objects.requireNonNull(classLoader.getResource("testDatasets/schemaInferenceJobJSONSchema.json")).getFile());
         String expectedSchema = FileUtils.readFileToString(schemaFile, StandardCharsets.UTF_8);
-
         assertEquals(expectedSchema, actualSchema);
     }
 
+    /**
+     * Should return an empty string,
+     * @throws IOException
+     */
     @Test
-    public void getJsonSchemaWIthEmptyDataset() throws IOException, UnirestException {
-        Dataset<Row> emptyDataset = schemaInferenceJob.read(String.format("%s/%s", configModel.bucketRoot(), "ukPropertiesDs/dataAnalysisJobDSEmpty.csv"));
+    public void getJsonSchema_emptyDataset_returnEmptyString() throws IOException {
+        Dataset<Row> emptyDataset = schemaInferenceJob.read(String.format("%s/%s", configModel.bucketRoot(), "testDatasets/dataAnalysisJobDSEmpty.csv"));
         String actualSchema = schemaInferenceJob.getJsonSchema(emptyDataset, jobModel);
         String expectedSchema = "";
         assertEquals(expectedSchema, actualSchema);

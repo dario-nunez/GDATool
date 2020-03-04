@@ -48,8 +48,7 @@ describe('GeneralPlotsComponent', () => {
           }
         }
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -68,19 +67,19 @@ describe('GeneralPlotsComponent', () => {
     expect(component.yAvailableColumns).toEqual([]);
   });
 
-  it('selectXColumn', () => {
+  it('selectXColumn selects the given element', () => {
     component.COLUMNS = ["a", "b", "c"]
     component.selectXColumn(event, "a");
     expect(component.yAvailableColumns).toEqual(["b", "c"]);
   });
 
-  it('selectYColumn', () => {
+  it('selectYColumn selects the given element', () => {
     component.COLUMNS = ["a", "b", "c"]
     component.selectYColumn(event, "a");
     expect(component.xAvailableColumns).toEqual(["b", "c"]);
   });
 
-  it('create plot', () => {
+  it('createPlot creates the expected Plot object', () => {
     component.COLUMNS = ["a", "b", "c"]
     component.chosenIdentifierColumn = "a"
     component.typeList = [["a", "double"], ["b", "double"], ["c", "string"]]
@@ -107,7 +106,7 @@ describe('GeneralPlotsComponent', () => {
     expect(component.chosenIdentifierColumn).toEqual("");
   });
 
-  it('delete plot', () => {
+  it('deletePlot button registers mongodb service call', () => {
     component.queryService.generalPlots = [MOCK_PLOT];
     component.deletePlot(event, MOCK_PLOT);
     expect(component.queryService.generalPlots.length).toEqual(0);
