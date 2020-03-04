@@ -1,14 +1,18 @@
 import { Inject } from "typescript-ioc";
 import { VisualizationBuilder } from "../elasticsearchEntityJsonBuilders/visualizationBuilder";
-import { IESCluster } from "../elasticsearchModels/clusterModel";
-import { IESDataTable } from "../elasticsearchModels/dataTableModel";
-import { IESMetric } from "../elasticsearchModels/metricModel";
-import { IESPlot } from "../elasticsearchModels/plotModel";
-import { IESBarChart } from "../elasticsearchModels/visBarChartModel";
-import { IESMarkup } from "../elasticsearchModels/visMarkupModel";
+import { IESBarChartVis } from "../elasticsearchModels/barChartVisModel";
+import { IESClusterVis } from "../elasticsearchModels/clusterVisModel";
+import { IESDataTableVis } from "../elasticsearchModels/dataTableVisModel";
+import { IESMarkupVis } from "../elasticsearchModels/markupVisModel";
+import { IESMetricVis } from "../elasticsearchModels/metricVisModel";
+import { IESPlotVis } from "../elasticsearchModels/plotVisModel";
 import { IESVisualization } from "../elasticsearchModels/visualizationModel";
 import { KibanaService } from "../services/kibana-service";
 
+/**
+ * A Manager class to control the building of visualization JSON objects and their starage
+ * in the Elasticsearch cluster.
+ */
 export class VisualizationManager {
     private visualizationBuilder: VisualizationBuilder;
 
@@ -16,8 +20,13 @@ export class VisualizationManager {
         this.visualizationBuilder = new VisualizationBuilder();
     }
 
-    public createVisMarkup(id: string, name: string) {
-        const markupSeed: IESMarkup = {
+    /**
+     * Creates and saves a Markup visualization to Elasticsearch
+     * @param id 
+     * @param name 
+     */
+    public createMarkupVis(id: string, name: string) {
+        const markupSeed: IESMarkupVis = {
             _id: id + "_markdown",
             type: "markdown",
             explorerTitle: name,
@@ -37,8 +46,16 @@ export class VisualizationManager {
         }
     }
 
-    public createVisBarChart(id: string, operationName: string, metricColumn: string, featureColumn: string, indexPatternId: string) {
-        const barChartSeed: IESBarChart = {
+    /**
+     * Creates and saves a Bar Chart visualization to Elasticsearch
+     * @param id 
+     * @param operationName 
+     * @param metricColumn 
+     * @param featureColumn 
+     * @param indexPatternId 
+     */
+    public createBarChartVis(id: string, operationName: string, metricColumn: string, featureColumn: string, indexPatternId: string) {
+        const barChartSeed: IESBarChartVis = {
             _id: id + "_bar",
             type: "bar",
             explorerTitle: featureColumn + " by " + metricColumn + " by " + operationName,
@@ -61,8 +78,14 @@ export class VisualizationManager {
         }
     }
 
-    public createMetric(id: string, aggregationName: string, indexPatternId: string) {
-        const metricSeed: IESMetric = {
+    /**
+     * Creates and saves a Metric visualization to Elasticsearch
+     * @param id 
+     * @param aggregationName 
+     * @param indexPatternId 
+     */
+    public createMetricVis(id: string, aggregationName: string, indexPatternId: string) {
+        const metricSeed: IESMetricVis = {
             _id: id + "_metric",
             type: "metric",
             explorerTitle: aggregationName,
@@ -83,8 +106,16 @@ export class VisualizationManager {
         }
     }
 
-    public createDataTable(id: string, aggregationName: string, operations: Array<string>, featureColumns: Array<string>, indexPatternId: string) {
-        const dataTableSeed: IESDataTable = {
+    /**
+     * Creates and saves a Data Table visualization to Elasticsearch
+     * @param id 
+     * @param aggregationName 
+     * @param operations 
+     * @param featureColumns 
+     * @param indexPatternId 
+     */
+    public createDataTableVis(id: string, aggregationName: string, operations: Array<string>, featureColumns: Array<string>, indexPatternId: string) {
+        const dataTableSeed: IESDataTableVis = {
             _id: id + "_table",
             type: "table",
             explorerTitle: aggregationName + " table",
@@ -106,8 +137,19 @@ export class VisualizationManager {
         }
     }
 
-    public createPlot(id: string, index: string, identifier: string, identifierType: string, xAxis: string, xType: string, yAxis: string, yType: string) {
-        const plotSeed: IESPlot = {
+    /**
+     * Creates and saves a Plot visualization to Elasticsearch
+     * @param id 
+     * @param index 
+     * @param identifier 
+     * @param identifierType 
+     * @param xAxis 
+     * @param xType 
+     * @param yAxis 
+     * @param yType 
+     */
+    public createPlotVis(id: string, index: string, identifier: string, identifierType: string, xAxis: string, xType: string, yAxis: string, yType: string) {
+        const plotSeed: IESPlotVis = {
             _id: id + "_plot",
             type: "plot",
             index: index,
@@ -133,8 +175,19 @@ export class VisualizationManager {
         }
     }
 
-    public createCluster(id: string, index: string, identifier: string, identifierType: string, xAxis: string, xType: string, yAxis: string, yType: string) {
-        const clusterSeed: IESCluster = {
+    /**
+     * Creates and saves a Cluster visualization to Elasticsearch
+     * @param id 
+     * @param index 
+     * @param identifier 
+     * @param identifierType 
+     * @param xAxis 
+     * @param xType 
+     * @param yAxis 
+     * @param yType 
+     */
+    public createClusterVis(id: string, index: string, identifier: string, identifierType: string, xAxis: string, xType: string, yAxis: string, yType: string) {
+        const clusterSeed: IESClusterVis = {
             _id: id + "_cluster",
             type: "cluster",
             index: index,

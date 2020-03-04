@@ -7,6 +7,9 @@ import { IESVisualization } from "../elasticsearchModels/visualizationModel";
 import { KibanaService } from "../services/kibana-service";
 import { MongodbService } from "../services/mongodb-service";
 
+/**
+ * Dashboard Builder endpoints rooted at "/es/dashboardBuilder".
+ */
 @Path("/es/dashboardBuilder")
 export class DashboardBuilderController {
     private dashboardManager: DashboardManager;
@@ -19,6 +22,9 @@ export class DashboardBuilderController {
         this.visualizationManager = new VisualizationManager(this.kibanaService);
     }
 
+    /**
+     * Status check endpoint to verify the API is running and listening.
+     */
     @Path("status")
     @GET
     public status(): Promise<string> {
@@ -27,6 +33,11 @@ export class DashboardBuilderController {
         });
     }
 
+    /**
+     * Create a dashboard of the "basic" type. This involves creating certain visualizations and adding
+     * them to a dashboard object in a particular order and layout.
+     * @param jobId 
+     */
     @Path("basic/:id")
     @GET
     public async createBasicDashboard(@PathParam("id") jobId: string) {
@@ -39,12 +50,12 @@ export class DashboardBuilderController {
 
         // Plot section title
         if (plots.length > 0) {
-            plotSection.push(this.visualizationManager.createVisMarkup(job._id, "General plots"));
+            plotSection.push(this.visualizationManager.createMarkupVis(job._id, "General plots"));
         }
 
         // Plots
         for (const plot of plots) {
-            plotSection.push(this.visualizationManager.createPlot(plot._id, plot._id, plot.identifier, plot.identifierType, plot.xAxis, plot.xType, plot.yAxis, plot.yType));
+            plotSection.push(this.visualizationManager.createPlotVis(plot._id, plot._id, plot.identifier, plot.identifierType, plot.xAxis, plot.xType, plot.yAxis, plot.yType));
         }
 
         // Add Plot section
@@ -57,25 +68,25 @@ export class DashboardBuilderController {
             const visualizationIdPrefix = aggregation.jobId + "_" + aggregation._id;
 
             // Title
-            aggSection.push(this.visualizationManager.createVisMarkup(visualizationIdPrefix, aggregation.name));
+            aggSection.push(this.visualizationManager.createMarkupVis(visualizationIdPrefix, aggregation.name));
 
             // Metrics
             for (const operation of aggregation.operations) {
-                aggSection.push(this.visualizationManager.createMetric(visualizationIdPrefix + operation.toLowerCase(), operation.toLowerCase(), aggregation._id));
+                aggSection.push(this.visualizationManager.createMetricVis(visualizationIdPrefix + operation.toLowerCase(), operation.toLowerCase(), aggregation._id));
             }
 
             // Bar charts
             for (const operation of aggregation.operations) {                
-                aggSection.push(this.visualizationManager.createVisBarChart(visualizationIdPrefix + "_" + operation.toLowerCase(), operation.toLowerCase(), aggregation.metricColumn, aggregation.featureColumns[0], aggregation._id));
+                aggSection.push(this.visualizationManager.createBarChartVis(visualizationIdPrefix + "_" + operation.toLowerCase(), operation.toLowerCase(), aggregation.metricColumn, aggregation.featureColumns[0], aggregation._id));
             }
 
             // Data tables
-            aggSection.push(this.visualizationManager.createDataTable(visualizationIdPrefix, aggregation.name , aggregation.operations, aggregation.featureColumns, aggregation._id));
+            aggSection.push(this.visualizationManager.createDataTableVis(visualizationIdPrefix, aggregation.name , aggregation.operations, aggregation.featureColumns, aggregation._id));
 
             // Clusters
             const clusters = await this.mongodbService.getClustersByAgg(aggregation._id);
             for (const cluster of clusters) {
-                aggSection.push(this.visualizationManager.createCluster(aggregation._id + "_" + cluster._id, cluster._id, cluster.identifier, cluster.identifierType, cluster.xAxis, cluster.xType, cluster.yAxis, cluster.yType));
+                aggSection.push(this.visualizationManager.createClusterVis(aggregation._id + "_" + cluster._id, cluster._id, cluster.identifier, cluster.identifierType, cluster.xAxis, cluster.xType, cluster.yAxis, cluster.yType));
             }
 
             // Add a visualisation section

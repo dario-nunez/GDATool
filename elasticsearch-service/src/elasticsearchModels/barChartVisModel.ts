@@ -1,6 +1,9 @@
 import { IESVisualization } from "./visualizationModel";
 
-export interface IESBarChart extends IESVisualization {
+/**
+ * Encapsulates the minimum metadata necessary to create a Bar Chart visualization object.
+ */
+export interface IESBarChartVis extends IESVisualization {
     explorerTitle: string;
     featureColumn: string;
     operationName: string;

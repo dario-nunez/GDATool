@@ -1,10 +1,14 @@
-import { IESCluster } from "../elasticsearchModels/clusterModel";
-import { IESDataTable } from "../elasticsearchModels/dataTableModel";
-import { IESMetric } from "../elasticsearchModels/metricModel";
-import { IESPlot } from "../elasticsearchModels/plotModel";
-import { IESBarChart } from "../elasticsearchModels/visBarChartModel";
-import { IESMarkup } from "../elasticsearchModels/visMarkupModel";
+import { IESBarChartVis } from "../elasticsearchModels/barChartVisModel";
+import { IESClusterVis } from "../elasticsearchModels/clusterVisModel";
+import { IESDataTableVis } from "../elasticsearchModels/dataTableVisModel";
+import { IESMarkupVis } from "../elasticsearchModels/markupVisModel";
+import { IESMetricVis } from "../elasticsearchModels/metricVisModel";
+import { IESPlotVis } from "../elasticsearchModels/plotVisModel";
 
+/**
+ * A Builder class to handle the generation of the JSON objects that make up visualizations.
+ * The format of the JSON objects is established by the .kibana index on Elasticsearch.
+ */
 export class VisualizationBuilder {
     protected elasticSearchUrl: string;
     protected indexName: string;
@@ -14,7 +18,12 @@ export class VisualizationBuilder {
         this.indexName = ".kibana/";
     }
 
-    public getMarkup(markupModel: IESMarkup) {
+    /**
+     * Generate the Markup visualization JSON and return it inside of a request ready to be sent to 
+     * Elasticseach by an http server.
+     * @param markupModel 
+     */
+    public getMarkup(markupModel: IESMarkupVis) {
         return {
             method: "PUT",
             url: this.elasticSearchUrl + this.indexName + "_doc/visualization:" + markupModel._id,
@@ -39,7 +48,12 @@ export class VisualizationBuilder {
         };
     }
 
-    public getBarChart(barChartModel: IESBarChart) {
+    /**
+     * Generate the Bar Chart visualization JSON and return it inside of a request ready to be sent to 
+     * Elasticseach by an http server.
+     * @param barChartModel 
+     */
+    public getBarChart(barChartModel: IESBarChartVis) {
         return {
             method: "PUT",
             url: this.elasticSearchUrl + this.indexName + "_doc/visualization:" + barChartModel._id,
@@ -72,7 +86,12 @@ export class VisualizationBuilder {
         };
     }
 
-    public getMetric(metricModel: IESMetric) {
+    /**
+     * Generate the Metric visualization JSON and return it inside of a request ready to be sent to 
+     * Elasticseach by an http server.
+     * @param metricModel 
+     */
+    public getMetric(metricModel: IESMetricVis) {
         // logger.info(metricModel);
         return {
             method: "PUT",
@@ -105,7 +124,12 @@ export class VisualizationBuilder {
         };
     }
 
-    public getDataTable(dataTableModel: IESDataTable) {
+    /**
+     * Generate the Data Table visualization JSON and return it inside of a request ready to be sent to 
+     * Elasticseach by an http server.
+     * @param dataTableModel 
+     */
+    public getDataTable(dataTableModel: IESDataTableVis) {
         const metricArray = this.getDataTableMetrics(0);
         const bucketArray = this.getDataTableBuckets(dataTableModel.featureColumns, 1);
         const aggArray = this.getDataTableAggs(dataTableModel);
@@ -140,7 +164,12 @@ export class VisualizationBuilder {
         };
     }
 
-    public getVegaPlot(plotModel: IESPlot) {
+    /**
+     * Generate the Vega Plot visualization JSON and return it inside of a request ready to be sent to 
+     * Elasticseach by an http server.
+     * @param plotModel 
+     */
+    public getVegaPlot(plotModel: IESPlotVis) {
         let sourceArray = "";
         if (plotModel.identifier === plotModel.xAxis || plotModel.identifier === plotModel.yAxis) {
             sourceArray = '\\n \\\"'+ plotModel.xAxis +'\\\",\\n \\\"'+ plotModel.yAxis +'\\\"\\n ';
@@ -172,7 +201,12 @@ export class VisualizationBuilder {
         };
     }
 
-    public getVegaCluster(clusterModel: IESCluster) {
+    /**
+     * Generate the Vega Cluster visualization JSON and return it inside of a request ready to be sent to 
+     * Elasticseach by an http server.
+     * @param clusterModel 
+     */
+    public getVegaCluster(clusterModel: IESClusterVis) {
         let sourceArray = "";
         if (clusterModel.identifier === clusterModel.xAxis || clusterModel.identifier === clusterModel.yAxis) {
             sourceArray = '\\n \\\"'+ clusterModel.xAxis +'\\\",\\n \\\"'+ clusterModel.yAxis +'\\\",\\n \\\"cluster\\\"\\n ';
@@ -204,10 +238,19 @@ export class VisualizationBuilder {
         };
     }
 
+    /**
+     * Generate a section responsible for declaring metric columns in the Data Table.
+     * @param currentIndex 
+     */
     private getDataTableMetrics(currentIndex: number) {
         return '{\"accessor\":' + currentIndex + ',\"format\":{\"id\":\"number\"},\"params\":{},\"aggType\":\"max\"}';
     }
 
+    /**
+     * Generate a section responsible for declaring feature columns in the Data Table.
+     * @param featureColumns 
+     * @param currentIndex 
+     */
     private getDataTableBuckets(featureColumns: Array<string>, currentIndex: number) {
         let bucketsArray = "";
 
@@ -220,7 +263,11 @@ export class VisualizationBuilder {
         return bucketsArray.substring(1, bucketsArray.length);
     }
 
-    private getDataTableAggs(dataTableModel: IESDataTable) {
+    /**
+     * Generate a section responsible for declaring aggregation columns in the Data Table
+     * @param dataTableModel 
+     */
+    private getDataTableAggs(dataTableModel: IESDataTableVis) {
         let currentId = 1;
         let aggsArray = "";
 

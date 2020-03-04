@@ -1,5 +1,9 @@
 import { IESIndexPattern } from "../elasticsearchModels/indexPatternModel";
 
+/**
+ * A Builder class to handle the generation of the JSON object that makes up an Index Pattern.
+ * The format of the JSON object is established by the .kibana index on Elasticsearch.
+ */
 export class IndexPatternBuilder {
     protected elasticSearchUrl: string;
     protected indexName: string;
@@ -9,6 +13,11 @@ export class IndexPatternBuilder {
         this.indexName = ".kibana/";
     }
 
+    /**
+     * Generate the Index Pattern JSON and return it inside of a request ready to be sent to 
+     * Elasticseach by an http server.
+     * @param indexPatternModel 
+     */
     public getIndexPattern(indexPatternModel: IESIndexPattern) {
         const defaultJSONLines = "{\"name\":\"_id\",\"type\":\"string\",\"esTypes\":[\"_id\"],\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false}," +
             "{\"name\":\"_index\",\"type\":\"string\",\"esTypes\":[\"_index\"],\"count\":0,\"scripted\":false,\"searchable\":true,\"aggregatable\":true,\"readFromDocValues\":false}," +
@@ -36,6 +45,11 @@ export class IndexPatternBuilder {
         };
     }
 
+    /**
+     * Generate the section responsible for declaring which operation (numeric) rows in the index are 
+     * accessible to visualizations.
+     * @param indexPatternModel 
+     */
     private getOperationJSONLines(indexPatternModel: IESIndexPattern) {
         let operationJSONLines = "";
 
@@ -46,6 +60,11 @@ export class IndexPatternBuilder {
         return operationJSONLines;
     }
 
+    /**
+     * Generate the section responsible for declaring which feature rows (strings) in the index are 
+     * accessible to visualizations.
+     * @param indexPatternModel 
+     */
     private getFeatureColumnJSONLines(indexPatternModel: IESIndexPattern) {
         let featureColumnsJSONLines = "";
 

@@ -1,6 +1,9 @@
 import { IESVisualization } from "./visualizationModel";
 
-export interface IESDataTable extends IESVisualization {
+/**
+ * Encapsulates the minimum metadata necessary to create a Data Table visualization object.
+ */
+export interface IESDataTableVis extends IESVisualization {
     explorerTitle: string;
     operations: Array<string>;
     featureColumns: Array<string>;

@@ -1,6 +1,9 @@
 import { IESVisualization } from "./visualizationModel";
 
-export interface IESCluster extends IESVisualization {
+/**
+ * Encapsulates the minimum metadata necessary to create a Cluster visualization object.
+ */
+export interface IESClusterVis extends IESVisualization {
     index: string;
     explorerTitle: string;
     identifier: string;

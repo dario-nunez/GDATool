@@ -25,7 +25,7 @@ describe("Visualization manager tests", () => {
                 type: "markdown"
             };
 
-            const json = visualizationManager.createVisMarkup("test_id", "test_type");
+            const json = visualizationManager.createMarkupVis("test_id", "test_type");
             assert.deepEqual(json, visualization);
             done();
         });
@@ -38,7 +38,7 @@ describe("Visualization manager tests", () => {
                 type: "bar"
             };
 
-            const json = visualizationManager.createVisBarChart("test_id", "aggregationName", "metricColumn", "featureColumn", "indexPatternId");
+            const json = visualizationManager.createBarChartVis("test_id", "aggregationName", "metricColumn", "featureColumn", "indexPatternId");
             assert.deepEqual(json, visualization);
             done();
         });
@@ -51,7 +51,7 @@ describe("Visualization manager tests", () => {
                 type: "metric"
             };
 
-            const json = visualizationManager.createMetric("test_id", "aggregationName", "indexPatternId");
+            const json = visualizationManager.createMetricVis("test_id", "aggregationName", "indexPatternId");
             assert.deepEqual(json, visualization);
             done();
         });
@@ -64,7 +64,7 @@ describe("Visualization manager tests", () => {
                 type: "table"
             };
 
-            const json = visualizationManager.createDataTable("test_id", "aggregationName", [], [], "indexPatternId");
+            const json = visualizationManager.createDataTableVis("test_id", "aggregationName", [], [], "indexPatternId");
             assert.deepEqual(json, visualization);
             done();
         });
@@ -77,7 +77,7 @@ describe("Visualization manager tests", () => {
                 type: "plot"
             };
 
-            const json = visualizationManager.createPlot("test_id", "index", "identifier", "identifierType", "xAxis", "xType", "yAxis", "yType");
+            const json = visualizationManager.createPlotVis("test_id", "index", "identifier", "identifierType", "xAxis", "xType", "yAxis", "yType");
             assert.deepEqual(json, visualization);
             done();
         });
@@ -90,7 +90,7 @@ describe("Visualization manager tests", () => {
                 type: "cluster"
             };
 
-            const json = visualizationManager.createCluster("test_id", "index", "identifier", "identifierType", "xAxis", "xType", "yAxis", "yType");
+            const json = visualizationManager.createClusterVis("test_id", "index", "identifier", "identifierType", "xAxis", "xType", "yAxis", "yType");
             assert.deepEqual(json, visualization);
             done();
         });
