@@ -12,8 +12,7 @@ import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
 })
 
 export class QueryComponent implements OnInit {
-  ioDisabled: boolean = true;
-  metricSelected: boolean = false;
+  ioIsDisabled: boolean = true;
   jobId: string;
   job: IJobModel;
   paramJob: IJobModel[] = [];
@@ -21,8 +20,6 @@ export class QueryComponent implements OnInit {
   constructor(public mongodbService: MongodbService, private route: ActivatedRoute, private schemaService: SchemaService, public queryService: QueryService, private router: Router) { }
 
   ngOnInit() {
-    // Should probably reset the query service every time this page is reached or inside the components
-    // Load job information and generate default aggregations
     this.route.params.subscribe(params => {
       this.jobId = params["job._id"];
       if (this.schemaService.schema == undefined) {
@@ -31,7 +28,7 @@ export class QueryComponent implements OnInit {
         this.mongodbService.getJobById(this.jobId).subscribe(job => {
           this.job = job;
           job.jobStatus = 4;
-          this.ioDisabled = false;
+          this.ioIsDisabled = false;
           this.paramJob.push(job);
         });
       }
@@ -41,7 +38,7 @@ export class QueryComponent implements OnInit {
   next() {
     this.mongodbService.updateJob(this.job).subscribe(retJob => {
       this.mongodbService.createMultipleAggregations(this.queryService.aggregations).subscribe(aggs => {
-        // Add aggregation IDs before moving on to the clusters
+        // Add aggregation IDs before moving on to the clusters and filters
         aggs.forEach(agg => {
           this.queryService.aggregations.find(obj => obj.name === agg.name)._id = agg._id
         });

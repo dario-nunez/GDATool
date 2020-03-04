@@ -8,7 +8,6 @@ import { ActivatedRoute } from '@angular/router';
 describe('SchemaComponent', () => {
   let component: SchemaComponent;
   let fixture: ComponentFixture<SchemaComponent>;
-
   const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobById", "readFile", "deleteJobRecusrive", "updateJob"])
   mockMongodbService.getJobById.and.returnValue(of(MOCK_JOB));
   mockMongodbService.deleteJobRecusrive.and.returnValue(of(MOCK_JOB));
@@ -40,8 +39,7 @@ describe('SchemaComponent', () => {
           }
         }
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -54,7 +52,7 @@ describe('SchemaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('move column from COLUMNS to FEATURES (double)', () => {
+  it('moveColumn moves column from COLUMNS to FEATURES (double)', () => {
     component.COLUMNS = [["a", "double"], ["b", "double"], ["c", "double"]];
     component.SELECTED_FEATURES = [];
     component.SELECTED_METRICS = [];
@@ -66,7 +64,7 @@ describe('SchemaComponent', () => {
     expect(component.SELECTED_METRICS).toEqual([])
   });
 
-  it('move column from COLUMNS to FEATURES (string)', () => {
+  it('moveColumn moves column from COLUMNS to FEATURES (string)', () => {
     component.COLUMNS = [["a", "string"], ["b", "double"], ["c", "double"]];
     component.SELECTED_FEATURES = [];
     component.SELECTED_METRICS = [];
@@ -78,7 +76,7 @@ describe('SchemaComponent', () => {
     expect(component.SELECTED_METRICS).toEqual([])
   });
 
-  it('move column from COLUMNS to METRICS (double)', () => {
+  it('moveColumn moves column from COLUMNS to METRICS (double)', () => {
     component.COLUMNS = [["a", "double"], ["b", "double"], ["c", "double"]];
     component.SELECTED_FEATURES = [];
     component.SELECTED_METRICS = [];
@@ -90,7 +88,7 @@ describe('SchemaComponent', () => {
     expect(component.SELECTED_FEATURES).toEqual([])
   });
 
-  it('move column from COLUMNS to METRICS (string)', () => {
+  it('moveColumn moves column from COLUMNS to METRICS (string)', () => {
     component.COLUMNS = [["a", "string"], ["b", "double"], ["c", "double"]];
     component.SELECTED_FEATURES = [];
     component.SELECTED_METRICS = [];
@@ -102,7 +100,7 @@ describe('SchemaComponent', () => {
     expect(component.SELECTED_FEATURES).toEqual([])
   });
 
-  it('move column from FEATURES to COLUMNS (double)', () => {
+  it('moveColumn moves column from FEATURES to COLUMNS (double)', () => {
     component.COLUMNS = [["b", "double"], ["c", "double"]];
     component.SELECTED_FEATURES = [["a", "double"]];
     component.SELECTED_METRICS = [];
@@ -114,7 +112,7 @@ describe('SchemaComponent', () => {
     expect(component.SELECTED_METRICS).toEqual([])
   });
 
-  it('move column from FEATURES to COLUMNS (string)', () => {
+  it('moveColumn moves column from FEATURES to COLUMNS (string)', () => {
     component.COLUMNS = [["b", "double"], ["c", "double"]];
     component.SELECTED_FEATURES = [["a", "string"]];
     component.SELECTED_METRICS = [];
@@ -126,7 +124,7 @@ describe('SchemaComponent', () => {
     expect(component.SELECTED_METRICS).toEqual([])
   });
 
-  it('move column from METRICS to COLUMNS (double)', () => {
+  it('moveColumn moves column from METRICS to COLUMNS (double)', () => {
     component.COLUMNS = [["b", "double"], ["c", "double"]];
     component.SELECTED_METRICS = [["a", "double"]];
     component.SELECTED_FEATURES = [];
@@ -138,7 +136,7 @@ describe('SchemaComponent', () => {
     expect(component.SELECTED_METRICS).toEqual([])
   });
 
-  it('move column from METRICS to COLUMNS (string)', () => {
+  it('moveColumn moves column from METRICS to COLUMNS (string)', () => {
     component.COLUMNS = [["b", "double"], ["c", "double"]];
     component.SELECTED_METRICS = [["a", "string"]];
     component.SELECTED_FEATURES = [];
@@ -150,7 +148,7 @@ describe('SchemaComponent', () => {
     expect(component.SELECTED_METRICS).toEqual([])
   });
 
-  it('move column from COLUMNS to FEATURES (double) already exists', () => {
+  it('moveColumn moves column from COLUMNS to FEATURES (double) already exists', () => {
     component.COLUMNS = [["a", "double"], ["b", "double"], ["c", "double"]];
     component.SELECTED_FEATURES = [["a", "double"]];
     component.SELECTED_METRICS = [];
@@ -162,7 +160,7 @@ describe('SchemaComponent', () => {
     expect(component.SELECTED_METRICS).toEqual([])
   });
 
-  it('move column from COLUMNS to METRICS (double) already exists', () => {
+  it('moveColumn moves column from COLUMNS to METRICS (double) already exists', () => {
     component.COLUMNS = [["a", "double"], ["b", "double"], ["c", "double"]];
     component.SELECTED_FEATURES = [];
     component.SELECTED_METRICS = [["a", "double"]];
@@ -174,12 +172,12 @@ describe('SchemaComponent', () => {
     expect(component.SELECTED_FEATURES).toEqual([])
   });
 
-  it('next', () => {
+  it('next button registers mongodb service call', () => {
     component.next();
     expect(component.mongodbService.updateJob).toHaveBeenCalled();
   });
 
-  it('delete job', () => {
+  it('deleteJob button registers mongodb service call', () => {
     spyOn(window, 'confirm').and.returnValue(true);
     component.deleteJob();
     expect(component.mongodbService.deleteJobRecusrive).toHaveBeenCalled();

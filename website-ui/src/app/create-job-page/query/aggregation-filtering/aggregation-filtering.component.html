@@ -37,7 +37,7 @@
                     <label for="identifier">Column</label>
                     <select id="identifier" class="form-control" name="identifier" required
                         (change)="selectColumn($event, identifier.value)" [(ngModel)]="chosenIdentifierColumn"
-                        #identifier="ngModel" [disabled]="!aggregationSelected">
+                        #identifier="ngModel" [disabled]="!aggregationIsSelected">
                         <option class="placeholder" selected disabled value="">Choose one</option>
                         <option *ngFor="let col of availableColumns">{{col[0]}}</option>
                     </select>
@@ -54,7 +54,7 @@
                     </select>
                 </div>
                 <!-- string value -->
-                <div class="form-group col-md-6" *ngIf="stringColumnChosen">
+                <div class="form-group col-md-6" *ngIf="stringColumnIsChosen">
                     <label for="stringValue">Value</label>
                     <select id="stringValue" class="form-control" name="stringValue" required
                         [(ngModel)]="chosenStringValue" #stringValue="ngModel"
@@ -64,7 +64,7 @@
                     </select>
                 </div>
                 <!-- numeric value -->
-                <div class="form-group col-md-6" *ngIf="!stringColumnChosen">
+                <div class="form-group col-md-6" *ngIf="!stringColumnIsChosen">
                     <label for="numericValue">Value</label>
                     <input [disabled]="chosenIdentifierColumn == ''" type="number" [min]='numericMin' [max]='numericMax'
                         step="0.0000000001" class="form-control" id="numericValue" name="numericValue"
@@ -74,22 +74,22 @@
             </div>
 
             <div class="row">
-                <div class="col col text-left" *ngIf="stringColumnChosen">
+                <div class="col col text-left" *ngIf="stringColumnIsChosen">
                     <button [disabled]="selectedAggregation == '' || chosenIdentifierColumn == '' || chosenStringValue == '' || chosenOperator == ''"
                         type="submit" class="btn btn-primary">Add Filter</button>
                 </div>
-                <div class="col col text-left" *ngIf="!stringColumnChosen">
+                <div class="col col text-left" *ngIf="!stringColumnIsChosen">
                     <button [disabled]="selectedAggregation == '' || chosenIdentifierColumn == '' || chosenNumericValue < numericMin || chosenNumericValue > numericMax || chosenOperator == ''"
                         type="submit" class="btn btn-primary">Add Filter</button>
                 </div>
 
-                <div class="col text-right" *ngIf="stringColumnChosen">
+                <div class="col text-right" *ngIf="stringColumnIsChosen">
                     <label class="text-danger"
                         *ngIf="selectedAggregation == '' || chosenIdentifierColumn == '' || chosenStringValue == '' || chosenOperator == ''">Incomplete
                         form
                     </label>
                 </div>
-                <div class="col text-right" *ngIf="!stringColumnChosen">
+                <div class="col text-right" *ngIf="!stringColumnIsChosen">
                     <label class="text-danger"
                         *ngIf="selectedAggregation == '' || chosenIdentifierColumn == '' || chosenNumericValue == undefined || chosenOperator == ''">Incomplete
                         form

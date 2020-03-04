@@ -7,7 +7,6 @@ import { MongodbService } from 'src/services/mongodb/mongodb.service';
 describe('JobsPageComponent', () => {
   let component: JobsPageComponent;
   let fixture: ComponentFixture<JobsPageComponent>;
-
   const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobsByUserId"])
   mockMongodbService.getJobsByUserId.and.returnValue(of(MOCK_JOBS));
 
@@ -31,7 +30,7 @@ describe('JobsPageComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', async () => {
+  it('should create and register mongodb service call', async () => {
     expect(component).toBeTruthy();
     expect(component.mongodbService.getJobsByUserId).toHaveBeenCalled();
   });

@@ -9,6 +9,5 @@ export class MarketingPageComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 }

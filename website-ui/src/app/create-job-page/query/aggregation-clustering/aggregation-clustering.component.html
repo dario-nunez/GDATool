@@ -33,32 +33,35 @@
                     </select>
                 </div>
             </div>
+
             <div class="form-row">
                 <!-- Identifier -->
                 <div class="form-group col-md-4">
                     <label for="identifier">Identifier</label>
                     <select id="identifier" class="form-control" name="identifier" required
-                        [(ngModel)]="chosenIdentifierColumn" #identifier="ngModel" [disabled]="!aggregationSelected">
+                        [(ngModel)]="chosenIdentifierColumn" #identifier="ngModel" [disabled]="!aggregationIsSelected">
                         <option class="placeholder" selected disabled value="">Choose one</option>
                         <option *ngFor="let col of FEATURE_COLUMNS">{{col}}</option>
                     </select>
                 </div>
+
                 <!-- Horizontal axis (x) -->
                 <div class="form-group col-md-4">
                     <label for="xSelector">Horizontal axis - x</label>
                     <select id="xSelector" class="form-control" name="xSelector" required
                         (change)="selectXColumn($event, xSelector.value)" [(ngModel)]="chosenXColumn"
-                        #xSelector="ngModel" [disabled]="!aggregationSelected">
+                        #xSelector="ngModel" [disabled]="!aggregationIsSelected">
                         <option class="placeholder" selected disabled value="">Choose one</option>
                         <option *ngFor="let col of xAvailableColumns">{{col}}</option>
                     </select>
                 </div>
+                
                 <!-- Vertical axis (y) -->
                 <div class="form-group col-md-4">
                     <label for="ySelector">Vertical axis - y</label>
                     <select id="ySelector" class="form-control" name="ySelector" required
                         (change)="selectYColumn($event, ySelector.value)" [(ngModel)]="chosenYColumn"
-                        #ySelector="ngModel" [disabled]="!aggregationSelected">
+                        #ySelector="ngModel" [disabled]="!aggregationIsSelected">
                         <option class="placeholder" selected disabled value="">Choose one</option>
                         <option *ngFor="let col of yAvailableColumns">{{col}}</option>
                     </select>

@@ -27,9 +27,10 @@
 
     <hr>
 
-    <div *ngIf=schemaFilePresent>
+    <div *ngIf=schemaFileIsPresent>
         <div class="container">
             <div class="row">
+                <!-- Feature column -->
                 <div class="col-md text-center">
                     <label><b>Features</b></label>
                     <div *ngFor="let column of SELECTED_FEATURES">
@@ -55,6 +56,8 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Unselected column -->
                 <div class="col-md text-center">
                     <label><b>Columns</b></label>
                     <div *ngFor="let column of COLUMNS">
@@ -86,6 +89,8 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Metric column -->
                 <div class="col-md text-center">
                     <label><b>Metrics</b></label>
                     <div *ngFor="let column of SELECTED_METRICS">
@@ -115,7 +120,7 @@
         </div>
     </div>
 
-    <div *ngIf=!schemaFilePresent>
+    <div *ngIf=!schemaFileIsPresent>
         <label for="name">Run the data inference job with the following arguments</label>
         <input type="text" class="form-control" disabled value="{{job.userId}} {{job._id}}">
     </div>
@@ -124,11 +129,11 @@
 
     <div class="row">
         <div class="col text-left">
-            <button class="btn btn-primary" [routerLink]="['/jobsPage']" [disabled]="ioDisabled">Save and Exit</button>
-            <button class="btn btn-danger ml-2" (click)="deleteJob()" [disabled]="ioDisabled">Delete Job</button>
+            <button class="btn btn-primary" [routerLink]="['/jobsPage']" [disabled]="ioIsDisabled">Save and Exit</button>
+            <button class="btn btn-danger ml-2" (click)="deleteJob()" [disabled]="ioIsDisabled">Delete Job</button>
         </div>
         <div class="col text-right">
-            <button class="btn btn-primary" (click)="next()" [disabled]="ioDisabled || SELECTED_METRICS.length <= 0 || SELECTED_FEATURES.length <= 0">Next</button>
+            <button class="btn btn-primary" (click)="next()" [disabled]="ioIsDisabled || SELECTED_METRICS.length <= 0 || SELECTED_FEATURES.length <= 0">Next</button>
         </div>
     </div>
 </div>

@@ -12,7 +12,7 @@ import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
 export class UploadComponent implements OnInit {
   jobId: string;
   job: IJobModel;
-  ioDisabled: boolean = true;
+  ioIsDisabled: boolean = true;
   uploader: FileUploader;
   itemSize: number;
 
@@ -26,7 +26,7 @@ export class UploadComponent implements OnInit {
 
     this.uploader.onCompleteItem = (item => {
       this.job.rawInputDirectory = this.job.rawInputDirectory + "/" + item.file.name;
-      this.ioDisabled = false;
+      this.ioIsDisabled = false;
     });
 
     this.uploader.onAfterAddingFile = (item => {

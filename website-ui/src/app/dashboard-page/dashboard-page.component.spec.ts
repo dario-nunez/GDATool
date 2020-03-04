@@ -10,8 +10,7 @@ describe('DashboardPageComponent', () => {
     TestBed.configureTestingModule({
       declarations: COMMON_DECLARATIONS,
       imports: COMMON_IMPORTS
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

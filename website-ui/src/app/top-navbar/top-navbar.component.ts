@@ -6,14 +6,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./top-navbar.component.css']
 })
 export class TopNavbarComponent implements OnInit {
-
   loggedInUser: string;
 
   constructor() { }
 
   ngOnInit() {
-    console.info(JSON.parse(localStorage.getItem("user")));
-    
+    // console.info(JSON.parse(localStorage.getItem("user")));
     if (JSON.parse(localStorage.getItem("user"))) {
       this.loggedInUser = JSON.parse(localStorage.getItem("user")).email;
     } else {

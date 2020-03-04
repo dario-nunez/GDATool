@@ -5,7 +5,6 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from
   providedIn: 'root'
 })
 export class AuthenticationGuardService implements CanActivate {
-
   unprotectedRoutes = ["", "logIn", "signUp"];
 
   constructor(private router: Router) { }

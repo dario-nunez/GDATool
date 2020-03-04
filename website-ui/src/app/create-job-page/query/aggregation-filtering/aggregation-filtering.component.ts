@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { QueryService } from 'src/services/query/query.service';
 import { SchemaService } from 'src/services/schema/schema.service';
 import { IColumn } from 'src/models/column.model';
-import { IAggregationModel } from '../../../../../../mongodb-service/src/models/aggregationModel';
 import { IFilterModel } from '../../../../../../mongodb-service/src/models/filterModel';
 
 @Component({
@@ -15,8 +14,8 @@ export class AggregationFilteringComponent implements OnInit {
   STRING_OPERATORS = ["exclude", "include"]
   FEATURE_COLUMNS = [];
   METRIC_COLUMNS = [];
-  aggregationSelected: boolean = false;
-  stringColumnChosen: boolean = false;
+  aggregationIsSelected: boolean = false;
+  stringColumnIsChosen: boolean = false;
 
   availableColumns: Array<[string, string]> = [];
   availableOperators: Array<string> = [];
@@ -36,7 +35,6 @@ export class AggregationFilteringComponent implements OnInit {
     this.queryService.aggregationFilters = [];
     this.selectedAggregation = "";
     this.chosenIdentifierColumn = "";
-
     this.FEATURE_COLUMNS = this.schemaService.featureColumns;
     this.METRIC_COLUMNS = this.schemaService.metricColumns;
     this.availableColumns = this.FEATURE_COLUMNS;
@@ -49,17 +47,14 @@ export class AggregationFilteringComponent implements OnInit {
   }
 
   selectAggregation($event, agg) {
-    let chosenAgg: IAggregationModel = this.queryService.aggregations.filter(obj => obj.name === agg)[0];
-
-    this.aggregationSelected = true;
-
+    this.aggregationIsSelected = true;
     this.chosenIdentifierColumn = "";
     this.chosenOperator = "";
     this.chosenStringValue = "";
     this.chosenNumericValue = undefined;
     this.numericMin = undefined;
     this.numericMax = undefined;
-    this.stringColumnChosen = false;
+    this.stringColumnIsChosen = false;
   }
 
   selectColumn($event, column) {
@@ -69,17 +64,14 @@ export class AggregationFilteringComponent implements OnInit {
     let schemaColumn: IColumn = this.schemaService.getSchema().schema.filter(obj => obj.name == column)[0];
 
     if (columnType == "string") {
-      this.stringColumnChosen = true;
+      this.stringColumnIsChosen = true;
       this.availableOperators = this.STRING_OPERATORS;
       this.availableStringValues = schemaColumn.range;
-      console.log(this.availableStringValues)
     } else {
-      this.stringColumnChosen = false;
+      this.stringColumnIsChosen = false;
       this.availableOperators = this.NUMERIC_OPERATORS;
       this.numericMin = +schemaColumn.range[0];
       this.numericMax = +schemaColumn.range[1];
-
-      console.log(this.numericMin + " " + this.numericMax)
     }
 
     this.chosenOperator = "";
@@ -88,7 +80,6 @@ export class AggregationFilteringComponent implements OnInit {
   }
 
   addFilter() {
-    let chosenAgg: IAggregationModel = this.queryService.aggregations.filter(obj => obj.name === this.selectedAggregation)[0];
     let sqlString;
     let columnType = this.availableColumns.filter(obj => obj[0] == this.chosenIdentifierColumn)[0][1];
 
@@ -109,8 +100,6 @@ export class AggregationFilteringComponent implements OnInit {
       query: sqlString
     }
 
-    console.log(newFilter);
-
     this.selectedAggregation = "";
     this.chosenIdentifierColumn = "";
     this.chosenOperator = "";
@@ -119,8 +108,8 @@ export class AggregationFilteringComponent implements OnInit {
     this.numericMin = undefined;
     this.numericMax = undefined;
 
-    this.aggregationSelected = false;
-    this.stringColumnChosen = false;
+    this.aggregationIsSelected = false;
+    this.stringColumnIsChosen = false;
 
     this.queryService.aggregationFilters.push(newFilter);
   }

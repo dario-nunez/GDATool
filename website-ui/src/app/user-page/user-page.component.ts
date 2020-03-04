@@ -9,10 +9,9 @@ import { IUserModel } from '../../../../mongodb-service/src/models/userModel';
   styleUrls: ['./user-page.component.css']
 })
 export class UserPageComponent implements OnInit {
-
   user: IUserModel;
-  private emailExists: boolean;
-  private repeatedPassword: string;
+  emailExists: boolean;
+  passwordIsRepeated: string;
 
   constructor(private router: Router, public mongodbService: MongodbService) { }
 
@@ -39,7 +38,6 @@ export class UserPageComponent implements OnInit {
 
   updateAccount() {
     this.user.email = this.user.email;
-
     this.mongodbService.updateUser(this.user).subscribe(user => {
       if (user != null) {
         const simplifiedUser = {
@@ -51,7 +49,7 @@ export class UserPageComponent implements OnInit {
         this.router.navigate(['/jobsPage']);
       } else {
         this.user.password = "";
-        this.repeatedPassword = "";
+        this.passwordIsRepeated = "";
         this.emailExists = true;
       }
     });

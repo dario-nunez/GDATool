@@ -13,15 +13,7 @@ import { IFilterModel } from '../../../../mongodb-service/src/models/filterModel
   providedIn: 'root'
 })
 export class MongodbService {
-
-  private upsertUserUrl = "ms/user";
-  private createAndGetJWT = "ms/user/createAndGetJWT";
-
   dashboardLink: string;
-  private corsHeaders = new HttpHeaders({
-    "Content-Type": "application/json",
-    Accept: "application/json"
-  });
 
   constructor(private http: HttpClient) { }
 

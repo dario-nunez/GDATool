@@ -45,11 +45,11 @@
     <!-- Submission buttons -->
     <div class="row">
         <div class="col text-left">
-            <button class="btn btn-primary" [routerLink]="['/jobsPage']" [disabled]="ioDisabled">Save and Exit</button>
-            <button class="btn btn-danger ml-2" (click)="deleteJob()" [disabled]="ioDisabled">Delete Job</button>
+            <button class="btn btn-primary" [routerLink]="['/jobsPage']" [disabled]="ioIsDisabled">Save and Exit</button>
+            <button class="btn btn-danger ml-2" (click)="deleteJob()" [disabled]="ioIsDisabled">Delete Job</button>
         </div>
         <div class="col text-right">
-            <button class="btn btn-primary" (click)="next()" [disabled]="ioDisabled">Next</button>
+            <button class="btn btn-primary" (click)="next()" [disabled]="ioIsDisabled">Next</button>
         </div>
     </div>
 </div>

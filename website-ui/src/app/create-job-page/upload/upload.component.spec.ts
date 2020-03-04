@@ -8,7 +8,6 @@ import { MongodbService } from 'src/services/mongodb/mongodb.service';
 describe('UploadComponent', () => {
   let component: UploadComponent;
   let fixture: ComponentFixture<UploadComponent>;
-
   const mockMongodbService = jasmine.createSpyObj("MongodbService", ["getJobById", "getUploadFileUrl", "updateJob", "deleteJobRecusrive"])
   mockMongodbService.getJobById.and.returnValue(of(MOCK_JOB));
   mockMongodbService.getUploadFileUrl.and.returnValue(of({}));
@@ -40,8 +39,7 @@ describe('UploadComponent', () => {
           }
         }
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -55,12 +53,12 @@ describe('UploadComponent', () => {
     expect(component.mongodbService.getJobById).toHaveBeenCalled();
   });
 
-  it('next', () => {
+  it('next button registers mongodb service call', () => {
     component.next();
     expect(component.mongodbService.updateJob).toHaveBeenCalled();
   });
 
-  it('delete job', () => {
+  it('deleteJob button registers mongodb service call', () => {
     spyOn(window, 'confirm').and.returnValue(true);
     component.deleteJob();
     expect(component.mongodbService.deleteJobRecusrive).toHaveBeenCalled();

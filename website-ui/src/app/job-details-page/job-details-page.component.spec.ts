@@ -39,8 +39,7 @@ describe('JobDetailsPageComponent', () => {
           }
         }
       ]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -54,17 +53,17 @@ describe('JobDetailsPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('get job', () => {
+  it('getJob button registers mongodb service call', () => {
     component.getJob();
     expect(component.mongodbService.getJobById).toHaveBeenCalled();
   });
 
-  it('update job', () => {
+  it('updateJob button registers mongodb service call', () => {
     component.updateJob();
     expect(component.mongodbService.updateJob).toHaveBeenCalled();
   });
 
-  it('delete job', () => {
+  it('deleteJob button registers mongodb service call', () => {
     spyOn(window, 'confirm').and.returnValue(true);
     component.deleteJob();
     expect(component.mongodbService.deleteJobRecusrive).toHaveBeenCalled();

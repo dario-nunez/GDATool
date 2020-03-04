@@ -11,15 +11,13 @@ import { IJobModel } from '../../../../../mongodb-service/src/models/jobModel';
   styleUrls: ['./schema.component.css']
 })
 export class SchemaComponent implements OnInit {
-  ioDisabled: boolean = true;
+  ioIsDisabled: boolean = true;
   job: IJobModel;
   jobId: string;
-  schemaFilePresent = false;
+  schemaFileIsPresent = false;
   COLUMNS: Array<[string, string]> = [];
   SELECTED_METRICS: Array<[string, string]> = [];
   SELECTED_FEATURES: Array<[string, string]> = [];
-
-  // This variable holds the whole schema file
   schema: ISchema;
 
   constructor(public mongodbService: MongodbService, private schemaService: SchemaService, private route: ActivatedRoute, private router: Router) { }
@@ -40,12 +38,12 @@ export class SchemaComponent implements OnInit {
       this.mongodbService.getJobById(this.jobId).subscribe(job => {
         this.job = job;
         job.jobStatus = 3;
-        this.ioDisabled = false;
+        this.ioIsDisabled = false;
         this.mongodbService.readFile(job).subscribe(fileContents => {
           if (fileContents.toString().length == 0) {
-            console.log("The schema file is empty!");
+            // schema file is empty
           } else {
-            this.schemaFilePresent = true;
+            this.schemaFileIsPresent = true;
             this.schema = JSON.parse(fileContents);
             this.schema.schema.forEach(column => {
               this.COLUMNS.push([column.name, column.type])
@@ -57,8 +55,9 @@ export class SchemaComponent implements OnInit {
   }
 
   moveColumn(event, element: [string, string], originArray: Array<[string, string]>, destinationArray: Array<[string, string]>) {
-    if (originArray == this.COLUMNS) {                   // From COLUMNS column
-      if (element[1] == "double") {  // Numeric
+    // Origin column logic
+    if (originArray == this.COLUMNS) {  // From COLUMNS
+      if (element[1] == "double") {   // Numeric
         if (destinationArray == this.SELECTED_FEATURES) {
           if (this.SELECTED_METRICS.includes(element)) {
             this.COLUMNS = this.COLUMNS.filter(obj => obj[0] !== element[0]);
@@ -71,14 +70,15 @@ export class SchemaComponent implements OnInit {
       } else {  // Non numeric
         this.COLUMNS = this.COLUMNS.filter(obj => obj[0] !== element[0]);
       }
-    } else if (originArray == this.SELECTED_FEATURES) { // From FEATURES column
+    } else if (originArray == this.SELECTED_FEATURES) { // From FEATURES
       this.SELECTED_FEATURES = this.SELECTED_FEATURES.filter(obj => obj[0] !== element[0]);
-    } else {                                            // From METRICS column
+    } else {  // From METRICS
       this.SELECTED_METRICS = this.SELECTED_METRICS.filter(obj => obj[0] !== element[0]);
     }
 
+    // Destination column logic
     if (destinationArray == this.COLUMNS) {
-      if (element[1] == "double") {  // Numeric
+      if (element[1] == "double") { // Numeric
         if (!destinationArray.includes(element)) {
           this.COLUMNS.push(element)
         }

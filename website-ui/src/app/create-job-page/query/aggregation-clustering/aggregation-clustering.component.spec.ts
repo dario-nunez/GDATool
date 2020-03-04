@@ -17,8 +17,7 @@ describe('AggregationClusteringComponent', () => {
           useValue: MOCK_QUERY_SERVICE
         }
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -36,31 +35,35 @@ describe('AggregationClusteringComponent', () => {
     expect(component.chosenIdentifierColumn).toEqual("");
   });
 
-  it('selectXColumn', () => {
+  it('selectXColumn selects the given element', () => {
     component.OPERATIONS = ["a", "b", "c"]
     component.selectXColumn(event, "a");
+
     expect(component.yAvailableColumns).toEqual(["b", "c"]);
   });
 
-  it('selectYColumn', () => {
+  it('selectYColumn selects the given element', () => {
     component.OPERATIONS = ["a", "b", "c"]
     component.selectYColumn(event, "a");
+
     expect(component.xAvailableColumns).toEqual(["b", "c"]);
   });
 
-  it('select aggregtaion', () => {
-    expect(component.aggregationSelected).toEqual(false);
+  it('selectAggregtaion selects the given aggregation', () => {
+    expect(component.aggregationIsSelected).toEqual(false);
+
     component.queryService.aggregations = MOCK_AGGREGATIONS;
     const expected = MOCK_AGGREGATIONS[0];
     component.selectAggregation(event, "mock_name1");
+
     expect(component.OPERATIONS).toEqual(expected.operations);
     expect(component.xAvailableColumns).toEqual(expected.operations);
     expect(component.yAvailableColumns).toEqual(expected.operations);
     expect(component.FEATURE_COLUMNS).toEqual(expected.featureColumns);
-    expect(component.aggregationSelected).toEqual(true);
+    expect(component.aggregationIsSelected).toEqual(true);
   });
 
-  it('addCluster button', () => {
+  it('addCluster adds the given cluster', () => {
     component.OPERATIONS = ["a", "b"];
     component.queryService.aggregations = MOCK_AGGREGATIONS;
     component.selectedAggregation = "mock_name1";
@@ -76,12 +79,13 @@ describe('AggregationClusteringComponent', () => {
     expect(component.chosenYColumn).toEqual("");
     expect(component.chosenIdentifierColumn).toEqual("");
     expect(component.selectedAggregation).toEqual("");
-    expect(component.aggregationSelected).toEqual(false);
+    expect(component.aggregationIsSelected).toEqual(false);
   });
 
-  it('delete cluster', () => {
+  it('deleteCluster deletes the given cluster', () => {
     component.queryService.aggregationClusters = [MOCK_CLUSTER];
     component.deleteCluster(event, MOCK_CLUSTER);
+    
     expect(component.queryService.aggregationClusters.length).toEqual(0);
   });
 });

@@ -9,8 +9,7 @@ import { MongodbService } from '../../services/mongodb/mongodb.service';
   styleUrls: ['./sign-up-page.component.css']
 })
 export class SignUpPageComponent implements OnInit {
-
-  private user: IUserModel;
+  user: IUserModel;
   repeatedPassword: string;
   emailExists: boolean;
 

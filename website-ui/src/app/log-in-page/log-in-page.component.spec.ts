@@ -21,8 +21,7 @@ describe('LogInPageComponent', () => {
           useValue: mockAuthenticationService
         }
       ]
-    })
-    .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -35,7 +34,7 @@ describe('LogInPageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('login', () => {
+  it('login button registers mongodb service call', () => {
     component.login();
     expect(component.authenticationService.authenticate).toHaveBeenCalled()
   });
