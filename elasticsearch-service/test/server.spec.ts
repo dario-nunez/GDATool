@@ -4,7 +4,9 @@ import { HttpMethod, Server } from "typescript-rest";
 
 const expect = chai.expect;
 
-// For the test to run, MongoDb must be available
+/**
+ * API Server tests ensure that all the expected endpoints are exposed at runtime. It also ensures that their paths have the expected types (GET, POST, PUT, DELETE, ...)
+ */
 describe("Rest Server Tests", () => {
     // A single test checking all exposed routes of the API
     describe("Check the exposed routes", () => {

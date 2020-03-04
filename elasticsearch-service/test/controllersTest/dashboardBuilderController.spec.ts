@@ -15,8 +15,11 @@ import { deleteIfPresent } from "../../../mongodb-service/test/deleteIfPresent.s
 import { DashboardBuilderController } from "../../src/controllers/dashboardBuilderController";
 import { KibanaService } from "../../src/services/kibana-service";
 import { MongodbService } from "../../src/services/mongodb-service";
-import { expectedDashboardSeed } from "./controllersTestResources/dashboardController.spec.resources";
+import { expectedDashboardSeed } from "./controllersTestResources/dashboardBuilderController.spec.resources";
 
+/**
+ * 
+ */
 chai.use(chaiHttp);
 const assert = chai.assert;
 const expect = chai.expect;
@@ -113,6 +116,9 @@ const testcluster2:IClusterModel = {
     yType: "cluster2_test_yType"
 };
 
+/**
+ * Setup the testing environment by creting mongodb entities.
+ */
 before(async () => {
     mongodbService = new MongodbService();
     kibanaServiceMock = new KibanaService();
@@ -157,9 +163,9 @@ before(async () => {
     await clusterRerpository.create(testcluster2);
 });
 
-describe("Builder controller tests", () => {
-    describe("Testing the ednpoints", () => {
-        it("Status endpoit returns a string", (done) => {
+describe("Dashboard Builder controller tests", () => {
+    describe("endpoint response", () => {
+        it("hitting the status endpoint succeeds", (done) => {
             chai.request("http://localhost:5020")
                 .get("/es/dashboardBuilder/status")
                 .end(function (err, res) {
@@ -168,12 +174,12 @@ describe("Builder controller tests", () => {
                 });
         });
 
-        it("Basic dashboard endpoint returns a dashboard seed", async () => {
+        it("Hitting the basic dashboard endpoint generates the expected dashboard", async () => {
             const json = await dashboardBuilderController.createBasicDashboard(testJob1._id);
             assert.equal(JSON.stringify(json), JSON.stringify(expectedDashboardSeed));
         });
 
-        it("Cleanup", async () => {
+        it("cleanup", async () => {
             await deleteIfPresent(testUser, userRepository);
             await deleteIfPresent(testJob1, jobRepository);
             await deleteIfPresent(testAggregation1, aggregationRepository);

@@ -5,8 +5,7 @@ import { Server, HttpMethod } from "typescript-rest";
 const expect = chai.expect;
 
 /**
- * API Server tests ensure that all the expected endpoints are exposed at runtime. It also ensures
- * their paths have the expected types (GET, POST, PUT, DELETE, ...)
+ * API Server tests ensure that all the expected endpoints are exposed at runtime. It also ensures that their paths have the expected types (GET, POST, PUT, DELETE, ...)
  */
 describe("Rest Server Tests", () => {
     describe("Check the exposed routes", () => {

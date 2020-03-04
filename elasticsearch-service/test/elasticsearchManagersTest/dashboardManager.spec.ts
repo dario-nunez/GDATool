@@ -4,10 +4,16 @@ import { DashboardManager } from "../../src/elasticsearchEntityManagers/dashboar
 import { IESDashboard } from "../../src/elasticsearchModels/dashboardModel";
 import { KibanaService } from "../../src/services/kibana-service";
 
+/**
+ * Dashboard Manager tests.
+ */
 const assert = chai.assert;
 let dashboardManager: DashboardManager;
 let kibanaService: KibanaService;
 
+/**
+ * Mocks the Kibana service so no calls are made to the real Elasticsearch cluster.
+ */
 before(async () => {
     kibanaService = new KibanaService();
     dashboardManager = new DashboardManager(kibanaService);
@@ -17,9 +23,9 @@ before(async () => {
     };
 });
 
-describe("Dashboard manager tests", () => {
+describe("Dashboard Manager tests", () => {
     describe("create dashboard", () => {
-        it("create succeeds", (done) => {
+        it("create dashboard succeeds", (done) => {
             const dashboardSeed: IESDashboard = {
                 _id: "jobId",
                 title: "jobId",

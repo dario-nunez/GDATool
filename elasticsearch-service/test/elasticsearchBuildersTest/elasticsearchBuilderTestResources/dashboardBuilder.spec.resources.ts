@@ -1,3 +1,6 @@
+/**
+ * Dashboard Builder Test resources
+ */
 export const expectedDashboard1 = {
     method: 'PUT',
     url: 'http://localhost:9200/.kibana/_doc/dashboard:test_id_dashboard',

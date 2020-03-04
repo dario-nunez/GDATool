@@ -4,10 +4,16 @@ import { VisualizationManager } from "../../src/elasticsearchEntityManagers/visu
 import { IESVisualization } from "../../src/elasticsearchModels/visualizationModel";
 import { KibanaService } from "../../src/services/kibana-service";
 
+/**
+ * Visualization Manager tests.
+ */
 const assert = chai.assert;
 let visualizationManager: VisualizationManager;
 let kibanaService: KibanaService;
 
+/**
+ * Mocks the Kibana service so no calls are made to the real Elasticsearch cluster.
+ */
 before(async () => {
     kibanaService = new KibanaService();
     visualizationManager = new VisualizationManager(kibanaService);
@@ -17,9 +23,9 @@ before(async () => {
     };
 });
 
-describe("Visualization manager tests", () => {
-    describe("create markup visualizations", () => {
-        it("create succeeds", (done) => {
+describe("Visualization Manager tests", () => {
+    describe("create markup visualization", () => {
+        it("create markup visualization succeeds", (done) => {
             const visualization: IESVisualization = {
                 _id: "test_id_markdown",
                 type: "markdown"
@@ -31,8 +37,8 @@ describe("Visualization manager tests", () => {
         });
     });
 
-    describe("create bar chart visualizations", () => {
-        it("create succeeds", (done) => {
+    describe("create bar chart visualization", () => {
+        it("create bar chart visualization succeeds", (done) => {
             const visualization: IESVisualization = {
                 _id: "test_id_bar",
                 type: "bar"
@@ -44,8 +50,8 @@ describe("Visualization manager tests", () => {
         });
     });
 
-    describe("create metric visualizations", () => {
-        it("create succeeds", (done) => {
+    describe("create metric visualization", () => {
+        it("create metric visualization succeeds", (done) => {
             const visualization: IESVisualization = {
                 _id: "test_id_metric",
                 type: "metric"
@@ -57,8 +63,8 @@ describe("Visualization manager tests", () => {
         });
     });
 
-    describe("create data table visualizations", () => {
-        it("create succeeds", (done) => {
+    describe("create data table visualization", () => {
+        it("create data table visualization succeeds", (done) => {
             const visualization: IESVisualization = {
                 _id: "test_id_table",
                 type: "table"
@@ -70,8 +76,8 @@ describe("Visualization manager tests", () => {
         });
     });
 
-    describe("create plot visualizations", () => {
-        it("create succeeds", (done) => {
+    describe("create plot visualization", () => {
+        it("create plot visualization succeeds", (done) => {
             const visualization: IESVisualization = {
                 _id: "test_id_plot",
                 type: "plot"
@@ -83,8 +89,8 @@ describe("Visualization manager tests", () => {
         });
     });
 
-    describe("create cluster visualizations", () => {
-        it("create succeeds", (done) => {
+    describe("create cluster visualization", () => {
+        it("create cluster visualization succeeds", (done) => {
             const visualization: IESVisualization = {
                 _id: "test_id_cluster",
                 type: "cluster"

@@ -1,3 +1,6 @@
+/**
+ * Index Pattern Builder Test resources
+ */
 export const expectedIndexPatternEntity = {
     method: 'PUT',
     url: 'http://localhost:9200/.kibana/_doc/index-pattern:test_id',

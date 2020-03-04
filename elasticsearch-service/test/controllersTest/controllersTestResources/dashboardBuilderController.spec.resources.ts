@@ -1,3 +1,6 @@
+/**
+ * Controller Test resources
+ */
 export const expectedDashboardSeed = {
     _id: '222222222222222222222222',
     title: '222222222222222222222222',

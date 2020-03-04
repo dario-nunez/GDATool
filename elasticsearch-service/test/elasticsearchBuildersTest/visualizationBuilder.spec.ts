@@ -1,14 +1,17 @@
 import * as chai from "chai";
 import { before, describe, it } from "mocha";
 import { VisualizationBuilder } from "../../src/elasticsearchEntityJsonBuilders/visualizationBuilder";
-import { IESCluster } from "../../src/elasticsearchModels/clusterModel";
-import { IESDataTable } from "../../src/elasticsearchModels/dataTableModel";
-import { IESMetric } from "../../src/elasticsearchModels/metricModel";
-import { IESPlot } from "../../src/elasticsearchModels/plotModel";
-import { IESBarChart } from "../../src/elasticsearchModels/visBarChartModel";
-import { IESMarkup } from "../../src/elasticsearchModels/visMarkupModel";
+import { IESBarChartVis } from "../../src/elasticsearchModels/barChartVisModel";
+import { IESClusterVis } from "../../src/elasticsearchModels/clusterVisModel";
+import { IESDataTableVis } from "../../src/elasticsearchModels/dataTableVisModel";
+import { IESMarkupVis } from "../../src/elasticsearchModels/markupVisModel";
+import { IESMetricVis } from "../../src/elasticsearchModels/metricVisModel";
+import { IESPlotVis } from "../../src/elasticsearchModels/plotVisModel";
 import { expectedBarChartVisualization, expectedClusterVisualization, expectedDataTableVisualization, expectedMarkupVisualization, expectedMetricVisualization, expectedPlotVisualization } from "./elasticsearchBuilderTestResources/visualizationBuilder.spec.resources";
 
+/**
+ * Visualization Builder tests.
+ */
 const assert = chai.assert;
 let visualizationBuilder: VisualizationBuilder;
 
@@ -16,10 +19,10 @@ before(async () => {
     visualizationBuilder = new VisualizationBuilder();
 });
 
-describe("Visualization builder tests", () => {
-    describe("create markup visualizations", () => {
-        it("create succeeds", (done) => {
-            const testMarkupSeed: IESMarkup = {
+describe("Visualization Builder tests", () => {
+    describe("create markup visualization", () => {
+        it("create markup visualization succeeds", (done) => {
+            const testMarkupSeed: IESMarkupVis = {
                 _id: "test_id",
                 type: "test_type",
                 explorerTitle: "test_explorerTitle",
@@ -32,9 +35,9 @@ describe("Visualization builder tests", () => {
         });
     });
 
-    describe("create bar chart visualizations", () => {
-        it("create succeeds", (done) => {
-            const testBarChartSeed: IESBarChart = {
+    describe("create bar chart visualization", () => {
+        it("create bar chart visualization succeeds", (done) => {
+            const testBarChartSeed: IESBarChartVis = {
                 _id: "test_id",
                 type: "test_type",
                 explorerTitle: "test_explorerTitle",
@@ -50,9 +53,9 @@ describe("Visualization builder tests", () => {
         });
     });
 
-    describe("create metric visualizations", () => {
-        it("create succeeds", (done) => {
-            const testMetricSeed: IESMetric = {
+    describe("create metric visualization", () => {
+        it("create metric visualization succeeds", (done) => {
+            const testMetricSeed: IESMetricVis = {
                 _id: "test_id",
                 type: "test_type",
                 explorerTitle: "test_explorerTitle",
@@ -66,9 +69,9 @@ describe("Visualization builder tests", () => {
         });
     });
 
-    describe("create data table visualizations", () => {
-        it("create succeeds", (done) => {
-            const testDataTableSeed: IESDataTable = {
+    describe("create data table visualization", () => {
+        it("create data table visualization succeeds", (done) => {
+            const testDataTableSeed: IESDataTableVis = {
                 _id: "test_id",
                 type: "test_type",
                 explorerTitle: "test_explorerTitle",
@@ -83,9 +86,9 @@ describe("Visualization builder tests", () => {
         });
     });
 
-    describe("create plot visualizations", () => {
-        it("create succeeds", (done) => {
-            const testPlotSeed: IESPlot = {
+    describe("create plot visualization", () => {
+        it("create plot visualization succeeds", (done) => {
+            const testPlotSeed: IESPlotVis = {
                 _id: "test_id",
                 type: "test_type",
                 index: "test_index",
@@ -104,9 +107,9 @@ describe("Visualization builder tests", () => {
         });
     });
 
-    describe("create cluster visualizations", () => {
-        it("create succeeds", (done) => {
-            const testClusterSeed: IESCluster = {
+    describe("create cluster visualization", () => {
+        it("create cluster visualization succeeds", (done) => {
+            const testClusterSeed: IESClusterVis = {
                 _id: "test_id",
                 type: "test_cluster",
                 index: "test_index",

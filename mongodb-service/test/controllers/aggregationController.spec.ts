@@ -10,7 +10,7 @@ import { UserRepository } from "../../src/repositories/userRepository";
 import { deleteIfPresent } from "../deleteIfPresent.spec";
 
 /**
- * Aggregation Controller tests
+ * Aggregation Controller tests.
  */
 chai.use(chaiHttp);
 const expect = chai.expect;

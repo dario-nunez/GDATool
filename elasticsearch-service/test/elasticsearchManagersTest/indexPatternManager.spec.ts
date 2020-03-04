@@ -4,10 +4,16 @@ import { IndexPatternManager } from "../../src/elasticsearchEntityManagers/index
 import { IESIndexPattern } from "../../src/elasticsearchModels/indexPatternModel";
 import { KibanaService } from "../../src/services/kibana-service";
 
+/**
+ * Index Pattern Manager tests.
+ */
 const assert = chai.assert;
 let indexPatternManager: IndexPatternManager;
 let kibanaService: KibanaService;
 
+/**
+ * Mocks the Kibana service so no calls are made to the real Elasticsearch cluster.
+ */
 before(async () => {
     kibanaService = new KibanaService();
     indexPatternManager = new IndexPatternManager(kibanaService);
@@ -17,9 +23,9 @@ before(async () => {
     };
 });
 
-describe("Index pattern manager tests", () => {
+describe("Index Pattern Manager tests", () => {
     describe("create index pattern", () => {
-        it("create succeeds", (done) => {
+        it("create index pattern succeeds", (done) => {
             const indexPatternSeed: IESIndexPattern = {
                 _id: "aggregationId",
                 index: "aggregationId",
