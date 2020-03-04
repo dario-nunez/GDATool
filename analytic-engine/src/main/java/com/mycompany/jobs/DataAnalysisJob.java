@@ -321,13 +321,22 @@ public class DataAnalysisJob extends Job {
      * @return a dataset that has had all input filters applied.
      */
     public Dataset<Row> filter(Dataset<Row> dataset, List<FilterModel> filters) {
-        Dataset<Row> filteredDataset = dataset;
+        if (filters.size() < 1) {
+            return dataset;
+        }
+
+        StringBuilder sqlQuery = new StringBuilder("SELECT * FROM source WHERE ");
 
         for (FilterModel filterModel : filters) {
-            filteredDataset.createOrReplaceTempView("source");
-            String sqlQuery = "SELECT * FROM source WHERE " + filterModel.query;
-            filteredDataset = sparkSession.sql(sqlQuery);
+            sqlQuery.append(filterModel.query).append(" AND ");
+
         }
+
+        sqlQuery = new StringBuilder(sqlQuery.substring(0, sqlQuery.length() - 5));
+
+        Dataset<Row> filteredDataset = dataset;
+        filteredDataset.createOrReplaceTempView("source");
+        filteredDataset = sparkSession.sql(sqlQuery.toString());
 
         return filteredDataset;
     }

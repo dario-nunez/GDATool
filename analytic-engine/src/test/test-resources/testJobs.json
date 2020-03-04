@@ -5,7 +5,7 @@
   "generateESIndices":true,
   "jobStatus":"4",
   "userId":"111111111111111111111111",
-  "rawInputDirectory":"ukPropertiesDs/dataAnalysisJobDS.csv",
+  "rawInputDirectory":"testDatasets/dataAnalysisJobDS.csv",
   "stagingFileName":"staging",
   "createdAt":"1582497494571",
   "updatedAt":"1582497494571",

@@ -34,6 +34,7 @@ export class UploadComponent implements OnInit {
       if (this.uploader.queue.length > 0) {
         this.uploader.queue = [item];
       }
+      
       this.mongodbService.getUploadFileUrl(item.file.name, this.jobId).subscribe(value => {
         item.url = value;
       },
