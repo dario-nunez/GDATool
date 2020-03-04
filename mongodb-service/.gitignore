@@ -3,4 +3,4 @@
 .idea
 .nyc_output
 reports
-private.env
+.env
