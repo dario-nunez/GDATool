@@ -329,7 +329,6 @@ public class DataAnalysisJob extends Job {
 
         for (FilterModel filterModel : filters) {
             sqlQuery.append(filterModel.query).append(" AND ");
-
         }
 
         sqlQuery = new StringBuilder(sqlQuery.substring(0, sqlQuery.length() - 5));
