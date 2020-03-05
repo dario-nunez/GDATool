@@ -11,11 +11,14 @@ import com.mycompany.services.ElasticsearchRepository;
 import com.mycompany.services.MongodbRepository;
 import org.apache.commons.io.FileUtils;
 import org.apache.spark.sql.Column;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,14 +37,13 @@ import static org.junit.Assert.assertEquals;
  */
 public class JobTests {
     @Mock
-    SparkSession sparkSessionMock;
-    @Mock
     MongodbRepository mongodbRepositoryMock;
     @Mock
     ElasticsearchRepository elasticsearchRepositoryMock;
 
     private Job job;
     private AggregationModel aggregationModel;
+    ConfigModel configModel;
 
     /**
      * Initialize the test class, set up the environment and create mock objects.
@@ -52,8 +54,9 @@ public class JobTests {
         ClassLoader classLoader = getClass().getClassLoader();
         MockitoAnnotations.initMocks(this);
         DependencyFactory dependencyFactory = new TestDependencyFactory();
-        ConfigModel configModel = dependencyFactory.getConfigModel();
-        job = new TestJob(sparkSessionMock, configModel, mongodbRepositoryMock, elasticsearchRepositoryMock);
+        SparkSession sparkSession = dependencyFactory.getSparkSession();
+        configModel = dependencyFactory.getConfigModel();
+        job = new TestJob(sparkSession, configModel, mongodbRepositoryMock, elasticsearchRepositoryMock);
         File aggregationsFile = new File(Objects.requireNonNull(classLoader.getResource("testAggregations.json")).getFile());
         String aggregationsFileContent = FileUtils.readFileToString(aggregationsFile, StandardCharsets.UTF_8);
         List<AggregationModel> aggregationModels = objectMapper.readValue(aggregationsFileContent, new TypeReference<List<AggregationModel>>(){});
@@ -106,6 +109,7 @@ public class JobTests {
     static class TestJob extends Job {
         TestJob(SparkSession sparkSession, ConfigModel configModel, MongodbRepository mongodbRepository, ElasticsearchRepository elasticsearchRepository) {
             super(sparkSession, configModel, mongodbRepository, elasticsearchRepository);
+            logger = LoggerFactory.getLogger(SchemaInferenceJob.class);
         }
 
         @Override
