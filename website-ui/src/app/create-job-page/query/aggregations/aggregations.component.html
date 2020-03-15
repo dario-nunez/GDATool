@@ -51,16 +51,16 @@
                     </select>
                     <hr>
                     <button class="btn btn-light m-1" *ngIf="selectedFeatureColumns.length == 0" disabled>
-                        No aggregations selected
+                        No feature columns selected
                     </button>
                     <button (click)="removeElement($event, sCol, 'featureColumn')" class="btn btn-light m-1"
                         *ngFor="let sCol of selectedFeatureColumns">{{sCol}}
                         <span class="badge badge-danger">X</span>
                     </button>
                 </div>
-                <!-- Aggregations -->
+                <!-- Operations -->
                 <div class="form-group col-md-6">
-                    <label for="aggregationCols">Aggregations</label>
+                    <label for="aggregationCols">Operations</label>
                     <select #AggregationDevice (change)="addElement($event, AggregationDevice.value, 'aggregation')"
                         id="aggregationCols" class="form-control">
                         <option selected>Choose one</option>
@@ -68,7 +68,7 @@
                     </select>
                     <hr>
                     <button class="btn btn-light m-1" *ngIf="selectedOperations.length == 0" disabled>
-                        No aggregations selected
+                        No operations selected
                     </button>
                     <button (click)="removeElement($event, sCol, 'aggregation')" class="btn btn-light m-1"
                         *ngFor="let sCol of selectedOperations">{{sCol}}
