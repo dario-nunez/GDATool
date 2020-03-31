@@ -1,42 +1,18 @@
-# Docker Configs:
-Handles all the Docker images needed to run the system: MongoDB, Elasticsearch, Kibana, elasticsearch-service, mongodb-service, website-ui, Spark: Master, Spark: Worker 1 and Spark: Worker 2.
+# Docker Configs
+Handles all the Docker images needed to run the system: MongoDB, Elasticsearch and Kibana. Elasticsearch runs version 7.3.0 and listens on ports 9300 and 9200. Kibana run version 7.3.0 and listens on port 5601. MongoDB run the latest version and listens on port 27017.
 
-# Connecting to docker container via SSH:
-docker exec -it <container_name> /bin/bash
+## Requirements
+1. [Docker](https://www.docker.com/)
 
-docker exec -it be07446bf2a2 /bin/bash
+## Run (script)
+1. Navigate to `/docker-config`
+2. Execute `./run-env.sh`
 
-# Copying the shaded jar to the docker container:
-On a normal console do: docker cdp <shaded_jar_path> <container_id>:<destination_path>
-docker cp /home/dario/github/GDATool/analytic-engine/target/analytic-engine-1.0-SNAPSHOT-shaded.jar 55e86bb897fc:/spark/examples/jars
+## Run (manually)
+1. Navigate to `/docker-config`
+2. Execute `docker system prune -f` to clean the Docker environment
+3. Execute `docker-compose -f docker-compose.yaml up` to create the images and start the containers
 
-docker cp Documents/GitHub/GDATool/analytic-engine/target/analytic-engine-1.0-SNAPSHOT-shaded.jar d5dfb1fe502c:/spark/examples/jars
+## Available docker-compose files
 
-docker cp Documents/GitHub/GDATool/spark-service/target/spark-service-1.0-SNAPSHOT.jar d5dfb1fe502c:/spark
-
-# Spark_submit arguments for running an application on a Spark standalone cluster in CLIENT deploy mode
-./bin/spark-submit \
-  --class <main-class> \
-  --master <master-url> \
-  --deploy-mode <deploy-mode> \
-  --conf <key>=<value> \
-
-# Running spark-submit. Run form /spark:
-./bin/spark-submit --class com.mycompany.run.SchemaInferenceMain --master spark://d5dfb1fe502c:7077 --executor-memory 2G /spark/examples/jars/analytic-engine-1.0-SNAPSHOT-shaded.jar DOCKER 5e39de14114a0621c760d9ab 5e39de29114a0621c760d9ac
-
-./bin/spark-submit --class com.mycompany.run.DataAnalysisMain --master spark://d5dfb1fe502c:7077 --executor-memory 2G /spark/examples/jars/analytic-engine-1.0-SNAPSHOT-shaded.jar DOCKER 5e39de14114a0621c760d9ab 5e39de29114a0621c760d9ac
-
-# Maven routine to create the shaded jar:
-Clean, Compile, Package
-
-# Running jar files
-java -jar <filename>.jar
-
-# List open ports on Mac
-lsof -nP +c 15 | grep LISTEN
-
-# Hitting an endpoint on a container
-use localhost:exposed_port...
-
-# List running processes
-ps aux | more
+The file currently in use is `docker-compose.yaml` which only contains database related conponents. The `docker-compose-medium.yaml` adds a Spark Master node and the `docker-compose-full.yaml` builds on that by adding two Spark Worker nodes.
