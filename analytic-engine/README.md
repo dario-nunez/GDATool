@@ -1,5 +1,5 @@
 # Analytic Engine
-Performs analytics on a given dataset. It loads the data, performs groupbys, stores it in Elasticsearch and triggers the dashboard creation.
+Performs analytics on a given dataset. It loads the data, cleans it, performs analytics, stores the results in Elasticsearch & AWS and triggers the dashboard creation process.
 
 ## Run (IDE virtual environment)
 

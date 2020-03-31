@@ -100,7 +100,7 @@ export class VisualizationBuilder {
             {
                 visualization: {
                     title: metricModel.explorerTitle,
-                    visState: '{"title":"' + metricModel._id + '","type":"metric","params":{"metric":{"percentageMode":false,"useRanges":false,"colorSchema":"Green to Red","metricColorMode":"None","colorsRange":[{"type":"range","from":0,"to":10000}],"labels":{"show":true},"invertColors":false,"style":{"bgFill":"#000","bgColor":false,"labelColor":false,"subText":"","fontSize":25}},"dimensions":{"metrics":[{"type":"vis_dimension","accessor":0,"format":{"id":"number","params":{}}}]},"addTooltip":true,"addLegend":false,"type":"metric"},"aggs":[{"id":"1","enabled":true,"type":"' + metricModel.aggregationName + '","schema":"metric","params":{"field":"' + metricModel.aggregationName + '"}}]}',
+                    visState: '{"title":"' + metricModel._id + '","type":"metric","params":{"metric":{"percentageMode":false,"useRanges":false,"colorSchema":"Green to Red","metricColorMode":"None","colorsRange":[{"type":"range","from":0,"to":10000}],"labels":{"show":true},"invertColors":false,"style":{"bgFill":"#000","bgColor":false,"labelColor":false,"subText":"","fontSize":25}},"dimensions":{"metrics":[{"type":"vis_dimension","accessor":0,"format":{"id":"number","params":{}}}]},"addTooltip":true,"addLegend":false,"type":"metric"},"aggs":[{"id":"1","enabled":true,"type":"' + metricModel.operationName + '","schema":"metric","params":{"field":"' + metricModel.operationName + '", "customLabel": "' + metricModel.operationName + '"}}]}',
                     uiStateJSON: "{}",
                     description: "",
                     version: 1,

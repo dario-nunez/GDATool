@@ -72,7 +72,7 @@ export class DashboardBuilderController {
 
             // Metrics
             for (const operation of aggregation.operations) {
-                aggSection.push(this.visualizationManager.createMetricVis(visualizationIdPrefix + operation.toLowerCase(), operation.toLowerCase(), aggregation._id));
+                aggSection.push(this.visualizationManager.createMetricVis(visualizationIdPrefix + "_" + operation.toLowerCase(), operation.toLowerCase(), aggregation._id));
             }
 
             // Bar charts

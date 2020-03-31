@@ -81,15 +81,15 @@ export class VisualizationManager {
     /**
      * Creates and saves a Metric visualization to Elasticsearch
      * @param id 
-     * @param aggregationName 
+     * @param operationName 
      * @param indexPatternId 
      */
-    public createMetricVis(id: string, aggregationName: string, indexPatternId: string) {
+    public createMetricVis(id: string, operationName: string, indexPatternId: string) {
         const metricSeed: IESMetricVis = {
             _id: id + "_metric",
             type: "metric",
-            explorerTitle: aggregationName,
-            aggregationName: aggregationName,
+            explorerTitle: "Metric " + operationName,
+            operationName: operationName,
             index: indexPatternId
         };
 
