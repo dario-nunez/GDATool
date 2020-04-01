@@ -1,6 +1,6 @@
 # GDATool
-General Data Analytics Tool
-By Dario Nunez
+General Data Analytics Tool 
+#### By Dario Nunez
 
 GDAtool is a data science application aimed at the average intelligent layperson. It is designed to be easy to use, cheap to run and make ample use of automation to offer advanced data science features without requiring expert knowledge.
 
