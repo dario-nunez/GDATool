@@ -20,3 +20,35 @@ Interfaces with the Elasticsearch cluster. Creates index patterns, visualization
 1. Run mongodb-service
 2. Navigate to `/elasticsearch-service`
 3. Execute `npm run test`
+
+## Supported visualisation types
+
+#### Markup
+Name the various dashboard sections
+
+<img src="../website-ui/src/assets/markupVis.png"  width="1000">
+
+#### Metric
+Summarise the result of an operation
+
+<img src="../website-ui/src/assets/metricVis.png"  width="200">
+
+#### Scatter plot
+Plot data on two axis
+
+<img src="../website-ui/src/assets/plotVis.png"  width="500">
+
+#### Bar chart
+Display ordered data by a property
+
+<img src="../website-ui/src/assets/barChartVis.png"  width="500">
+
+#### Data table
+Interact with an entire dataset
+
+<img src="../website-ui/src/assets/dataTableVis.png"  width="1000">
+
+#### Cluster plot
+Cluster data on two features
+
+<img src="../website-ui/src/assets/heavyPlotVis.png"  width="500">
