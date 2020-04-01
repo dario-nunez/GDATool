@@ -8,7 +8,7 @@ The website allows users to create accounts and jobs. The job creation process w
 
 ## Run
 
-1. Start the docker container in `docker-config`
+1. Start the docker container in `docker-configs`
 2. Run the `mongodb-service`
 2. Run the `elasticsearch-service`
 3. Run the `website-ui`
