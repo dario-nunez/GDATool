@@ -1,6 +1,12 @@
 # Analytic Engine
 Performs analytics on a given dataset. It loads the data, cleans it, performs analytics, stores the results in Elasticsearch & AWS and triggers the dashboard creation process.
 
+## Requirements
+1. [Docker](https://www.docker.com/)
+2. Active docker container runnig MongoDB, Elasticsearch and Kibana
+3. mongodb-service
+4. elasticsearch-service
+
 ## Run (IDE virtual environment)
 
 1. Ensure the `pom.xml` file is present in the project root
@@ -28,3 +34,20 @@ Steps 1 to 5 only need to be done once.
 2. Run mongodb-service
 3. Run elasticsearch-service
 4. Execute Maven `test`
+
+## Test coverage report (including EndToEnd test)
+
+Category        |Percentage |Totals
+----------------|-----------|---------
+Tests passing   |100%       |( 41/41 )
+
+### Class breakdown
+
+Element         |Class          |Method         |Line               |
+----------------|---------------|---------------|-------------------|
+configuration   |75%    (3/4)   |71%    (10/14) |61%    (40/65)     |
+jobs            |100%   (6/6)   |88%    (30/34) |83%    (237/283)   |
+models          |90%    (10/11) |88%    (35/52) |58%    (138/236)   |
+run             |0%     (0/2)   |0%     (0/2)   |0%     (0/19)      |
+services        |100%   (16/16) |100%   (26/26) |100%   (80/80)     |
+TOTAL           |0.89%          |75%            |72%                |

@@ -19,7 +19,17 @@ Interfaces with MongoDB. Manages user and job preference data. The entities stor
 ## Test
 1. Run the docker-config docker container
 2. Navigate to `/mongodb-service`
-3. Execute `npm run test`
+3. Execute `npm run test` or `npm run test:coverage` for a coverage report
+
+## Test coverage report
+
+Category        |Percentage |Totals
+----------------|-----------|---------
+Tests passing   |100%       |( 67/67 )
+Statements      |84.3%      |( 349/414 )
+Branches        |64.29%     |( 18/28 )
+Functions       |77.24%     |( 95/123 )
+Lines           |84.04%     |( 337/401 )
 
 ## MongoDB entities
 
