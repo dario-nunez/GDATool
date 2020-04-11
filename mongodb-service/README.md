@@ -4,6 +4,19 @@ Interfaces with MongoDB. Manages user and job preference data. The entities stor
 ## Requirements
 1. [Docker](https://www.docker.com/)
 2. An active docker container running MongoDB
+3. An environment file containing system properties
+
+## Environment file
+The file should be stored as `mongodb-service/.env` and contain the following properties
+```
+MONGODB_URI = <URL to the MongoDB provider>
+ENABLE_CORS = false
+ENABLE_SWAGGER = true
+awsAccessKeyIdEnvVariable = <AWS key id>
+awsSecretAccessKeyEnvVariable = <AWS secret>
+AWS_REGION = <S3 bucket region>
+BUCKET_NAME = <S3 bucket root>
+```
 
 ## Run (script)
 1. Run docker-config's docker container

@@ -80,7 +80,7 @@ public class DataAnalysisJob extends Job {
         List<PlotModel> plots = mongodbRepository.loadPlots(jobId);
         List<AggregationModel> aggregations = mongodbRepository.loadAggregations(jobId);
         Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), job.rawInputDirectory));
-//        Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "uk-properties-large.csv"));
+        //Dataset<Row> dataset = read(String.format("%s/%s", configModel.bucketRoot(), "uk-properties-mid.csv"));
 
         // Clean: Clean the dataset.
         dataset = HelperFunctions.getValidDataset(dataset);

@@ -5,6 +5,17 @@ Interfaces with the Elasticsearch cluster. Creates index patterns, visualization
 1. [Docker](https://www.docker.com/)
 2. Active docker container runnig MongoDB, Elasticsearch and Kibana
 3. mongodb-service
+4. An environment file containing system properties
+
+## Environment file
+The file should be stored as `elasticsearch-service/.env` and contain the following properties
+```
+MONGODB_URI = <URL to the MongoDB provider>
+ENABLE_CORS = false
+ENABLE_SWAGGER = true
+ELASTICSEARCH_URL = <URL to the Elasticsearch provider>
+INDEX_NAME= <index used by Kibana to store visualisation metadata>
+```
 
 ## Run (script)
 1. Run docker-config's docker container

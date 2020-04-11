@@ -6,6 +6,15 @@ Performs analytics on a given dataset. It loads the data, cleans it, performs an
 2. Active docker container runnig MongoDB, Elasticsearch and Kibana
 3. mongodb-service
 4. elasticsearch-service
+5. A property file containing AWS credentials.
+
+## AWS credentials property file
+The file should be stored as `analytic-engine/src/main/resources/common.properties` and contain the following properties
+```
+awsAccessKeyIdEnvVariable = <AWS key id>
+awsSecretAccessKeyEnvVariable = <AWS secret>
+appName = <S3 bucket root>
+```
 
 ## Run (IDE virtual environment)
 
