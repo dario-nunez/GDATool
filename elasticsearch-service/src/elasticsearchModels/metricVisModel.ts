@@ -5,6 +5,6 @@ import { IESVisualization } from "./visualizationModel";
  */
 export interface IESMetricVis extends IESVisualization {
     explorerTitle: string;
-    aggregationName: string;
+    operationName: string;
     index: string;
 }

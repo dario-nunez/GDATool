@@ -93,7 +93,7 @@ public abstract class Job {
                 case MAX:
                     return max(metricColumn).alias(OperationEnum.MAX.toString().toLowerCase());
                 default:
-                    throw new RuntimeException("Unsupported Aggregations");
+                    throw new RuntimeException("Unsupported Operations");
 
             }
         }).collect(Collectors.toList());

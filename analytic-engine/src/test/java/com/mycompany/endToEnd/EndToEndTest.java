@@ -186,17 +186,17 @@ public class EndToEndTest {
         assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_markdown"));
 
         // Metrics
-        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_333333333333333333333333count_metric"));
-        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_333333333333333333333333sum_metric"));
-        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_333333333333333333333333max_metric"));
-        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_333333333333333333333333min_metric"));
-        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_333333333333333333333333avg_metric"));
+        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_333333333333333333333333_count_metric"));
+        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_333333333333333333333333_sum_metric"));
+        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_333333333333333333333333_max_metric"));
+        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_333333333333333333333333_min_metric"));
+        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_333333333333333333333333_avg_metric"));
 
-        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_444444444444444444444444count_metric"));
-        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_444444444444444444444444sum_metric"));
-        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_444444444444444444444444max_metric"));
-        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_444444444444444444444444min_metric"));
-        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_444444444444444444444444avg_metric"));
+        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_444444444444444444444444_count_metric"));
+        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_444444444444444444444444_sum_metric"));
+        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_444444444444444444444444_max_metric"));
+        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_444444444444444444444444_min_metric"));
+        assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_444444444444444444444444_avg_metric"));
 
         // Bar charts
         assertTrue(kibanaEntityExists("visualization", "222222222222222222222222_333333333333333333333333_count_bar"));
