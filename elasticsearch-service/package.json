@@ -20,7 +20,7 @@
     "swagger": "swaggerGen -c ./swagger.config.yml"
   },
   "dependencies": {
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "chai-http": "^4.3.0",
     "cors": "^2.8.5",
     "dotenv": "8.0.0",
